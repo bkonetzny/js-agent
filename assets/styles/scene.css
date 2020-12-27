@@ -1,0 +1,50 @@
+#scene {
+    background: #fff;
+    margin: 10px;
+    width: 400px;
+    height: 200px;
+    position: relative;
+}
+
+#scene > div {
+    position: absolute;
+}
+
+.building {
+    background-color: yellow;
+    width: 10px;
+    height: 10px;
+}
+
+.building-source {
+    background-color: green;
+}
+
+.building-destination {
+    background-color: blueviolet;
+}
+
+.building-destination-busy {
+    background-color: orange;
+}
+
+.agent {
+    width: 10px;
+    height: 10px;
+    font-size: 10px;
+}
+
+.agent-state-idle:before {
+    content: '😴';
+    font-size: 8px;
+}
+
+.agent-state-busy:before {
+    content: '😀';
+    font-size: 8px;
+}
+
+.agent-state-packed:before {
+    content: '🥵';
+    font-size: 8px;
+}
