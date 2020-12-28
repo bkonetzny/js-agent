@@ -5,9 +5,16 @@
         <title>js-agent</title>
         <link rel="stylesheet" href="assets/styles/scene.css">
         <link rel="stylesheet" href="assets/styles/ui.css">
-        <script src="scripts/scene.js"></script>
+        <script src="scripts/ui/scene.js"></script>
+        <script src="scripts/ui/controls.js"></script>
         <script src="scripts/game.js"></script>
-        <script src="scripts/ui.js"></script>
+        <script src="scripts/objects/helper.js"></script>
+        <script src="scripts/objects/position.js"></script>
+        <script src="scripts/objects/instance.js"></script>
+        <script src="scripts/objects/instances/job.js"></script>
+        <script src="scripts/objects/instances/entity.js"></script>
+        <script src="scripts/objects/instances/entities/location.js"></script>
+        <script src="scripts/objects/instances/entities/agent.js"></script>
     </head>
     <body>
         <div id="controls">
@@ -34,7 +41,7 @@
         </div>
         <script>
             var game = new Game();
-            var scene = new Scene(game, document, '#scene');
+            var scene = new UiScene(game, document, '#scene');
             new UiControls(game, scene, document, '#controls');
         </script>
     </body>

@@ -1,6 +1,6 @@
 // @ts-check
 
-class Scene {
+class UiScene {
     /**
      *
      * @param {Game} game

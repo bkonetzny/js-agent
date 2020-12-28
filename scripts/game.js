@@ -1,223 +1,5 @@
 // @ts-check
 
-class Position {
-    constructor(x, y) {
-        this.x = parseInt(x, 10);
-        this.y = parseInt(y, 10);
-    }
-}
-
-class Entity {
-    /**
-     *
-     * @param {Position} position
-     */
-    constructor(position) {
-        this.position = position;
-        this.processTicks = 0;
-    }
-
-    /**
-     *
-     * @param {Game} game
-     */
-    process(game) {
-        this.processTicks++;
-    }
-}
-
-class LocationEntity extends Entity {
-    /**
-     *
-     * @param {Position} position
-     * @param {String} type
-     */
-    constructor(position, type) {
-        super(position);
-        this.type = type;
-    }
-
-    /**
-     *
-     * @param {Game} game
-     */
-    process(game) {
-        super.process(game);
-
-        if (this.type !== 'destination' && this.type !== 'destination-busy') {
-            return;
-        }
-
-        if (this.type === 'destination') {
-            if (this.processTicks < 50) {
-                return;
-            }
-        }
-        else if (this.type === 'destination-busy') {
-            if (this.processTicks < 10) {
-                return;
-            }
-        }
-
-        this.processTicks = 0;
-
-        /**
-         * @type {LocationEntity[]}
-         */
-        var possibleSources = game.locations.filter((location) => {
-            return location.type === 'source';
-        });
-
-        if (!possibleSources.length) {
-            return;
-        }
-
-        game.shuffleArray(possibleSources);
-
-        var job = new Job(possibleSources.shift(), this);
-
-        game.addJob(job);
-    }
-}
-
-class AgentEntity extends Entity {
-    /**
-     *
-     * @param {Position} position
-     */
-    constructor(position) {
-        super(position);
-        this.job = null;
-    }
-
-    /**
-     *
-     * @param {Game} game
-     */
-    process(game) {
-        super.process(game);
-
-        if (this.arrivedAtJobDestinationLocation()) {
-            return;
-        }
-
-        this.arrivedAtJobSourceLocation();
-
-        const jobTarget = this.job.getCurrentTargetLocation();
-        this.moveToTarget(jobTarget);
-    }
-
-    /**
-     *
-     * @param {Job} job
-     */
-    setJob(job) {
-        this.job = job;
-
-        if (this.job.agent !== this) {
-            this.job.setAgent(this);
-        }
-    }
-
-    /**
-     *
-     * @param {LocationEntity} jobTarget
-     */
-    moveToTarget(jobTarget) {
-        if (this.position.x > jobTarget.position.x) {
-            this.position.x--;
-        }
-        if (this.position.x < jobTarget.position.x) {
-            this.position.x++;
-        }
-
-        if (this.position.y > jobTarget.position.y) {
-            this.position.y--;
-        }
-        if (this.position.y < jobTarget.position.y) {
-            this.position.y++;
-        }
-    }
-
-    /**
-     *
-     * @return {Boolean}
-     */
-    arrivedAtJobDestinationLocation() {
-        if (!this.job || !this.job.started) {
-            return false;
-        }
-
-        if (this.position.x === this.job.destination.position.x
-            && this.position.y === this.job.destination.position.y
-        ) {
-            this.job.finished = true;
-            this.job = null;
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     *
-     * @return {Boolean}
-     */
-    arrivedAtJobSourceLocation() {
-        if (!this.job) {
-            return false;
-        }
-
-        if (this.job.started) {
-            return true;
-        }
-
-        if (this.position.x === this.job.source.position.x
-            && this.position.y === this.job.source.position.y
-        ) {
-            this.job.started = true;
-        }
-
-        return this.job.started;
-    }
-}
-
-class Job {
-    /**
-     *
-     * @param {LocationEntity} source
-     * @param {LocationEntity} destination
-     */
-    constructor(source, destination) {
-        this.source = source;
-        this.destination = destination;
-        this.agent = null;
-        this.started = false;
-        this.finished = false;
-    }
-
-    /**
-     *
-     * @param {AgentEntity} agent
-     */
-    setAgent(agent) {
-        this.agent = agent;
-
-        if (this.agent.job !== this) {
-            this.agent.setJob(this);
-        }
-    }
-
-    /**
-     *
-     * @return {LocationEntity}
-     */
-    getCurrentTargetLocation() {
-        return this.started ? this.destination : this.source;
-    }
-}
-
 class Game {
     constructor() {
         this.scene = null;
@@ -247,7 +29,7 @@ class Game {
         }
 
         this.process();
-        this.render();
+        this.publish();
 
         setTimeout(() => {
             this.scheduleMainLoop();
@@ -280,7 +62,7 @@ class Game {
         });
 
         if (idleAgents.length && idleJobs.length) {
-            this.shuffleArray(idleAgents);
+            Helper.shuffleArray(idleAgents);
 
             idleJobs.forEach((job) => {
                 if (!idleAgents.length) {
@@ -303,7 +85,7 @@ class Game {
         });
     }
 
-    render() {
+    publish() {
         if (!this.scene) {
             return;
         }
@@ -315,17 +97,17 @@ class Game {
         );
     }
 
-    forceRender() {
+    forcePublish() {
         if (this.running) {
             return;
         }
 
-        this.render();
+        this.publish();
     }
 
     /**
      *
-     * @param {Scene} scene
+     * @param {UiScene} scene
      */
     setScene(scene) {
         this.scene = scene;
@@ -338,7 +120,7 @@ class Game {
     addLocation(location) {
         this.locations.push(location);
 
-        this.forceRender();
+        this.forcePublish();
     }
 
     /**
@@ -348,7 +130,7 @@ class Game {
     addAgent(agent) {
         this.agents.push(agent);
 
-        this.forceRender();
+        this.forcePublish();
     }
 
     /**
@@ -393,12 +175,5 @@ class Game {
         this.controlStart();
 
         return true;
-    }
-
-    shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
     }
 }

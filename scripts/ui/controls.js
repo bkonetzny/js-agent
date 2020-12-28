@@ -4,7 +4,7 @@ class UiControls {
     /**
      *
      * @param {Game} game
-     * @param {Scene} scene
+     * @param {UiScene} scene
      * @param {Document} domDocument
      * @param {String} controlsSelector
      */
