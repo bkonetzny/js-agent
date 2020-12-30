@@ -21,9 +21,11 @@ class Game {
         this.running = false;
     }
 
+    /**
+     *
+     * @param {Number} timestamp
+     */
     mainLoop(timestamp) {
-        // console.log('state: ' + this.running + ', timestamp:' + timestamp);
-
         if (!this.running) {
             return;
         }
@@ -43,46 +45,9 @@ class Game {
     }
 
     process() {
-        this.locations.forEach((location) => {
-            location.process(this);
-        });
-
-        /**
-         * @type {AgentEntity[]}
-         */
-        var idleAgents = this.agents.filter((agent) => {
-            return !agent.job;
-        });
-
-        /**
-         * @type {Job[]}
-         */
-        var idleJobs = this.jobs.filter((job) => {
-            return !job.agent;
-        });
-
-        if (idleAgents.length && idleJobs.length) {
-            Helper.shuffleArray(idleAgents);
-
-            idleJobs.forEach((job) => {
-                if (!idleAgents.length) {
-                    return;
-                }
-
-                job.setAgent(idleAgents.shift());
-            });
-        }
-
-        /**
-         * @type {AgentEntity[]}
-         */
-        var busyAgents = this.agents.filter((agent) => {
-            return !!agent.job;
-        });
-
-        busyAgents.forEach((agent) => {
-            agent.process(this);
-        });
+        LocationManager.process(this);
+        JobManager.process(this);
+        AgentManager.process(this);
     }
 
     publish() {
@@ -116,29 +81,38 @@ class Game {
     /**
      *
      * @param {LocationEntity} location
+     * @return {String}
      */
     addLocation(location) {
         this.locations.push(location);
 
         this.forcePublish();
+
+        return location.id;
     }
 
     /**
      *
      * @param {AgentEntity} agent
+     * @return {String}
      */
     addAgent(agent) {
         this.agents.push(agent);
 
         this.forcePublish();
+
+        return agent.id;
     }
 
     /**
      *
      * @param {Job} job
+     * @return {String}
      */
     addJob(job) {
         this.jobs.push(job);
+
+        return job.id;
     }
 
     /**
