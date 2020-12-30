@@ -5,8 +5,10 @@
         <title>js-agent</title>
         <link rel="stylesheet" href="assets/styles/scene.css">
         <link rel="stylesheet" href="assets/styles/ui.css">
-        <script src="scripts/ui/scene.js"></script>
-        <script src="scripts/ui/controls.js"></script>
+        <script src="scripts/ui/ui.js"></script>
+        <script src="scripts/ui/ui-controls.js"></script>
+        <script src="scripts/ui/ui-details.js"></script>
+        <script src="scripts/ui/ui-scene.js"></script>
         <script src="scripts/game.js"></script>
         <script src="scripts/managers/agent-manager.js"></script>
         <script src="scripts/managers/job-manager.js"></script>
@@ -48,8 +50,7 @@
         </fieldset>
         <script>
             var game = new Game();
-            var scene = new UiScene(game, document, '#scene', '#details');
-            new UiControls(game, scene, document, '#controls');
+            var ui = new Ui(game, document, '#controls', '#scene', '#details');
         </script>
     </body>
 </html>

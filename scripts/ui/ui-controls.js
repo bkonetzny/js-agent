@@ -3,25 +3,23 @@
 class UiControls {
     /**
      *
+     * @param {Element} domElement
      * @param {Game} game
      * @param {UiScene} scene
-     * @param {Document} domDocument
-     * @param {String} controlsSelector
      */
-    constructor(game, scene, domDocument, controlsSelector) {
+    constructor(domElement, game, scene) {
+        this.domElement = domElement;
         this.game = game;
         this.scene = scene;
-        this.controlsSelector = controlsSelector;
-        this.controls = domDocument.querySelector(this.controlsSelector);
 
-        this.btnStart = this.controls.querySelector('#start');
-        this.btnPause = this.controls.querySelector('#pause');
-        this.btnAddSource = this.controls.querySelector('#addSource');
-        this.btnAddDestination = this.controls.querySelector('#addDestination');
-        this.btnAddBusyDestination = this.controls.querySelector('#addBusyDestination');
-        this.btnAddAgent = this.controls.querySelector('#addAgent');
-        this.btnExport = this.controls.querySelector('#export');
-        this.btnImport = this.controls.querySelector('#import');
+        this.btnStart = this.domElement.querySelector('#start');
+        this.btnPause = this.domElement.querySelector('#pause');
+        this.btnAddSource = this.domElement.querySelector('#addSource');
+        this.btnAddDestination = this.domElement.querySelector('#addDestination');
+        this.btnAddBusyDestination = this.domElement.querySelector('#addBusyDestination');
+        this.btnAddAgent = this.domElement.querySelector('#addAgent');
+        this.btnExport = this.domElement.querySelector('#export');
+        this.btnImport = this.domElement.querySelector('#import');
 
         this.addEventListeners();
     }

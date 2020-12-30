@@ -2,7 +2,7 @@
 
 class Game {
     constructor() {
-        this.scene = null;
+        this.ui = null;
         this.running = false;
         this.locations = [];
         this.agents = [];
@@ -51,11 +51,11 @@ class Game {
     }
 
     publish() {
-        if (!this.scene) {
+        if (!this.ui) {
             return;
         }
 
-        this.scene.render(
+        this.ui.publish(
             this.locations,
             this.agents,
             this.jobs
@@ -72,10 +72,10 @@ class Game {
 
     /**
      *
-     * @param {UiScene} scene
+     * @param {Ui} ui
      */
-    setScene(scene) {
-        this.scene = scene;
+    setUi(ui) {
+        this.ui = ui;
     }
 
     /**

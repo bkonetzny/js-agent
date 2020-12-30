@@ -3,27 +3,23 @@
 class UiScene {
     /**
      *
-     * @param {Game} game
+     * @param {Element} domElement
      * @param {Document} domDocument
-     * @param {String} sceneSelector
-     * @param {String} detailsSelector
+     * @param {Game} game
+     * @param {UiDetails} uiDetails
      */
-    constructor(game, domDocument, sceneSelector, detailsSelector) {
-        this.game = game;
+    constructor(domElement, domDocument, game, uiDetails) {
+        this.domElement = domElement;
         this.domDocument = domDocument;
-        this.sceneSelector = sceneSelector;
-        this.detailsSelector = detailsSelector;
+        this.game = game;
+        this.uiDetails = uiDetails;
 
-        this.scene = this.domDocument.querySelector(this.sceneSelector);
-        this.sceneRect = this.scene.getBoundingClientRect();
-        this.details = this.domDocument.querySelector(this.detailsSelector);
+        this.sceneRect = this.domElement.getBoundingClientRect();
         this.clickMode = null;
 
-        this.scene.addEventListener('click', (/** @type {MouseEvent} */ event) => {
+        this.domElement.addEventListener('click', (/** @type {MouseEvent} */ event) => {
             this.processClickEvent(event);
         });
-
-        this.game.setScene(this);
     }
 
     /**
@@ -39,7 +35,7 @@ class UiScene {
      * @param {MouseEvent} event
      */
     processClickEvent(event) {
-        if (event.target !== this.scene) {
+        if (event.target !== this.domElement) {
             this.processClickEventOnObject(event);
         }
         else {
@@ -113,29 +109,27 @@ class UiScene {
      *
      * @param {LocationEntity[]} locations
      * @param {AgentEntity[]} agents
-     * @param {Job[]} jobs
      */
-    render(locations, agents, jobs) {
+    render(locations, agents) {
         /*console.table(locations);
-        console.table(agents);
-        console.table(jobs);*/
+        console.table(agents);*/
 
-        while (this.scene.firstChild) {
-            this.scene.firstChild.remove();
+        while (this.domElement.firstChild) {
+            this.domElement.firstChild.remove();
         }
 
         locations.forEach((building) => {
             var domBuilding = this.createDomElementForTyoe('building', building.position, building.id);
             domBuilding.classList.add('building-' + building.type);
 
-            this.scene.appendChild(domBuilding);
+            this.domElement.appendChild(domBuilding);
         });
 
         agents.forEach((agent) => {
             var domAgent = this.createDomElementForTyoe('agent', agent.position, agent.id);
             domAgent.classList.add('agent-state-' + (agent.job ? (agent.job.started ? 'packed' : 'busy') : 'idle'));
 
-            this.scene.appendChild(domAgent);
+            this.domElement.appendChild(domAgent);
         });
     }
 
@@ -165,19 +159,13 @@ class UiScene {
             return location.id === id;
         }).shift();
 
-        console.log(matchingLocation);
-
-        while (this.details.firstChild) {
-            this.details.firstChild.remove();
-        }
-
-        this.details.innerHTML = `
+        this.uiDetails.render(`
             <dl>
                 <dt>ID</dt>
                 <dd>${matchingLocation.id}</dd>
                 <dt>Actions</dt>
                 <dd><a href="#">Remove</a></dd>
             </dl>
-        `;
+        `);
     }
 }
