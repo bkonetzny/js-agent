@@ -35,4 +35,20 @@ class JobRepository extends ArrayStorage {
             return !job.agentId;
         });
     }
+
+    /**
+     * @return {Job|null}
+     */
+    findOneNextOpen() {
+        return this.data.find((job) => {
+            return !job.agentId;
+        });
+    }
+
+    /**
+     * @return {Boolean}
+     */
+    hasOpen() {
+        return !!this.findOpen();
+    }
 }

@@ -6,19 +6,17 @@ class JobManager {
      * @param {Game} game
      */
     static process(game) {
-        var idleAgents = game.agents.findIdle();
-        var openJobs = game.jobs.findOpen();
+        if (!game.agents.hasIdle() || !game.jobs.hasOpen()) {
+            return;
+        }
 
-        if (idleAgents.length && openJobs.length) {
-            Helper.shuffleArray(idleAgents);
+        let openJob, idleAgent;
 
-            openJobs.forEach((job) => {
-                if (!idleAgents.length) {
-                    return;
-                }
-
-                job.setAgent(idleAgents.shift());
-            });
+        while (
+            (openJob = game.jobs.findOneNextOpen())
+            && (idleAgent = game.agents.findOneClosestIdle(openJob.source))
+        ) {
+            openJob.setAgent(idleAgent);
         }
     }
 }
