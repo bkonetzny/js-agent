@@ -10,21 +10,45 @@ class Job extends Instance {
         super();
         this.source = source;
         this.destination = destination;
-        this.agent = null;
+        this.agentId = null;
         this.started = false;
         this.finished = false;
     }
 
     /**
      *
-     * @param {AgentEntity} agent
+     * @param {AgentEntity|null} agent
      */
     setAgent(agent) {
-        this.agent = agent;
+        if (!agent) {
+            var assignedAgent = this.getAgent();
 
-        if (this.agent.job !== this) {
-            this.agent.setJob(this);
+            this.agentId = null;
+
+            if (assignedAgent && assignedAgent.getJob() === this) {
+                assignedAgent.setJob(null);
+            }
+
+            return;
         }
+
+        this.agentId = agent.id;
+
+        var assignedAgent = this.getAgent();
+
+        if (assignedAgent && assignedAgent.jobId !== this.id) {
+            assignedAgent.setJob(this);
+        }
+    }
+
+    /**
+     *
+     * @return {AgentEntity|null}
+     */
+    getAgent() {
+        return this.agentId
+            ? this.game.agents.findOneById(this.agentId)
+            : null;
     }
 
     /**
@@ -32,6 +56,8 @@ class Job extends Instance {
      * @return {LocationEntity}
      */
     getCurrentTargetLocation() {
-        return this.started ? this.destination : this.source;
+        return this.started
+            ? this.destination
+            : this.source;
     }
 }

@@ -4,9 +4,9 @@ class Game {
     constructor() {
         this.ui = null;
         this.running = false;
-        this.locations = [];
-        this.agents = [];
-        this.jobs = [];
+        this.locations = new LocationRepository();
+        this.agents = new AgentRepository();
+        this.jobs = new JobRepository();
         this.timeout = 50;
     }
 
@@ -56,9 +56,9 @@ class Game {
         }
 
         this.ui.publish(
-            this.locations,
-            this.agents,
-            this.jobs
+            this.locations.findAll(),
+            this.agents.findAll(),
+            this.jobs.findAll()
         );
     }
 
@@ -84,7 +84,8 @@ class Game {
      * @return {String}
      */
     addLocation(location) {
-        this.locations.push(location);
+        location.setGame(this);
+        this.locations.add(location);
 
         this.forcePublish();
 
@@ -97,7 +98,8 @@ class Game {
      * @return {String}
      */
     addAgent(agent) {
-        this.agents.push(agent);
+        agent.setGame(this);
+        this.agents.add(agent);
 
         this.forcePublish();
 
@@ -110,7 +112,8 @@ class Game {
      * @return {String}
      */
     addJob(job) {
-        this.jobs.push(job);
+        job.setGame(this);
+        this.jobs.add(job);
 
         return job.id;
     }
@@ -120,10 +123,12 @@ class Game {
      * @return {String}
      */
     exportState() {
+        this.controlPause();
+
         const state = {
-            locations: this.locations,
-            agents: this.agents,
-            jobs: this.jobs,
+            locations: Helper.deepCopy(this.locations.findAll(), ['game']),
+            agents: Helper.deepCopy(this.agents.findAll(), ['game']),
+            jobs: Helper.deepCopy(this.jobs.findAll(), ['game']),
         };
 
         return JSON.stringify(state);
@@ -142,9 +147,13 @@ class Game {
          */
         const parsedState = JSON.parse(state);
 
+        console.log('TODO: importState', parsedState);
+
+        /*
         this.locations = parsedState.locations;
         this.agents = parsedState.agents;
         this.jobs = parsedState.jobs;
+        */
 
         this.controlStart();
 

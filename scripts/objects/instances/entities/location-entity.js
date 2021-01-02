@@ -11,12 +11,8 @@ class LocationEntity extends Entity {
         this.type = type;
     }
 
-    /**
-     *
-     * @param {Game} game
-     */
-    process(game) {
-        super.process(game);
+    process() {
+        super.process();
 
         if (this.type !== 'destination' && this.type !== 'destination-busy') {
             return;
@@ -38,9 +34,7 @@ class LocationEntity extends Entity {
         /**
          * @type {LocationEntity[]}
          */
-        var possibleSources = game.locations.filter((location) => {
-            return location.type === 'source';
-        });
+        var possibleSources = this.game.locations.findByType('source');
 
         if (!possibleSources.length) {
             return;
@@ -50,6 +44,6 @@ class LocationEntity extends Entity {
 
         var job = new Job(possibleSources.shift(), this);
 
-        game.addJob(job);
+        this.game.addJob(job);
     }
 }

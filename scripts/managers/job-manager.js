@@ -6,24 +6,13 @@ class JobManager {
      * @param {Game} game
      */
     static process(game) {
-        /**
-         * @type {AgentEntity[]}
-         */
-        var idleAgents = game.agents.filter((agent) => {
-            return !agent.job;
-        });
+        var idleAgents = game.agents.findIdle();
+        var openJobs = game.jobs.findOpen();
 
-        /**
-         * @type {Job[]}
-         */
-        var idleJobs = game.jobs.filter((job) => {
-            return !job.agent;
-        });
-
-        if (idleAgents.length && idleJobs.length) {
+        if (idleAgents.length && openJobs.length) {
             Helper.shuffleArray(idleAgents);
 
-            idleJobs.forEach((job) => {
+            openJobs.forEach((job) => {
                 if (!idleAgents.length) {
                     return;
                 }

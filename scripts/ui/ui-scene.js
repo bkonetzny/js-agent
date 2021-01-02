@@ -111,15 +111,13 @@ class UiScene {
      * @param {AgentEntity[]} agents
      */
     render(locations, agents) {
-        /*console.table(locations);
-        console.table(agents);*/
-
         while (this.domElement.firstChild) {
             this.domElement.firstChild.remove();
         }
 
         locations.forEach((building) => {
             var domBuilding = this.createDomElementForTyoe('building', building.position, building.id);
+
             domBuilding.classList.add('building-' + building.type);
 
             this.domElement.appendChild(domBuilding);
@@ -127,7 +125,9 @@ class UiScene {
 
         agents.forEach((agent) => {
             var domAgent = this.createDomElementForTyoe('agent', agent.position, agent.id);
-            domAgent.classList.add('agent-state-' + (agent.job ? (agent.job.started ? 'packed' : 'busy') : 'idle'));
+            var job = agent.getJob();
+
+            domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
 
             this.domElement.appendChild(domAgent);
         });
@@ -155,9 +155,7 @@ class UiScene {
      * @param {String} id
      */
     showDetails(id) {
-        const matchingLocation = this.game.locations.filter((location) => {
-            return location.id === id;
-        }).shift();
+        const matchingLocation = this.game.locations.findOneById(id);
 
         this.uiDetails.render(`
             <dl>

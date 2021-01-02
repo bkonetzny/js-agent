@@ -7,15 +7,15 @@ class AgentEntity extends Entity {
      */
     constructor(position) {
         super(position);
-        this.job = null;
+        this.jobId = null;
     }
 
-    /**
-     *
-     * @param {Game} game
-     */
-    process(game) {
-        super.process(game);
+    process() {
+        super.process();
+
+        console.log('process', this.id);
+
+        console.log(this.arrivedAtJobDestinationLocation());
 
         if (this.arrivedAtJobDestinationLocation()) {
             return;
@@ -23,20 +23,48 @@ class AgentEntity extends Entity {
 
         this.arrivedAtJobSourceLocation();
 
-        const jobTarget = this.job.getCurrentTargetLocation();
-        this.moveToTarget(jobTarget);
+        var job = this.getJob();
+
+        if (job) {
+            const jobTarget = job.getCurrentTargetLocation();
+            this.moveToTarget(jobTarget);
+        }
     }
 
     /**
      *
-     * @param {Job} job
+     * @param {Job|null} job
      */
     setJob(job) {
-        this.job = job;
+        if (!job) {
+            var assignedJob = this.getJob();
 
-        if (this.job.agent !== this) {
-            this.job.setAgent(this);
+            this.jobId = null;
+
+            if (assignedJob && assignedJob.getAgent() === this) {
+                assignedJob.setAgent(null);
+            }
+
+            return;
         }
+
+        this.jobId = job.id;
+
+        var assignedJob = this.getJob();
+
+        if (assignedJob && assignedJob.getAgent() !== this) {
+            assignedJob.setAgent(this);
+        }
+    }
+
+    /**
+     *
+     * @return {Job|null}
+     */
+    getJob() {
+        return this.jobId
+            ? this.game.jobs.findOneById(this.jobId)
+            : null;
     }
 
     /**
@@ -64,15 +92,18 @@ class AgentEntity extends Entity {
      * @return {Boolean}
      */
     arrivedAtJobDestinationLocation() {
-        if (!this.job || !this.job.started) {
+        var job = this.getJob();
+
+        if (!job || !job.started) {
             return false;
         }
 
-        if (this.position.x === this.job.destination.position.x
-            && this.position.y === this.job.destination.position.y
+        if (this.position.x === job.destination.position.x
+            && this.position.y === job.destination.position.y
         ) {
-            this.job.finished = true;
-            this.job = null;
+            job.finished = true;
+            this.game.jobs.remove(job);
+            this.jobId = null;
 
             return true;
         }
@@ -85,20 +116,22 @@ class AgentEntity extends Entity {
      * @return {Boolean}
      */
     arrivedAtJobSourceLocation() {
-        if (!this.job) {
+        var job = this.getJob();
+
+        if (!job) {
             return false;
         }
 
-        if (this.job.started) {
+        if (job.started) {
             return true;
         }
 
-        if (this.position.x === this.job.source.position.x
-            && this.position.y === this.job.source.position.y
+        if (this.position.x === job.source.position.x
+            && this.position.y === job.source.position.y
         ) {
-            this.job.started = true;
+            job.started = true;
         }
 
-        return this.job.started;
+        return job.started;
     }
 }

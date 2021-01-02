@@ -11,11 +11,7 @@ class Entity extends Instance {
         this.processTicks = 0;
     }
 
-    /**
-     *
-     * @param {Game} game
-     */
-    process(game) {
+    process() {
         this.processTicks++;
     }
 }

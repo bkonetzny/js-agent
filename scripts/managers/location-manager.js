@@ -6,8 +6,8 @@ class LocationManager {
      * @param {Game} game
      */
     static process(game) {
-        game.locations.forEach((location) => {
-            location.process(game);
+        game.locations.findAll().forEach((location) => {
+            location.process();
         });
     }
 }
