@@ -14,9 +14,28 @@ class JobManager {
 
         while (
             (openJob = game.jobs.findOneNextOpen())
-            && (idleAgent = game.agents.findOneClosestIdle(openJob.source))
+            && (idleAgent = this.findIdleAgentForOpenJob(game, openJob))
         ) {
             openJob.setAgent(idleAgent);
+        }
+    }
+
+    /**
+     *
+     * @param {Game} game
+     * @param {Job} openJob
+     * @return {AgentEntity|null}
+     */
+    static findIdleAgentForOpenJob(game, openJob) {
+        switch (game.settings.assignIdleAgentToOpenJobStrategy) {
+            case 'next':
+                return game.agents.findOneNextIdle();
+            case 'random':
+                return game.agents.findOneRandomIdle();
+            case 'closest':
+                return game.agents.findOneClosestIdle(openJob.source);
+            default:
+                throw new Error('Invalid value for assignIdleAgentToOpenJobStrategy: ' + game.settings.assignIdleAgentToOpenJobStrategy);
         }
     }
 }

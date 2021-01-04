@@ -1,7 +1,10 @@
 // @ts-check
 
 class Game {
-    constructor() {
+    constructor(settings) {
+        this.settings = {...{
+            assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest
+        }, ...settings};
         this.ui = null;
         this.running = false;
         this.locations = new LocationRepository();
@@ -120,12 +123,30 @@ class Game {
 
     /**
      *
+     * @param {String} key
+     * @param {String} value
+     * @return {Object}
+     */
+    updateSetting(key, value) {
+        let oldValue = this.settings[key];
+
+        this.settings[key] = value;
+
+        return {
+            oldValue: oldValue,
+            settings: this.settings,
+        };
+    }
+
+    /**
+     *
      * @return {String}
      */
     exportState() {
         this.controlPause();
 
         const state = {
+            settings: this.settings,
             locations: Helper.deepCopy(this.locations.findAll(), ['game']),
             agents: Helper.deepCopy(this.agents.findAll(), ['game']),
             jobs: Helper.deepCopy(this.jobs.findAll(), ['game']),
@@ -150,6 +171,7 @@ class Game {
         console.log('TODO: importState', parsedState);
 
         /*
+        this.settings = parsedState.settings;
         this.locations = parsedState.locations;
         this.agents = parsedState.agents;
         this.jobs = parsedState.jobs;

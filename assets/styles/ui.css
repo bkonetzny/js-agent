@@ -11,7 +11,7 @@ body {
     width: 100px;
 }
 
-button {
+input, select, button {
     float: left;
     clear: both;
     width: 90px;
