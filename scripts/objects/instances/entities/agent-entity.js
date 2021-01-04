@@ -13,10 +13,6 @@ class AgentEntity extends Entity {
     process() {
         super.process();
 
-        console.log('process', this.id);
-
-        console.log(this.arrivedAtJobDestinationLocation());
-
         if (this.arrivedAtJobDestinationLocation()) {
             return;
         }
@@ -69,21 +65,37 @@ class AgentEntity extends Entity {
 
     /**
      *
+     * @return {Number}
+     */
+    getSpeed() {
+        var job = this.getJob();
+
+        return (job && job.started)
+            ? 2
+            : 10;
+    }
+
+    /**
+     *
      * @param {LocationEntity} target
      */
     moveToTarget(target) {
+        let speed = this.getSpeed();
+        let distanceX = Math.abs(this.position.x - target.position.x);
+        let distanceY = Math.abs(this.position.y - target.position.y);
+
         if (this.position.x > target.position.x) {
-            this.position.x--;
+            this.position.x = this.position.x - Math.min(distanceX, speed);
         }
         if (this.position.x < target.position.x) {
-            this.position.x++;
+            this.position.x = this.position.x + Math.min(distanceX, speed);
         }
 
         if (this.position.y > target.position.y) {
-            this.position.y--;
+            this.position.y = this.position.y - Math.min(distanceY, speed);
         }
         if (this.position.y < target.position.y) {
-            this.position.y++;
+            this.position.y = this.position.y + Math.min(distanceY, speed);
         }
     }
 

@@ -33,11 +33,12 @@ class Ui {
      * @param {Job[]} jobs
      */
     publish(locations, agents, jobs) {
+        /*
         console.clear();
         console.table(locations);
         console.table(agents);
         console.table(jobs);
-
+*/
         this.scene.render(locations, agents);
     }
 }

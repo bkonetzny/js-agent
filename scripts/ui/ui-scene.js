@@ -111,43 +111,108 @@ class UiScene {
      * @param {AgentEntity[]} agents
      */
     render(locations, agents) {
-        while (this.domElement.firstChild) {
-            this.domElement.firstChild.remove();
-        }
+        this.domRemoveObsoleteLocations(locations);
+        this.domRemoveObsoleteAgents(agents);
 
-        locations.forEach((building) => {
-            var domBuilding = this.createDomElementForTyoe('building', building.position, building.id);
+        this.domUpdateLocations(locations);
+        this.domUpdateAgents(agents);
+    }
 
-            domBuilding.classList.add('building-' + building.type);
-
-            this.domElement.appendChild(domBuilding);
+    /**
+     *
+     * @param {LocationEntity[]} locations
+     */
+    domRemoveObsoleteLocations(locations) {
+        let domLocations = this.domElement.querySelectorAll('.building');
+        let locationIds = locations.map((location) => {
+            return location.id;
         });
 
+        domLocations.forEach((domLocation) => {
+            if (!locationIds.includes(domLocation.id)) {
+                domLocation.remove();
+            }
+        });
+    }
+
+    /**
+     *
+     * @param {AgentEntity[]} agents
+     */
+    domRemoveObsoleteAgents(agents) {
+        let domAgents = this.domElement.querySelectorAll('.agent');
+        let agentIds = agents.map((agent) => {
+            return agent.id;
+        });
+
+        domAgents.forEach((domAgent) => {
+            if (!agentIds.includes(domAgent.id)) {
+                domAgent.remove();
+            }
+        });
+    }
+
+    /**
+     *
+     * @param {LocationEntity[]} locations
+     */
+    domUpdateLocations(locations) {
+        locations.forEach((building) => {
+            var domBuilding = this.domEnsureElementForTyoe('building', building.id);
+
+            this.domUpdateElementPosition(domBuilding, building.position);
+
+            domBuilding.classList.add('building-' + building.type);
+        });
+    }
+
+    /**
+     *
+     * @param {AgentEntity[]} agents
+     */
+    domUpdateAgents(agents) {
         agents.forEach((agent) => {
-            var domAgent = this.createDomElementForTyoe('agent', agent.position, agent.id);
+            var domAgent = this.domEnsureElementForTyoe('agent', agent.id);
+
+            this.domUpdateElementPosition(domAgent, agent.position);
+
             var job = agent.getJob();
 
             domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
-
-            this.domElement.appendChild(domAgent);
         });
     }
 
     /**
      *
      * @param {String} type
-     * @param {Position} position
      * @param {String} id
      * @return {HTMLDivElement}
      */
-    createDomElementForTyoe(type, position, id) {
-        var element = this.domDocument.createElement('div');
-        element.id = id;
+    domEnsureElementForTyoe(type, id) {
+        /** @type {HTMLDivElement} */
+        var element = this.domElement.querySelector('#' + id);
+
+        if (!element) {
+            element = this.domDocument.createElement('div');
+            element.id = id;
+
+            this.domElement.appendChild(element);
+        }
+
+        element.classList.remove(...element.classList);
         element.classList.add(type);
-        element.style.left = position.x + 'px';
-        element.style.top = position.y + 'px';
 
         return element;
+    }
+
+    /**
+     *
+     * @param {HTMLDivElement} element
+     * @param {Position} position
+     */
+    domUpdateElementPosition(element, position) {
+        element.style.left = position.x + 'px';
+        element.style.top = position.y + 'px';
     }
 
     /**
@@ -156,6 +221,10 @@ class UiScene {
      */
     showDetails(id) {
         const matchingLocation = this.game.locations.findOneById(id);
+
+        if (!matchingLocation) {
+            return;
+        }
 
         this.uiDetails.render(`
             <dl>
