@@ -56,24 +56,13 @@ class AgentRepository extends ArrayStorage {
     }
 
     /**
-     * @param {LocationEntity} location
+     * @param {Position} position
      * @return {AgentEntity|null}
      */
-    findOneClosestIdle(location) {
+    findOneClosestIdle(position) {
         let idleAgents = this.findIdle();
-        let closestDistance = null;
-        let closestAgent = null;
 
-        idleAgents.forEach((agent) => {
-            let distance = Math.abs(location.position.x - agent.position.x) + Math.abs(location.position.y - agent.position.y);
-
-            if (!closestAgent || distance < closestDistance) {
-                closestAgent = agent;
-                closestDistance = distance;
-            }
-        });
-
-        return closestAgent;
+        return Position.findClosestEntity(position, idleAgents);
     }
 
     /**

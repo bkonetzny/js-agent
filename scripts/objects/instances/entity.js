@@ -14,4 +14,8 @@ class Entity extends Instance {
     process() {
         this.processTicks++;
     }
+
+    resetProcessTicks() {
+        this.processTicks = 0;
+    }
 }

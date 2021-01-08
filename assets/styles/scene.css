@@ -17,15 +17,15 @@
     height: 40px;
 }
 
-.building-source {
+.building-SourceLocation {
     background-color: green;
 }
 
-.building-destination {
+.building-DestinationLocation {
     background-color: blueviolet;
 }
 
-.building-destination-busy {
+.building-DestinationBusyLocation {
     background-color: orange;
 }
 

@@ -16,6 +16,7 @@ class UiScene {
 
         this.sceneRect = this.domElement.getBoundingClientRect();
         this.clickMode = null;
+        this.focusedObjectId = null;
 
         this.domElement.addEventListener('click', (/** @type {MouseEvent} */ event) => {
             this.processClickEvent(event);
@@ -35,6 +36,8 @@ class UiScene {
      * @param {MouseEvent} event
      */
     processClickEvent(event) {
+        this.focusedObjectId = null;
+
         if (event.target !== this.domElement) {
             this.processClickEventOnObject(event);
         }
@@ -61,15 +64,15 @@ class UiScene {
 
         switch (this.clickMode) {
             case 'addSource':
-                instanceId = this.game.addLocation(new LocationEntity(position, 'source'));
+                instanceId = this.game.addLocation(new SourceLocation(position));
                 break;
 
             case 'addDestination':
-                instanceId = this.game.addLocation(new LocationEntity(position, 'destination'));
+                instanceId = this.game.addLocation(new DestinationLocation(position));
                 break;
 
             case 'addBusyDestination':
-                instanceId = this.game.addLocation(new LocationEntity(position, 'destination-busy'));
+                instanceId = this.game.addLocation(new DestinationBusyLocation(position));
                 break;
 
             case 'addAgent':
@@ -93,7 +96,8 @@ class UiScene {
      * @param {MouseEvent} event
      */
     processClickEventOnObject(event) {
-        this.showDetails(event.target.id);
+        this.focusedObjectId = event.target.id;
+        this.updateDetails();
     }
 
     /**
@@ -116,6 +120,8 @@ class UiScene {
 
         this.domUpdateLocations(locations);
         this.domUpdateAgents(agents);
+
+        this.updateDetails();
     }
 
     /**
@@ -162,7 +168,7 @@ class UiScene {
 
             this.domUpdateElementPosition(domBuilding, building.position);
 
-            domBuilding.classList.add('building-' + building.type);
+            domBuilding.classList.add('building-' + building.constructor.name);
         });
     }
 
@@ -215,11 +221,21 @@ class UiScene {
         element.style.top = position.y + 'px';
     }
 
+    updateDetails() {
+        this.showDetails(this.focusedObjectId);
+    }
+
     /**
      *
-     * @param {String} id
+     * @param {String|null} id
      */
     showDetails(id) {
+        if (!id) {
+            this.uiDetails.render('');
+
+            return;
+        }
+
         const matchingLocation = this.game.locations.findOneById(id);
 
         if (!matchingLocation) {
@@ -230,6 +246,8 @@ class UiScene {
             <dl>
                 <dt>ID</dt>
                 <dd>${matchingLocation.id}</dd>
+                <dt>Resources</dt>
+                <dd>${matchingLocation.resources.length}</dd>
                 <dt>Actions</dt>
                 <dd><a href="#">Remove</a></dd>
             </dl>

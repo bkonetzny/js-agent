@@ -33,7 +33,7 @@ class JobManager {
             case 'random':
                 return game.agents.findOneRandomIdle();
             case 'closest':
-                return game.agents.findOneClosestIdle(openJob.source);
+                return game.agents.findOneClosestIdle(openJob.source.position);
             default:
                 throw new Error('Invalid value for assignIdleAgentToOpenJobStrategy: ' + game.settings.assignIdleAgentToOpenJobStrategy);
         }
