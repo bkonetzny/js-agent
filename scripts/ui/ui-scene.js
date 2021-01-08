@@ -52,12 +52,12 @@ class UiScene {
             return;
         }
 
-        var position = this.getPositionForEvent(event);
+        let position = this.getPositionForEvent(event);
 
         console.log('click on:', position);
         console.log('click mode:', this.clickMode);
 
-        var instanceId = null;
+        let instanceId;
 
         switch (this.clickMode) {
             case 'addSource':
@@ -158,7 +158,7 @@ class UiScene {
      */
     domUpdateLocations(locations) {
         locations.forEach((building) => {
-            var domBuilding = this.domEnsureElementForTyoe('building', building.id);
+            let domBuilding = this.domEnsureElementForTyoe('building', building.id);
 
             this.domUpdateElementPosition(domBuilding, building.position);
 
@@ -172,11 +172,11 @@ class UiScene {
      */
     domUpdateAgents(agents) {
         agents.forEach((agent) => {
-            var domAgent = this.domEnsureElementForTyoe('agent', agent.id);
+            let domAgent = this.domEnsureElementForTyoe('agent', agent.id);
 
             this.domUpdateElementPosition(domAgent, agent.position);
 
-            var job = agent.getJob();
+            let job = agent.getJob();
 
             domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
         });
@@ -190,7 +190,7 @@ class UiScene {
      */
     domEnsureElementForTyoe(type, id) {
         /** @type {HTMLDivElement} */
-        var element = this.domElement.querySelector('#' + id);
+        let element = this.domElement.querySelector('#' + id);
 
         if (!element) {
             element = this.domDocument.createElement('div');

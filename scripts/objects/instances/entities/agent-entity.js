@@ -19,7 +19,7 @@ class AgentEntity extends Entity {
 
         this.arrivedAtJobSourceLocation();
 
-        var job = this.getJob();
+        let job = this.getJob();
 
         if (job) {
             const jobTarget = job.getCurrentTargetLocation();
@@ -32,8 +32,10 @@ class AgentEntity extends Entity {
      * @param {Job|null} job
      */
     setJob(job) {
+        let assignedJob;
+
         if (!job) {
-            var assignedJob = this.getJob();
+            assignedJob = this.getJob();
 
             this.jobId = null;
 
@@ -46,7 +48,7 @@ class AgentEntity extends Entity {
 
         this.jobId = job.id;
 
-        var assignedJob = this.getJob();
+        assignedJob = this.getJob();
 
         if (assignedJob && assignedJob.getAgent() !== this) {
             assignedJob.setAgent(this);
@@ -68,7 +70,7 @@ class AgentEntity extends Entity {
      * @return {Number}
      */
     getSpeed() {
-        var job = this.getJob();
+        let job = this.getJob();
 
         return (job && job.started)
             ? 2
@@ -104,7 +106,7 @@ class AgentEntity extends Entity {
      * @return {Boolean}
      */
     arrivedAtJobDestinationLocation() {
-        var job = this.getJob();
+        let job = this.getJob();
 
         if (!job || !job.started) {
             return false;
@@ -128,7 +130,7 @@ class AgentEntity extends Entity {
      * @return {Boolean}
      */
     arrivedAtJobSourceLocation() {
-        var job = this.getJob();
+        let job = this.getJob();
 
         if (!job) {
             return false;

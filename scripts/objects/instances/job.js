@@ -20,8 +20,10 @@ class Job extends Instance {
      * @param {AgentEntity|null} agent
      */
     setAgent(agent) {
+        let assignedAgent;
+
         if (!agent) {
-            var assignedAgent = this.getAgent();
+            assignedAgent = this.getAgent();
 
             this.agentId = null;
 
@@ -34,7 +36,7 @@ class Job extends Instance {
 
         this.agentId = agent.id;
 
-        var assignedAgent = this.getAgent();
+        assignedAgent = this.getAgent();
 
         if (assignedAgent && assignedAgent.jobId !== this.id) {
             assignedAgent.setJob(this);

@@ -18,7 +18,7 @@ class ArrayStorage {
      * @param {Instance} item
      */
     remove(item) {
-        var index = this.data.indexOf(item);
+        let index = this.data.indexOf(item);
 
         if (index === -1) {
             return false;

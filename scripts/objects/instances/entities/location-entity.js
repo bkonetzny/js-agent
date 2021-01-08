@@ -9,6 +9,7 @@ class LocationEntity extends Entity {
     constructor(position, type) {
         super(position);
         this.type = type;
+        this.ressources = [];
     }
 
     process() {
@@ -34,7 +35,7 @@ class LocationEntity extends Entity {
         /**
          * @type {LocationEntity[]}
          */
-        var possibleSources = this.game.locations.findByType('source');
+        let possibleSources = this.game.locations.findByType('source');
 
         if (!possibleSources.length) {
             return;
@@ -42,7 +43,7 @@ class LocationEntity extends Entity {
 
         Helper.shuffleArray(possibleSources);
 
-        var job = new Job(possibleSources.shift(), this);
+        let job = new Job(possibleSources.shift(), this);
 
         this.game.addJob(job);
     }
