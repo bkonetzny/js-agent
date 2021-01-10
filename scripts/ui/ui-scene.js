@@ -246,8 +246,10 @@ class UiScene {
             <dl>
                 <dt>ID</dt>
                 <dd>${matchingLocation.id}</dd>
+                <dt>Type</dt>
+                <dd>${matchingLocation.constructor.name}</dd>
                 <dt>Resources</dt>
-                <dd>${matchingLocation.resources.length}</dd>
+                <dd>${matchingLocation.getResources().length}</dd>
                 <dt>Actions</dt>
                 <dd><a href="#">Remove</a></dd>
             </dl>

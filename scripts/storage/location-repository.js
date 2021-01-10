@@ -35,7 +35,7 @@ class LocationRepository extends ArrayStorage {
      */
     findOneClosestByResource(resource, position) {
         let locationsWithResource = this.data.filter((location) => {
-            return location.resources.find((locationResource) => {
+            return location.getResources().find((locationResource) => {
                 return locationResource.constructor.name === resource.constructor.name;
             });
         });

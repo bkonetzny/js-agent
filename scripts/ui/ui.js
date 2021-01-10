@@ -31,14 +31,18 @@ class Ui {
      * @param {LocationEntity[]} locations
      * @param {AgentEntity[]} agents
      * @param {Job[]} jobs
+     * @param {Resource[]} resources
      */
-    publish(locations, agents, jobs) {
+    publish(locations, agents, jobs, resources) {
         /*
         console.clear();
         console.table(locations);
         console.table(agents);
         console.table(jobs);
 */
+
+console.table(resources);
+
         this.scene.render(locations, agents);
     }
 }

@@ -8,7 +8,7 @@ class SourceLocation extends LocationEntity {
             return;
         }
 
-        this.resources.push(new ItemA());
+        this.createResource(new ItemA());
 
         this.resetProcessTicks();
     }

@@ -10,6 +10,7 @@ class Game {
         this.locations = new LocationRepository();
         this.agents = new AgentRepository();
         this.jobs = new JobRepository();
+        this.resources = new ResourceRepository();
         this.timeout = 50;
     }
 
@@ -61,7 +62,8 @@ class Game {
         this.ui.publish(
             this.locations.findAll(),
             this.agents.findAll(),
-            this.jobs.findAll()
+            this.jobs.findAll(),
+            this.resources.findAll()
         );
     }
 
@@ -150,6 +152,7 @@ class Game {
             locations: Helper.deepCopy(this.locations.findAll(), ['game']),
             agents: Helper.deepCopy(this.agents.findAll(), ['game']),
             jobs: Helper.deepCopy(this.jobs.findAll(), ['game']),
+            resources: Helper.deepCopy(this.resources.findAll(), ['game']),
         };
 
         return JSON.stringify(state);
@@ -175,6 +178,7 @@ class Game {
         this.locations = parsedState.locations;
         this.agents = parsedState.agents;
         this.jobs = parsedState.jobs;
+        this.resources = parsedState.resources;
         */
 
         this.controlStart();
