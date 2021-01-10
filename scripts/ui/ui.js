@@ -39,9 +39,8 @@ class Ui {
         console.table(locations);
         console.table(agents);
         console.table(jobs);
-*/
-
-console.table(resources);
+        console.table(resources);
+        */
 
         this.scene.render(locations, agents);
     }

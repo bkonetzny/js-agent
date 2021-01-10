@@ -115,7 +115,8 @@ class AgentEntity extends Entity {
         if (this.position.x === job.destination.position.x
             && this.position.y === job.destination.position.y
         ) {
-            job.finished = true;
+            job.finish();
+
             this.game.jobs.remove(job);
             this.jobId = null;
 
@@ -143,7 +144,7 @@ class AgentEntity extends Entity {
         if (this.position.x === job.source.position.x
             && this.position.y === job.source.position.y
         ) {
-            job.started = true;
+            job.start();
         }
 
         return job.started;

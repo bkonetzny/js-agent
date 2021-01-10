@@ -1,22 +1,22 @@
 // @ts-check
 
 class DestinationBusyLocation extends LocationEntity {
-    process() {
-        super.process();
-
+    onProcess() {
         if (this.processTicks < 10) {
             return;
         }
 
         this.resetProcessTicks();
 
-        let matchingSource = this.game.locations.findOneClosestByResource(new ItemA(), this.position);
+        let matchingResource = this.game.resources.findOneClosestByType((new ItemA()).constructor.name, this.position);
 
-        if (!matchingSource) {
+        if (!matchingResource) {
             return;
         }
 
-        let job = new Job(matchingSource, this);
+        let job = new Job(matchingResource.getLocation(), this, matchingResource);
+
+        matchingResource.assignToJob(job);
 
         this.game.addJob(job);
     }

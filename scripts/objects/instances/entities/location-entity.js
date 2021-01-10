@@ -2,6 +2,18 @@
 
 class LocationEntity extends Entity {
     /**
+     * To be overwritten in locations.
+     */
+    onCreate() {}
+    onProcess() {}
+
+    process() {
+        super.process();
+
+        this.onProcess();
+    }
+
+    /**
      *
      * @return {Resource[]}
      */

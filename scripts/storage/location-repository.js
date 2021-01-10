@@ -27,23 +27,4 @@ class LocationRepository extends ArrayStorage {
             return location.type === type;
         });
     }
-
-    /**
-     * @param {Resource} resource
-     * @param {Position} position
-     * @return {LocationEntity|null}
-     */
-    findOneClosestByResource(resource, position) {
-        let locationsWithResource = this.data.filter((location) => {
-            return location.getResources().find((locationResource) => {
-                return locationResource.constructor.name === resource.constructor.name;
-            });
-        });
-
-        if (!locationsWithResource.length) {
-            return null;
-        }
-
-        return Position.findClosestEntity(position, locationsWithResource);
-    }
 }

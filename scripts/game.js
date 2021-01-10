@@ -91,6 +91,7 @@ class Game {
     addLocation(location) {
         location.setGame(this);
         this.locations.add(location);
+        location.onCreate();
 
         this.forcePublish();
 

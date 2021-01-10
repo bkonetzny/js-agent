@@ -5,11 +5,13 @@ class Job extends Instance {
      *
      * @param {LocationEntity} source
      * @param {LocationEntity} destination
+     * @param {Resource} resource
      */
-    constructor(source, destination) {
+    constructor(source, destination, resource) {
         super();
         this.source = source;
         this.destination = destination;
+        this.resourceId = resource ? resource.id : null;
         this.agentId = null;
         this.started = false;
         this.finished = false;
@@ -55,11 +57,41 @@ class Job extends Instance {
 
     /**
      *
+     * @return {Resource|null}
+     */
+    getResource() {
+        return this.resourceId
+            ? this.game.resources.findOneById(this.resourceId)
+            : null;
+    }
+
+    /**
+     *
      * @return {LocationEntity}
      */
     getCurrentTargetLocation() {
         return this.started
             ? this.destination
             : this.source;
+    }
+
+    start() {
+        if (this.started) {
+            return;
+        }
+
+        this.getResource().assignToAgent();
+
+        this.started = true;
+    }
+
+    finish() {
+        if (!this.started) {
+            return;
+        }
+
+        this.getResource().assignToLocation(this.destination);
+
+        this.finished = true;
     }
 }

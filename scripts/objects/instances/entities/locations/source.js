@@ -1,14 +1,28 @@
 // @ts-check
 
 class SourceLocation extends LocationEntity {
-    process() {
-        super.process();
+    onCreate() {
+        for (let index = 0; index < 10; index++) {
+            let resource = new ItemA();
+            resource.pickable = true;
 
-        if (this.processTicks < 50) {
+            this.createResource(resource);
+        }
+    }
+
+    onProcess() {
+        if (this.processTicks < 10) {
             return;
         }
 
-        this.createResource(new ItemA());
+        if (this.getResources().length >= 20) {
+            return;
+        }
+
+        let resource = new ItemA();
+        resource.pickable = true;
+
+        this.createResource(resource);
 
         this.resetProcessTicks();
     }
