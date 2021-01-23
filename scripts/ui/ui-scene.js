@@ -242,14 +242,25 @@ class UiScene {
             return;
         }
 
+        const resources = matchingLocation.getResources();
+        let resourcesByType = {};
+
+        resources.forEach((resource) => {
+            if (!resourcesByType[resource.constructor.name]) {
+                resourcesByType[resource.constructor.name] = 0;
+            }
+
+            resourcesByType[resource.constructor.name]++;
+        });
+
         this.uiDetails.render(`
             <dl>
                 <dt>ID</dt>
                 <dd>${matchingLocation.id}</dd>
                 <dt>Type</dt>
                 <dd>${matchingLocation.constructor.name}</dd>
-                <dt>Resources</dt>
-                <dd>${matchingLocation.getResources().length}</dd>
+                <dt>Resources (${resources.length})</dt>
+                <dd>${JSON.stringify(resourcesByType)}</dd>
                 <dt>Actions</dt>
                 <dd><a href="#">Remove</a></dd>
             </dl>
