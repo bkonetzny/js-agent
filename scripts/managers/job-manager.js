@@ -24,7 +24,7 @@ class JobManager {
      *
      * @param {Game} game
      * @param {Job} openJob
-     * @return {AgentEntity|null}
+     * @returns {AgentEntity|null}
      */
     static findIdleAgentForOpenJob(game, openJob) {
         switch (game.settings.assignIdleAgentToOpenJobStrategy) {

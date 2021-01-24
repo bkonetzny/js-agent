@@ -13,7 +13,7 @@ class JobRepository extends ArrayStorage {
 
     /**
      * @override
-     * @return {Job[]}
+     * @returns {Job[]}
      */
     findAll() {
         return super.findAll();
@@ -21,14 +21,14 @@ class JobRepository extends ArrayStorage {
 
     /**
      * @override
-     * @return {Job}
+     * @returns {Job}
      */
     findOneById(id) {
         return super.findOneById(id);
     }
 
     /**
-     * @return {Job[]}
+     * @returns {Job[]}
      */
     findOpen() {
         return this.data.filter((job) => {
@@ -37,7 +37,7 @@ class JobRepository extends ArrayStorage {
     }
 
     /**
-     * @return {Job|null}
+     * @returns {Job|null}
      */
     findOneNextOpen() {
         return this.data.find((job) => {
@@ -46,7 +46,7 @@ class JobRepository extends ArrayStorage {
     }
 
     /**
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     hasOpen() {
         return !!this.findOpen();

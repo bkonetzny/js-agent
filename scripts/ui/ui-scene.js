@@ -103,7 +103,7 @@ class UiScene {
     /**
      *
      * @param {MouseEvent} event
-     * @return {Position}
+     * @returns {Position}
      */
     getPositionForEvent(event) {
         return new Position(event.clientX - this.sceneRect.left, event.clientY - this.sceneRect.top);
@@ -192,7 +192,7 @@ class UiScene {
      *
      * @param {String} type
      * @param {String} id
-     * @return {HTMLDivElement}
+     * @returns {HTMLDivElement}
      */
     domEnsureElementForTyoe(type, id) {
         /** @type {HTMLDivElement} */

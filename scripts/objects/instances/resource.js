@@ -11,7 +11,7 @@ class Resource extends Instance {
 
     /**
      *
-     * @return {LocationEntity|null}
+     * @returns {LocationEntity|null}
      */
     getLocation() {
         return this.locationId
@@ -41,5 +41,14 @@ class Resource extends Instance {
     assignToAgent() {
         this.owner = 'agent';
         this.pickable = false;
+    }
+
+    /**
+     *
+     * @param {Resource} resource
+     * @returns {String}
+     */
+    static getClassName(resource) {
+        return resource.constructor.name;
     }
 }

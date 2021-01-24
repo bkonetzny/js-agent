@@ -32,7 +32,7 @@ class ArrayStorage {
     /**
      *
      * @param {String} id
-     * @return {Instance}
+     * @returns {Instance}
      */
     findOneById(id) {
         return this.data.find((item) => {
@@ -42,7 +42,7 @@ class ArrayStorage {
 
     /**
      *
-     * @return {Instance[]}
+     * @returns {Instance[]}
      */
     findAll() {
         return this.data;

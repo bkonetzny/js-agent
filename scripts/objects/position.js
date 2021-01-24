@@ -15,7 +15,7 @@ class Position {
      *
      * @param {Position} position
      * @param {Entity[]} entities
-     * @return {Entity|null}
+     * @returns {Entity|null}
      */
     static findClosestEntity(position, entities) {
         let closestDistance;

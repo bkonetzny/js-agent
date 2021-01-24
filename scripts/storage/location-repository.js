@@ -3,7 +3,7 @@
 class LocationRepository extends ArrayStorage {
     /**
      * @override
-     * @return {LocationEntity[]}
+     * @returns {LocationEntity[]}
      */
     findAll() {
         return super.findAll();
@@ -11,7 +11,7 @@ class LocationRepository extends ArrayStorage {
 
     /**
      * @override
-     * @return {LocationEntity}
+     * @returns {LocationEntity}
      */
     findOneById(id) {
         return super.findOneById(id);
@@ -20,7 +20,7 @@ class LocationRepository extends ArrayStorage {
     /**
      *
      * @param {String} type
-     * @return {LocationEntity[]}
+     * @returns {LocationEntity[]}
      */
     findByType(type) {
         return this.data.filter((location) => {

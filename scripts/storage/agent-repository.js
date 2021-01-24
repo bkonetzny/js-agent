@@ -3,7 +3,7 @@
 class AgentRepository extends ArrayStorage {
     /**
      * @override
-     * @return {AgentEntity[]}
+     * @returns {AgentEntity[]}
      */
     findAll() {
         return super.findAll();
@@ -11,14 +11,14 @@ class AgentRepository extends ArrayStorage {
 
     /**
      * @override
-     * @return {AgentEntity}
+     * @returns {AgentEntity}
      */
     findOneById(id) {
         return super.findOneById(id);
     }
 
     /**
-     * @return {AgentEntity[]}
+     * @returns {AgentEntity[]}
      */
     findIdle() {
         return this.data.filter((agent) => {
@@ -27,7 +27,7 @@ class AgentRepository extends ArrayStorage {
     }
 
     /**
-     * @return {AgentEntity[]}
+     * @returns {AgentEntity[]}
      */
     findBusy() {
         return this.data.filter((agent) => {
@@ -36,7 +36,7 @@ class AgentRepository extends ArrayStorage {
     }
 
     /**
-     * @return {AgentEntity|null}
+     * @returns {AgentEntity|null}
      */
     findOneNextIdle() {
         return this.data.find((agent) => {
@@ -45,7 +45,7 @@ class AgentRepository extends ArrayStorage {
     }
 
     /**
-     * @return {AgentEntity|null}
+     * @returns {AgentEntity|null}
      */
     findOneRandomIdle() {
         let idleAgents = this.findIdle();
@@ -57,7 +57,7 @@ class AgentRepository extends ArrayStorage {
 
     /**
      * @param {Position} position
-     * @return {AgentEntity|null}
+     * @returns {AgentEntity|null}
      */
     findOneClosestIdle(position) {
         let idleAgents = this.findIdle();
@@ -66,7 +66,7 @@ class AgentRepository extends ArrayStorage {
     }
 
     /**
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     hasIdle() {
         return !!this.findIdle();

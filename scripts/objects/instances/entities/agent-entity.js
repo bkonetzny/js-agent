@@ -57,7 +57,7 @@ class AgentEntity extends Entity {
 
     /**
      *
-     * @return {Job|null}
+     * @returns {Job|null}
      */
     getJob() {
         return this.jobId
@@ -67,7 +67,7 @@ class AgentEntity extends Entity {
 
     /**
      *
-     * @return {Number}
+     * @returns {Number}
      */
     getSpeed() {
         let job = this.getJob();
@@ -103,7 +103,7 @@ class AgentEntity extends Entity {
 
     /**
      *
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     arrivedAtJobDestinationLocation() {
         let job = this.getJob();
@@ -128,7 +128,7 @@ class AgentEntity extends Entity {
 
     /**
      *
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     arrivedAtJobSourceLocation() {
         let job = this.getJob();

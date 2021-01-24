@@ -86,7 +86,7 @@ class Game {
     /**
      *
      * @param {LocationEntity} location
-     * @return {String}
+     * @returns {String}
      */
     addLocation(location) {
         location.setGame(this);
@@ -101,7 +101,7 @@ class Game {
     /**
      *
      * @param {AgentEntity} agent
-     * @return {String}
+     * @returns {String}
      */
     addAgent(agent) {
         agent.setGame(this);
@@ -115,7 +115,7 @@ class Game {
     /**
      *
      * @param {Job} job
-     * @return {String}
+     * @returns {String}
      */
     addJob(job) {
         job.setGame(this);
@@ -128,7 +128,7 @@ class Game {
      *
      * @param {String} key
      * @param {String} value
-     * @return {Object}
+     * @returns {Object}
      */
     updateSetting(key, value) {
         let oldValue = this.settings[key];
@@ -143,7 +143,7 @@ class Game {
 
     /**
      *
-     * @return {String}
+     * @returns {String}
      */
     exportState() {
         this.controlPause();
@@ -162,7 +162,7 @@ class Game {
     /**
      *
      * @param {String} state
-     * @return {Boolean}
+     * @returns {Boolean}
      */
     importState(state) {
         this.controlPause();

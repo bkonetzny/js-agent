@@ -47,7 +47,7 @@ class Job extends Instance {
 
     /**
      *
-     * @return {AgentEntity|null}
+     * @returns {AgentEntity|null}
      */
     getAgent() {
         return this.agentId
@@ -57,7 +57,7 @@ class Job extends Instance {
 
     /**
      *
-     * @return {Resource|null}
+     * @returns {Resource|null}
      */
     getResource() {
         return this.resourceId
@@ -67,7 +67,7 @@ class Job extends Instance {
 
     /**
      *
-     * @return {LocationEntity}
+     * @returns {LocationEntity}
      */
     getCurrentTargetLocation() {
         return this.started

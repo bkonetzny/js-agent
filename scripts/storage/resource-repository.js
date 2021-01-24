@@ -4,7 +4,7 @@ class ResourceRepository extends ArrayStorage {
     /**
      *
      * @param {LocationEntity} location
-     * @return {Resource[]}
+     * @returns {Resource[]}
      */
     findByLocation(location) {
         return this.data.filter((resource) => {
@@ -18,7 +18,7 @@ class ResourceRepository extends ArrayStorage {
     /**
      * @param {String} type
      * @param {Position} position
-     * @return {Resource|null}
+     * @returns {Resource|null}
      */
     findOneClosestByType(type, position) {
         let pickableResources = this.data.filter((resource) => {
