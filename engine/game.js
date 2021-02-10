@@ -1,6 +1,9 @@
 // @ts-check
 
 import { Ui } from "../ui/scripts/ui";
+import { AgentManager } from "./managers/agent-manager";
+import { JobManager } from "./managers/job-manager";
+import { LocationManager } from "./managers/location-manager";
 import { Helper } from "./objects/helper";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
@@ -59,11 +62,8 @@ export class Game {
     }
 
     process() {
-        // @ts-ignore
         LocationManager.process(this);
-        // @ts-ignore
         JobManager.process(this);
-        // @ts-ignore
         AgentManager.process(this);
     }
 
