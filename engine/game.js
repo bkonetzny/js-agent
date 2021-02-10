@@ -7,6 +7,7 @@ import { Helper } from "./objects/helper";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
+import { OutputHandler } from "./output-handler";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";

@@ -1,6 +1,8 @@
 // @ts-check
 
 import { Game } from "../../engine/game";
+import { InputHandler } from "../../engine/input-handler";
+import { OutputHandler } from "../../engine/output-handler";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
