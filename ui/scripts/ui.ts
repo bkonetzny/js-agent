@@ -1,6 +1,8 @@
 // @ts-check
 
 import { Game } from "../../engine/game";
+import { InputHandler } from "../../engine/input-handler";
+import { OutputHandler } from "../../engine/output-handler";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
@@ -10,7 +12,7 @@ const stylesScene = require('../styles/scene.css');
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
-    private game: any;
+    private inputHandler: any;
     private controlsSelector: any;
     private sceneSelector : any;
     private detailsSelector: any;
@@ -22,14 +24,14 @@ export class Ui {
 
     /**
      *
-     * @param {Game} game
      * @param {Document} domDocument
      * @param {String} controlsSelector
      * @param {String} sceneSelector
      * @param {String} detailsSelector
      */
-    constructor(game, domDocument, controlsSelector, sceneSelector, detailsSelector) {
-        this.game = game;
+    constructor(domDocument, controlsSelector, sceneSelector, detailsSelector) {
+        this.inputHandler = null;
+
         this.controlsSelector = controlsSelector;
         this.sceneSelector = sceneSelector;
         this.detailsSelector = detailsSelector;
@@ -39,10 +41,26 @@ export class Ui {
         this.detailsDomElement = domDocument.querySelector(this.detailsSelector);
 
         this.details = new UiDetails(this.detailsDomElement);
-        this.scene = new UiScene(this.sceneSelector, domDocument, this.game, this.details);
-        this.controls = new UiControls(this.controlsDomElement, this.game, this.scene);
+        this.scene = new UiScene(this, this.sceneSelector, domDocument, this.details);
+        this.controls = new UiControls(this, this.controlsDomElement, this.scene);
+    }
 
-        this.game.setUi(this);
+    /**
+     *
+     * @param {InputHandler} inputHandler
+     */
+    setInputHandler(inputHandler) {
+        this.inputHandler = inputHandler;
+    }
+
+    /**
+     *
+     * @param {String} command
+     * @param {Object} data
+     * @returns {any}
+     */
+    handleInput(command, data) {
+        return this.inputHandler.command(command, data);
     }
 
     /**
@@ -52,7 +70,7 @@ export class Ui {
      * @param {Job[]} jobs
      * @param {Resource[]} resources
      */
-    publish(locations, agents, jobs, resources) {
+    updateState(locations, agents, jobs, resources) {
         /*
         console.clear();
         console.table(locations);
@@ -66,4 +84,7 @@ export class Ui {
 }
 
 var game = new Game();
-var ui = new Ui(game, document, '#controls', '#scene', '#details');
+var ui = new Ui(document, '#controls', '#scene', '#details');
+
+new InputHandler(game, ui);
+new OutputHandler(game, ui);

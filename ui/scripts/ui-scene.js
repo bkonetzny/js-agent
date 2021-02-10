@@ -1,20 +1,30 @@
+import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
+import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
+import { DestinationLocation } from "../../engine/objects/instances/entities/locations/destination";
+import { DestinationBusyLocation } from "../../engine/objects/instances/entities/locations/destination-busy";
+import { SourceLocation } from "../../engine/objects/instances/entities/locations/source";
+import { Position } from "../../engine/objects/position";
+import { Ui } from "./ui";
+import { UiDetails } from "./ui-details";
+
 export class UiScene {
     /**
      *
+     * @param {Ui} ui
      * @param {Element} domElement
      * @param {Document} domDocument
-     * @param {Game} game
      * @param {UiDetails} uiDetails
      */
-    constructor(domElement, domDocument, game, uiDetails) {
+    constructor(ui, domElement, domDocument, uiDetails) {
+        this.ui = ui;
         this.domElement = domElement;
         this.domDocument = domDocument;
-        this.game = game;
         this.uiDetails = uiDetails;
 
         this.sceneRect = this.domElement.getBoundingClientRect();
         this.clickMode = null;
         this.focusedObjectId = null;
+        this.locationCache = null;
 
         this.domElement.addEventListener('click', (/** @type {MouseEvent} */ event) => {
             this.processClickEvent(event);
@@ -62,19 +72,19 @@ export class UiScene {
 
         switch (this.clickMode) {
             case 'addSource':
-                instanceId = this.game.addLocation(new SourceLocation(position));
+                instanceId = this.ui.handleInput('location:add', new SourceLocation(position));
                 break;
 
             case 'addDestination':
-                instanceId = this.game.addLocation(new DestinationLocation(position));
+                instanceId = this.ui.handleInput('location:add', new DestinationLocation(position));
                 break;
 
             case 'addBusyDestination':
-                instanceId = this.game.addLocation(new DestinationBusyLocation(position));
+                instanceId = this.ui.handleInput('location:add', new DestinationBusyLocation(position));
                 break;
 
             case 'addAgent':
-                instanceId = this.game.addAgent(new AgentEntity(position));
+                instanceId = this.ui.handleInput('agent:add', new AgentEntity(position));
                 break;
 
             default:
@@ -113,6 +123,8 @@ export class UiScene {
      * @param {AgentEntity[]} agents
      */
     render(locations, agents) {
+        this.locationCache = locations;
+
         this.domRemoveObsoleteLocations(locations);
         this.domRemoveObsoleteAgents(agents);
 
@@ -234,7 +246,9 @@ export class UiScene {
             return;
         }
 
-        const matchingLocation = this.game.locations.findOneById(id);
+        const matchingLocation = this.locationCache.find((location) => {
+            return location.id === id;
+        });
 
         if (!matchingLocation) {
             return;

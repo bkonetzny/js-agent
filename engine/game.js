@@ -1,6 +1,5 @@
 // @ts-check
 
-import { Ui } from "../ui/scripts/ui";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
@@ -8,6 +7,7 @@ import { Helper } from "./objects/helper";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
+import { OutputHandler } from "./output-handler";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
@@ -18,7 +18,7 @@ export class Game {
         this.settings = {...{
             assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest
         }, ...settings};
-        this.ui = null;
+        this.outputHandler = null;
         this.running = false;
         this.locations = new LocationRepository();
         this.agents = new AgentRepository();
@@ -68,11 +68,11 @@ export class Game {
     }
 
     publish() {
-        if (!this.ui) {
+        if (!this.outputHandler) {
             return;
         }
 
-        this.ui.publish(
+        this.outputHandler.update(
             this.locations.findAll(),
             this.agents.findAll(),
             this.jobs.findAll(),
@@ -90,10 +90,43 @@ export class Game {
 
     /**
      *
-     * @param {Ui} ui
+     * @param {OutputHandler} outputHandler
      */
-    setUi(ui) {
-        this.ui = ui;
+    setOutputHandler(outputHandler) {
+        this.outputHandler = outputHandler;
+    }
+
+    /**
+     *
+     * @param {String} command
+     * @param {Object} data
+     */
+    command(command, data) {
+        switch (command) {
+            case 'control:start':
+                return this.controlStart();
+
+            case 'control:pause':
+                return this.controlPause();
+
+            case 'setting:update':
+                return this.updateSetting(data.key, data.value);
+
+            case 'gamestate:import':
+                return this.importState(data.state);
+
+            case 'gamestate:export':
+                return this.exportState();
+
+            case 'location:add':
+                return this.addLocation(data);
+
+            case 'agent:add':
+                return this.addAgent(data);
+
+            default:
+                throw new Error(`Unknown command "${command}"`);
+        }
     }
 
     /**
