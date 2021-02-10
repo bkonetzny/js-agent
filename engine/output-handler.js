@@ -15,6 +15,7 @@ export class OutputHandler {
     }
 
     update(...args) {
+        // @ts-ignore
         this.ui.updateState(...args);
     }
 }
