@@ -5,6 +5,8 @@ import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
 
+const stylesUi = require('../styles/ui.css');
+const stylesScene = require('../styles/scene.css');
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
