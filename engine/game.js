@@ -1,6 +1,5 @@
 // @ts-check
 
-import { Ui } from "../ui/scripts/ui";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";

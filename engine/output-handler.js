@@ -1,6 +1,9 @@
 // @ts-check
 
-class OutputHandler {
+import { Ui } from "../ui/scripts/ui";
+import { Game } from "./game";
+
+export class OutputHandler {
     /**
      *
      * @param {Game} game

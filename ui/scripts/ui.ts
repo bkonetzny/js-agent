@@ -8,7 +8,7 @@ import { UiScene } from "./ui-scene";
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
-    private game: any;
+    private inputHandler: any;
     private controlsSelector: any;
     private sceneSelector : any;
     private detailsSelector: any;
@@ -80,4 +80,7 @@ export class Ui {
 }
 
 var game = new Game();
-var ui = new Ui(game, document, '#controls', '#scene', '#details');
+var ui = new Ui(document, '#controls', '#scene', '#details');
+
+new InputHandler(game, ui);
+new OutputHandler(game, ui);
