@@ -1,6 +1,11 @@
-// @ts-check
+// @ts-nocheck
 
-class AgentEntity extends Entity {
+import { Position } from "../../position";
+import { Entity } from "../entity";
+import { Job } from "../job";
+import { LocationEntity } from "./location-entity";
+
+export class AgentEntity extends Entity {
     /**
      *
      * @param {Position} position
@@ -57,7 +62,7 @@ class AgentEntity extends Entity {
 
     /**
      *
-     * @returns {Job|null}
+     * @returns {any|null}
      */
     getJob() {
         return this.jobId

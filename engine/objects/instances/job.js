@@ -1,6 +1,11 @@
-// @ts-check
+// @ts-nocheck
 
-class Job extends Instance {
+import { Instance } from "../instance";
+import { AgentEntity } from "./entities/agent-entity";
+import { LocationEntity } from "./entities/location-entity";
+import { Resource } from "./resource";
+
+export class Job extends Instance {
     /**
      *
      * @param {LocationEntity} source
@@ -57,7 +62,7 @@ class Job extends Instance {
 
     /**
      *
-     * @returns {Resource|null}
+     * @returns {any|null}
      */
     getResource() {
         return this.resourceId

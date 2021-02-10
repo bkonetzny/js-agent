@@ -1,4 +1,6 @@
 // @ts-check
 
-class ItemA extends Resource {
+import { Resource } from "../resource";
+
+export class ItemA extends Resource {
 }

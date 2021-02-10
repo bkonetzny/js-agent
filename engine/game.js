@@ -1,6 +1,19 @@
 // @ts-check
 
-class Game {
+import { Ui } from "../ui/scripts/ui";
+import { AgentManager } from "./managers/agent-manager";
+import { JobManager } from "./managers/job-manager";
+import { LocationManager } from "./managers/location-manager";
+import { Helper } from "./objects/helper";
+import { AgentEntity } from "./objects/instances/entities/agent-entity";
+import { LocationEntity } from "./objects/instances/entities/location-entity";
+import { Job } from "./objects/instances/job";
+import { AgentRepository } from "./storage/agent-repository";
+import { JobRepository } from "./storage/job-repository";
+import { LocationRepository } from "./storage/location-repository";
+import { ResourceRepository } from "./storage/resource-repository";
+
+export class Game {
     constructor(settings) {
         this.settings = {...{
             assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest

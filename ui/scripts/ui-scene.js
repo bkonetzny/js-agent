@@ -1,6 +1,4 @@
-// @ts-check
-
-class UiScene {
+export class UiScene {
     /**
      *
      * @param {Ui} ui

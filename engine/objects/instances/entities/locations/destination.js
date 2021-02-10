@@ -1,7 +1,14 @@
 // @ts-check
 
-class DestinationLocation extends LocationEntity {
+import { Job } from "../../job";
+import { Resource } from "../../resource";
+import { ItemA } from "../../resources/item-a";
+import { ItemB } from "../../resources/item-b";
+import { LocationEntity } from "../location-entity";
+
+export class DestinationLocation extends LocationEntity {
     constructor(...args) {
+        // @ts-ignore
         super(...args);
 
         this.procesAfterTicks = 50;
