@@ -1,6 +1,11 @@
-// @ts-check
+// @ts-nocheck
 
-class ResourceRepository extends ArrayStorage {
+import { LocationEntity } from "../objects/instances/entities/location-entity";
+import { Resource } from "../objects/instances/resource";
+import { Position } from "../objects/position";
+import { ArrayStorage } from "./array-storage";
+
+export class ResourceRepository extends ArrayStorage {
     /**
      *
      * @param {LocationEntity} location
@@ -18,7 +23,7 @@ class ResourceRepository extends ArrayStorage {
     /**
      * @param {String} type
      * @param {Position} position
-     * @returns {Resource|null}
+     * @returns {Resource|undefined|null}
      */
     findOneClosestByType(type, position) {
         let pickableResources = this.data.filter((resource) => {

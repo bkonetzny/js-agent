@@ -1,6 +1,6 @@
 // @ts-check
 
-class Helper {
+export class Helper {
     /**
      *
      * @param {Array} array

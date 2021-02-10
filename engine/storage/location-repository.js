@@ -1,6 +1,9 @@
-// @ts-check
+// @ts-nocheck
 
-class LocationRepository extends ArrayStorage {
+import { LocationEntity } from "../objects/instances/entities/location-entity";
+import { ArrayStorage } from "./array-storage";
+
+export class LocationRepository extends ArrayStorage {
     /**
      * @override
      * @returns {LocationEntity[]}

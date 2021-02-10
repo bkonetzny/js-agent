@@ -1,4 +1,14 @@
-// @ts-nocheck
+// @ts-check
+
+import { Ui } from "../ui/scripts/ui";
+import { Helper } from "./objects/helper";
+import { AgentEntity } from "./objects/instances/entities/agent-entity";
+import { LocationEntity } from "./objects/instances/entities/location-entity";
+import { Job } from "./objects/instances/job";
+import { AgentRepository } from "./storage/agent-repository";
+import { JobRepository } from "./storage/job-repository";
+import { LocationRepository } from "./storage/location-repository";
+import { ResourceRepository } from "./storage/resource-repository";
 
 export class Game {
     constructor(settings) {
@@ -49,8 +59,11 @@ export class Game {
     }
 
     process() {
+        // @ts-ignore
         LocationManager.process(this);
+        // @ts-ignore
         JobManager.process(this);
+        // @ts-ignore
         AgentManager.process(this);
     }
 

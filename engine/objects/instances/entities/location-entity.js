@@ -1,6 +1,9 @@
-// @ts-check
+// @ts-nocheck
 
-class LocationEntity extends Entity {
+import { Entity } from "../entity";
+import { Resource } from "../resource";
+
+export class LocationEntity extends Entity {
     /**
      * To be overwritten in locations.
      */

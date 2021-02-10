@@ -1,6 +1,10 @@
 // @ts-check
 
-class JobRepository extends ArrayStorage {
+import { Instance } from "../objects/instance";
+import { Job } from "../objects/instances/job";
+import { ArrayStorage } from "./array-storage";
+
+export class JobRepository extends ArrayStorage {
     /**
      * @override
      * @param {Job} job
@@ -13,7 +17,7 @@ class JobRepository extends ArrayStorage {
 
     /**
      * @override
-     * @returns {Job[]}
+     * @returns {Instance[]}
      */
     findAll() {
         return super.findAll();
@@ -21,7 +25,7 @@ class JobRepository extends ArrayStorage {
 
     /**
      * @override
-     * @returns {Job}
+     * @returns {Instance}
      */
     findOneById(id) {
         return super.findOneById(id);

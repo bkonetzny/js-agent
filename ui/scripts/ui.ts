@@ -5,7 +5,7 @@ import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
 
-class Ui {
+export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
     private game: any;

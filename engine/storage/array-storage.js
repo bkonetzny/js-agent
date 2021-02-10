@@ -1,6 +1,8 @@
 // @ts-check
 
-class ArrayStorage {
+import { Instance } from "../objects/instance";
+
+export class ArrayStorage {
     constructor() {
         this.data = [];
     }
