@@ -29,16 +29,19 @@ export class DestinationLocation extends LocationEntity {
 
         this.convertResources(inputResourcesDefinition, outputResourcesDefinition);
 
+        // @ts-ignore
         let matchingResource = this.game.resources.findOneClosestByType((new ItemA()).constructor.name, this.position);
 
         if (!matchingResource) {
             return;
         }
 
+        // @ts-ignore
         let job = new Job(matchingResource.getLocation(), this, matchingResource);
 
         matchingResource.assignToJob(job);
 
+        // @ts-ignore
         this.game.addJob(job);
     }
 }

@@ -1,3 +1,12 @@
+import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
+import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
+import { DestinationLocation } from "../../engine/objects/instances/entities/locations/destination";
+import { DestinationBusyLocation } from "../../engine/objects/instances/entities/locations/destination-busy";
+import { SourceLocation } from "../../engine/objects/instances/entities/locations/source";
+import { Position } from "../../engine/objects/position";
+import { Ui } from "./ui";
+import { UiDetails } from "./ui-details";
+
 export class UiScene {
     /**
      *

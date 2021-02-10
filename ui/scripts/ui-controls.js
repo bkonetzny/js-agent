@@ -1,3 +1,5 @@
+import { Ui } from "./ui";
+import { UiScene } from "./ui-scene";
 
 export class UiControls {
     /**
