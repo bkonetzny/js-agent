@@ -25,7 +25,7 @@ export class DestinationLocation extends LocationEntity {
         inputResourcesDefinition.addDefinition(new ItemA(), 5);
 
         let outputResourcesDefinition = new ResourcesDefinition();
-        outputResourcesDefinition.addDefinition(new ItemB(), 1);
+        outputResourcesDefinition.addDefinition(new ItemB(), 2);
 
         this.convertResources(inputResourcesDefinition, outputResourcesDefinition);
 

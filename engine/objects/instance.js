@@ -16,4 +16,14 @@ export class Instance {
     setGame(game) {
         this.game = game;
     }
+
+    /**
+     * @returns {Instance}
+     */
+    getClonedInstance() {
+        const clonedInstance = Object.assign(Object.create(this), this);
+        clonedInstance.id = Helper.createUuid();
+
+        return clonedInstance;
+    }
 }

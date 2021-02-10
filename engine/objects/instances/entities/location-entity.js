@@ -72,7 +72,7 @@ export class LocationEntity extends Entity {
 
         Object.keys(outputResourcesDefinition.definitions).forEach((resourceClass) => {
             while (outputResourcesDefinition.definitions[resourceClass].amountMatched < outputResourcesDefinition.definitions[resourceClass].amountRequested) {
-                this.createResource(outputResourcesDefinition.definitions[resourceClass].resource);
+                this.createResource(outputResourcesDefinition.definitions[resourceClass].resource.getClonedInstance());
                 outputResourcesDefinition.definitions[resourceClass].amountMatched++;
             }
         });
