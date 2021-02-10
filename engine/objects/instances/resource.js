@@ -46,13 +46,4 @@ export class Resource extends Instance {
         this.owner = 'agent';
         this.pickable = false;
     }
-
-    /**
-     *
-     * @param {Resource} resource
-     * @returns {String}
-     */
-    static getClassName(resource) {
-        return resource.constructor.name;
-    }
 }

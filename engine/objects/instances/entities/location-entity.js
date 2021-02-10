@@ -1,5 +1,6 @@
 // @ts-nocheck
 
+import { ResourcesDefinition } from "../../util/resources-definition";
 import { Entity } from "../entity";
 import { Resource } from "../resource";
 
@@ -46,47 +47,33 @@ export class LocationEntity extends Entity {
 
     /**
      *
-     * @param {Object} inputResourcesDefinition
-     * @param {Object} outputResourcesDefinition
+     * @param {ResourcesDefinition} inputResourcesDefinition
+     * @param {ResourcesDefinition} outputResourcesDefinition
      * @returns {Boolean}
      */
     convertResources(inputResourcesDefinition, outputResourcesDefinition) {
         const resources = this.getResources();
-        const inputResourcesDefinitionCheck = {...inputResourcesDefinition};
 
         resources.forEach((resource) => {
-            if (inputResourcesDefinitionCheck.hasOwnProperty(resource.constructor.name)
-                && inputResourcesDefinitionCheck[resource.constructor.name] > 0
-            ) {
-                inputResourcesDefinitionCheck[resource.constructor.name]--;
-            }
+            inputResourcesDefinition.matchResource(resource);
         });
 
-        let missingResources = false;
-        Object.keys(inputResourcesDefinitionCheck).forEach((resourceClass) => {
-            if (inputResourcesDefinitionCheck[resourceClass] > 0) {
-                missingResources = true;
-            }
-        });
-
-        if (missingResources) {
+        if (inputResourcesDefinition.hasMissingResources()) {
             return false;
         }
 
+        inputResourcesDefinition.resetMatches();
+
         resources.forEach((resource) => {
-            if (inputResourcesDefinition.hasOwnProperty(resource.constructor.name)
-                && inputResourcesDefinition[resource.constructor.name] > 0
-            ) {
+            if (inputResourcesDefinition.matchResource(resource)) {
                 this.game.resources.remove(resource);
-                inputResourcesDefinition[resource.constructor.name]--;
             }
         });
 
-        Object.keys(outputResourcesDefinition).forEach((resourceClass) => {
-            while (outputResourcesDefinition[resourceClass] > 0) {
-                const resource = (Function('return new ' + resourceClass))();
-                this.createResource(resource);
-                outputResourcesDefinition[resourceClass]--;
+        Object.keys(outputResourcesDefinition.definitions).forEach((resourceClass) => {
+            while (outputResourcesDefinition.definitions[resourceClass].amountMatched < outputResourcesDefinition.definitions[resourceClass].amountRequested) {
+                this.createResource(outputResourcesDefinition.definitions[resourceClass].resource);
+                outputResourcesDefinition.definitions[resourceClass].amountMatched++;
             }
         });
 

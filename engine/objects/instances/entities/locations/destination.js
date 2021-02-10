@@ -1,7 +1,7 @@
 // @ts-check
 
+import { ResourcesDefinition } from "../../../util/resources-definition";
 import { Job } from "../../job";
-import { Resource } from "../../resource";
 import { ItemA } from "../../resources/item-a";
 import { ItemB } from "../../resources/item-b";
 import { LocationEntity } from "../location-entity";
@@ -21,16 +21,16 @@ export class DestinationLocation extends LocationEntity {
 
         this.resetProcessTicks();
 
-        let inputResourcesDefinition = {};
-        inputResourcesDefinition[Resource.getClassName(new ItemA())] = 5;
+        let inputResourcesDefinition = new ResourcesDefinition();
+        inputResourcesDefinition.addDefinition(new ItemA(), 5);
 
-        let outputResourcesDefinition = {};
-        outputResourcesDefinition[Resource.getClassName(new ItemB())] = 1;
+        let outputResourcesDefinition = new ResourcesDefinition();
+        outputResourcesDefinition.addDefinition(new ItemB(), 1);
 
         this.convertResources(inputResourcesDefinition, outputResourcesDefinition);
 
         // @ts-ignore
-        let matchingResource = this.game.resources.findOneClosestByType((new ItemA()).constructor.name, this.position);
+        let matchingResource = this.game.resources.findOneClosestByType(new ItemA(), this.position);
 
         if (!matchingResource) {
             return;

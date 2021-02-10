@@ -21,7 +21,7 @@ export class ResourceRepository extends ArrayStorage {
     }
 
     /**
-     * @param {String} type
+     * @param {Resource} type
      * @param {Position} position
      * @returns {Resource|undefined|null}
      */
@@ -29,7 +29,7 @@ export class ResourceRepository extends ArrayStorage {
         let pickableResources = this.data.filter((resource) => {
             return (
                 resource.pickable
-                && resource.constructor.name === type
+                && resource.constructor.name === type.constructor.name
             );
         });
 
