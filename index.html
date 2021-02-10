@@ -12,6 +12,8 @@
         <script src="ui/scripts/ui-scene.js"></script>
 
         <script src="engine/game.js"></script>
+        <script src="engine/input-handler.js"></script>
+        <script src="engine/output-handler.js"></script>
         <script src="engine/storage/array-storage.js"></script>
         <script src="engine/storage/agent-repository.js"></script>
         <script src="engine/storage/job-repository.js"></script>
@@ -71,7 +73,10 @@
         </fieldset>
         <script>
             var game = new Game();
-            var ui = new Ui(game, document, '#controls', '#scene', '#details');
+            var ui = new Ui(document, '#controls', '#scene', '#details');
+
+            var inputHandler = new InputHandler(game, ui);
+            var outputHandler = new OutputHandler(game, ui);
         </script>
     </body>
 </html>

@@ -3,13 +3,13 @@
 class UiControls {
     /**
      *
+     * @param {Ui} ui
      * @param {Element} domElement
-     * @param {Game} game
      * @param {UiScene} scene
      */
-    constructor(domElement, game, scene) {
+    constructor(ui, domElement, scene) {
+        this.ui = ui;
         this.domElement = domElement;
-        this.game = game;
         this.scene = scene;
 
         this.btnStart = this.domElement.querySelector('#start');
@@ -31,11 +31,11 @@ class UiControls {
 
     addEventListeners() {
         this.btnStart.addEventListener('click', (event) => {
-            this.game.controlStart();
+            this.ui.handleInput('control:start');
         });
 
         this.btnPause.addEventListener('click', (event) => {
-            this.game.controlPause();
+            this.ui.handleInput('control:pause');
         });
 
         this.btnAddSource.addEventListener('click', (event) => {
@@ -55,13 +55,13 @@ class UiControls {
         });
 
         this.btnUpdateSetting.addEventListener('click', (event) => {
-            let oldValue = this.game.updateSetting(this.inputUpdateSettingKey.value, this.inputUpdateSettingValue.value).oldValue;
+            let oldValue = this.ui.handleInput('setting:update', {key: this.inputUpdateSettingKey.value, value: this.inputUpdateSettingValue.value}).oldValue;
 
             console.log('Update setting ' + this.inputUpdateSettingKey.value + ' from "' + oldValue + '" to "' + this.inputUpdateSettingValue.value + '"');
         });
 
         this.btnExport.addEventListener('click', (event) => {
-            console.log('Export:', this.game.exportState());
+            console.log('Export:', this.ui.handleInput('gamestate:export'));
         });
 
         this.btnImport.addEventListener('click', (event) => {
@@ -72,7 +72,7 @@ class UiControls {
                 jobs: [],
             };
 
-            this.game.importState(JSON.stringify(state));
+            this.ui.handleInput('gamestate:import', {state: JSON.stringify(state)});
         });
     }
 }
