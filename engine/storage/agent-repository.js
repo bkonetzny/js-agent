@@ -1,6 +1,11 @@
-// @ts-check
+// @ts-nocheck
 
-class AgentRepository extends ArrayStorage {
+import { Helper } from "../objects/helper";
+import { AgentEntity } from "../objects/instances/entities/agent-entity";
+import { Position } from "../objects/position";
+import { ArrayStorage } from "./array-storage";
+
+export class AgentRepository extends ArrayStorage {
     /**
      * @override
      * @returns {AgentEntity[]}

@@ -1,6 +1,10 @@
 // @ts-check
 
-class JobManager {
+import { Game } from "../game";
+import { AgentEntity } from "../objects/instances/entities/agent-entity";
+import { Job } from "../objects/instances/job";
+
+export class JobManager {
     /**
      *
      * @param {Game} game

@@ -1,10 +1,12 @@
 // @ts-check
 
-class Position {
+import { Entity } from "./instances/entity";
+
+export class Position {
     /**
      *
-     * @param {Number} x
-     * @param {Number} y
+     * @param {String} x
+     * @param {String} y
      */
     constructor(x, y) {
         this.x = parseInt(x, 10);
@@ -15,7 +17,7 @@ class Position {
      *
      * @param {Position} position
      * @param {Entity[]} entities
-     * @returns {Entity|null}
+     * @returns {Entity|undefined}
      */
     static findClosestEntity(position, entities) {
         let closestDistance;

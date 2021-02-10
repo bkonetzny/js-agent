@@ -1,6 +1,8 @@
 // @ts-check
 
-class AgentManager {
+import { Game } from "../game";
+
+export class AgentManager {
     /**
      *
      * @param {Game} game

@@ -1,6 +1,8 @@
 // @ts-check
 
-class LocationManager {
+import { Game } from "../game";
+
+export class LocationManager {
     /**
      *
      * @param {Game} game

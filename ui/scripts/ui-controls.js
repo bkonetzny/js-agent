@@ -1,6 +1,5 @@
-// @ts-check
 
-class UiControls {
+export class UiControls {
     /**
      *
      * @param {Element} domElement

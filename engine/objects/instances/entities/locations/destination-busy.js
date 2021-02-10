@@ -1,6 +1,8 @@
 // @ts-check
 
-class DestinationBusyLocation extends DestinationLocation {
+import { DestinationLocation } from "./destination";
+
+export class DestinationBusyLocation extends DestinationLocation {
     constructor(...args) {
         super(...args);
 

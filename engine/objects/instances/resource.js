@@ -1,6 +1,10 @@
-// @ts-check
+// @ts-nocheck
 
-class Resource extends Instance {
+import { Instance } from "../instance";
+import { LocationEntity } from "./entities/location-entity";
+import { Job } from "./job";
+
+export class Resource extends Instance {
     constructor() {
         super();
         this.owner = 'location'; // location, agent
