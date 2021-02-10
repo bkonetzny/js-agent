@@ -4,6 +4,11 @@ Simulation to let Agents transport Items from source Location to destination Loc
 
 Locations and Agents can be managed via UI in the browser.
 
-## Run in browser
+## Build
+```shell
+$ npm run build
+```
 
-Open `index.html` in your favorite browser, add a `source`, `destination` and `agent` by clicking on the scene, and press `Start`.
+## Run
+
+Open `dist/index.html` in your favorite browser, add a `source`, `destination` and `agent` by clicking on the scene, and press `Start`.
