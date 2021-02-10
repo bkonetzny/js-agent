@@ -239,7 +239,7 @@ class UiScene {
             return;
         }
 
-        const matchingLocation = this.locationCache.find((locationCache) => {
+        const matchingLocation = this.locationCache.find((location) => {
             return location.id === id;
         });
 
