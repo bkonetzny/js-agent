@@ -1,6 +1,23 @@
 // @ts-check
 
+import { Game } from "../../engine/game";
+import { UiControls } from "./ui-controls";
+import { UiDetails } from "./ui-details";
+import { UiScene } from "./ui-scene";
+
 class Ui {
+    // We will type those as any for now, just to be able to start from here with typescript
+    // TODO: implement interfaces
+    private game: any;
+    private controlsSelector: any;
+    private sceneSelector : any;
+    private detailsSelector: any;
+    private controlsDomElement: any;
+    private detailsDomElement: any;
+    private details: any;
+    private scene: any;
+    private controls: any;
+
     /**
      *
      * @param {Game} game
@@ -45,3 +62,6 @@ class Ui {
         this.scene.render(locations, agents);
     }
 }
+
+var game = new Game();
+var ui = new Ui(game, document, '#controls', '#scene', '#details');

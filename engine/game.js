@@ -1,6 +1,6 @@
-// @ts-check
+// @ts-nocheck
 
-class Game {
+export class Game {
     constructor(settings) {
         this.settings = {...{
             assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest

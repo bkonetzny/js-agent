@@ -1,6 +1,5 @@
-// @ts-check
 
-class UiDetails {
+export class UiDetails {
     /**
      *
      * @param {Element} domElement
