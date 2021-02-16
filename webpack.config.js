@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (argv) => {
 	const config = {
@@ -53,6 +54,11 @@ module.exports = (argv) => {
 				title:"JS DEV",
 				template:"ui/index.ejs"
 			}),
+			new CopyPlugin({
+				patterns: [
+					{ from: "ui/assets", to: "assets" }
+				],
+			})
 		]
 	}
 

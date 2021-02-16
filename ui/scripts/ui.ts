@@ -6,9 +6,25 @@ import { OutputHandler } from "../../engine/output-handler";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
+import * as Phaser from "phaser";
+import { GameLevel } from "../scenes/Level";
 
 const stylesUi = require('../styles/ui.css');
 const stylesScene = require('../styles/scene.css');
+
+class Boot extends Phaser.Scene {
+
+	preload() {
+		
+		this.load.pack("pack", "assets/asset-pack.json");
+	}
+
+	create() {
+		
+        this.scene.start("Level");
+	}
+
+}
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
@@ -46,6 +62,19 @@ export class Ui {
         // TODO: Needs to be reworked - prone to fail at any time.
         this.scene = new UiScene(this, this.sceneSelector!, domDocument, this.details);
         this.controls = new UiControls(this, this.controlsDomElement, this.scene);
+
+        const game = new Phaser.Game({
+            width: 800,
+            height: 600,
+            type: Phaser.AUTO,
+            backgroundColor: "#242424",
+            scale: {
+                mode: Phaser.Scale.FIT,
+                autoCenter: Phaser.Scale.CENTER_BOTH
+            }
+        });
+        game.scene.add("Level", GameLevel);
+        game.scene.add("Boot", Boot, true);
     }
 
     /**
@@ -91,3 +120,4 @@ var ui = new Ui(document, '#controls', '#scene', '#details');
 
 new InputHandler(game, ui);
 new OutputHandler(game, ui);
+
