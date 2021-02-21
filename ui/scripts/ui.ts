@@ -125,7 +125,9 @@ export class Ui {
     }
 }
 
-var game = new Game();
+var game = new Game({}, (callback) => {
+    window.requestAnimationFrame(callback);
+});
 var ui = new Ui(document, '#controls', '#scene', '#details', '#meta');
 
 new InputHandler(game, ui);

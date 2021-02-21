@@ -11,10 +11,15 @@ import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { ResourceRepository } from "./storage/resource-repository";
-import { cloneDeep, cloneDeepWith } from 'lodash-es';
+import { cloneDeepWith } from 'lodash-es';
 
 export class Game {
-    constructor(settings) {
+    /**
+     *
+     * @param {Object} settings
+     * @param {Function} tickFunction
+     */
+    constructor(settings, tickFunction) {
         this.settings = {...{
             assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest
         }, ...settings};
@@ -24,7 +29,7 @@ export class Game {
         this.agents = new AgentRepository();
         this.jobs = new JobRepository();
         this.resources = new ResourceRepository();
-        this.timeout = 50;
+        this.tickFunction = tickFunction;
     }
 
     controlStart() {
@@ -38,26 +43,19 @@ export class Game {
         this.running = false;
     }
 
-    /**
-     *
-     * @param {Number} timestamp
-     */
-    mainLoop(timestamp) {
+    mainLoop() {
         if (!this.running) {
             return;
         }
 
         this.process();
         this.publish();
-
-        //setTimeout(() => {
-            this.scheduleMainLoop();
-        //}, this.timeout);
+        this.scheduleMainLoop();
     }
 
     scheduleMainLoop() {
-        window.requestAnimationFrame((timestamp) => {
-            this.mainLoop(timestamp);
+        this.tickFunction(() => {
+            this.mainLoop();
         });
     }
 
