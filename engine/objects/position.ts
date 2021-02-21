@@ -1,25 +1,15 @@
-// @ts-check
-
 import { Entity } from "./instances/entity";
 
 export class Position {
-    /**
-     *
-     * @param {String} x
-     * @param {String} y
-     */
-    constructor(x, y) {
+    public x : integer;
+    public y : integer;
+
+    constructor(x: string, y: string) {
         this.x = parseInt(x, 10);
         this.y = parseInt(y, 10);
     }
 
-    /**
-     *
-     * @param {Position} position
-     * @param {Entity[]} entities
-     * @returns {Entity|undefined}
-     */
-    static findClosestEntity(position, entities) {
+    static findClosestEntity(position: Position, entities: Entity[]): Entity | undefined {
         let closestDistance;
         let closestEntity;
 

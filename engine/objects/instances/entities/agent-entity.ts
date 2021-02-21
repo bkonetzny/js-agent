@@ -1,18 +1,16 @@
-// @ts-nocheck
-
 import { Position } from "../../position";
 import { Entity } from "../entity";
 import { Job } from "../job";
 import { LocationEntity } from "./location-entity";
 
 export class AgentEntity extends Entity {
-    /**
-     *
-     * @param {Position} position
-     */
-    constructor(position) {
+    public jobId ?: string;
+    private velocityIdle : number;
+    private velocityJob : number;
+
+    constructor(position: Position) {
         super(position);
-        this.jobId = null;
+        this.jobId = undefined;
         this.velocityIdle = 5;
         this.velocityJob = 1;
     }
@@ -34,17 +32,13 @@ export class AgentEntity extends Entity {
         }
     }
 
-    /**
-     *
-     * @param {Job|null} job
-     */
-    setJob(job) {
+    setJob(job: Job | null) {
         let assignedJob;
 
         if (!job) {
             assignedJob = this.getJob();
 
-            this.jobId = null;
+            this.jobId = undefined;
 
             if (assignedJob && assignedJob.getAgent() === this) {
                 assignedJob.setAgent(null);
@@ -62,21 +56,13 @@ export class AgentEntity extends Entity {
         }
     }
 
-    /**
-     *
-     * @returns {any|null}
-     */
-    getJob() {
+    getJob(): any | null {
         return this.jobId
-            ? this.game.jobs.findOneById(this.jobId)
+            ? this.game?.jobs.findOneById(this.jobId)
             : null;
     }
 
-    /**
-     *
-     * @returns {Number}
-     */
-    getSpeed() {
+    getSpeed(): number {
         let job = this.getJob();
 
         return (job && job.started)
@@ -84,11 +70,7 @@ export class AgentEntity extends Entity {
             : this.velocityIdle;
     }
 
-    /**
-     *
-     * @param {LocationEntity} target
-     */
-    moveToTarget(target) {
+    moveToTarget(target: LocationEntity) {
         let speed = this.getSpeed();
         let distanceX = Math.abs(this.position.x - target.position.x);
         let distanceY = Math.abs(this.position.y - target.position.y);
@@ -108,11 +90,7 @@ export class AgentEntity extends Entity {
         }
     }
 
-    /**
-     *
-     * @returns {Boolean}
-     */
-    arrivedAtJobDestinationLocation() {
+    arrivedAtJobDestinationLocation(): boolean {
         let job = this.getJob();
 
         if (!job || !job.started) {
@@ -124,8 +102,8 @@ export class AgentEntity extends Entity {
         ) {
             job.finish();
 
-            this.game.jobs.remove(job);
-            this.jobId = null;
+            this.game?.jobs.remove(job);
+            this.jobId = undefined;
 
             return true;
         }
@@ -133,11 +111,7 @@ export class AgentEntity extends Entity {
         return false;
     }
 
-    /**
-     *
-     * @returns {Boolean}
-     */
-    arrivedAtJobSourceLocation() {
+    arrivedAtJobSourceLocation(): boolean {
         let job = this.getJob();
 
         if (!job) {

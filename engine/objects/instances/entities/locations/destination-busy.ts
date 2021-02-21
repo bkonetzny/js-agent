@@ -1,5 +1,3 @@
-// @ts-check
-
 import { DestinationLocation } from "./destination";
 
 export class DestinationBusyLocation extends DestinationLocation {

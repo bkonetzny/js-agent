@@ -1,5 +1,3 @@
-// @ts-check
-
 import { ItemA } from "../../resources/item-a";
 import { LocationEntity } from "../location-entity";
 

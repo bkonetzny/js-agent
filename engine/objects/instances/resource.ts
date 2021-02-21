@@ -5,39 +5,32 @@ import { LocationEntity } from "./entities/location-entity";
 import { Job } from "./job";
 
 export class Resource extends Instance {
+    public owner : string;
+    public locationId ?: string;
+    public jobId ?: string;
+    public pickable : boolean;
+
     constructor() {
         super();
         this.owner = 'location'; // location, agent
-        this.locationId = null;
-        this.jobId = null;
+        this.locationId = undefined;
+        this.jobId = undefined;
         this.pickable = false;
     }
 
-    /**
-     *
-     * @returns {LocationEntity|null}
-     */
-    getLocation() {
+    getLocation(): LocationEntity | null {
         return this.locationId
             ? this.game.locations.findOneById(this.locationId)
             : null;
     }
 
-    /**
-     *
-     * @param {LocationEntity} location
-     */
-    assignToLocation(location) {
+    assignToLocation(location: LocationEntity) {
         this.locationId = location.id;
         this.owner = 'location';
         this.pickable = false;
     }
 
-    /**
-     *
-     * @param {Job} job
-     */
-    assignToJob(job) {
+    assignToJob(job: Job) {
         this.jobId = job.id;
         this.pickable = false;
     }

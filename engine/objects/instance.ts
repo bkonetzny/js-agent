@@ -1,26 +1,20 @@
-// @ts-check
-
 import { Game } from "../game";
 import { v4 as uuidv4 } from 'uuid';
 
 export class Instance {
+    public game ?: Game;
+    public id : string;
+
     constructor() {
-        this.game = null;
+        this.game = undefined;
         this.id = uuidv4();
     }
 
-    /**
-     *
-     * @param {Game} game
-     */
-    setGame(game) {
+    setGame(game: Game) {
         this.game = game;
     }
 
-    /**
-     * @returns {Instance}
-     */
-    getClonedInstance() {
+    getClonedInstance(): Instance {
         const clonedInstance = Object.assign(Object.create(this), this);
         clonedInstance.id = uuidv4();
 

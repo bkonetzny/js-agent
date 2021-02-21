@@ -1,18 +1,13 @@
-// @ts-nocheck
-
 import { Resource } from "../instances/resource";
 
 export class ResourcesDefinition {
+    public definitions : object;
+
     constructor() {
         this.definitions = {};
     }
 
-    /**
-     *
-     * @param {Resource} resource
-     * @param {Number} amount
-     */
-    addDefinition(resource, amount) {
+    addDefinition(resource: Resource, amount: number) {
         this.definitions[resource.constructor.name] = {
             resource: resource,
             amountRequested: amount,
@@ -20,21 +15,11 @@ export class ResourcesDefinition {
         };
     }
 
-    /**
-     *
-     * @param {Resource} resource
-     * @returns {Boolean}
-     */
-    hasResource(resource) {
+    hasResource(resource: Resource): boolean {
         return this.definitions.hasOwnProperty(resource.constructor.name);
     }
 
-    /**
-     *
-     * @param {Resource} resource
-     * @returns {Boolean}
-     */
-    matchResource(resource) {
+    matchResource(resource: Resource): boolean {
         if (!this.hasResource(resource)) {
             return false;
         }
@@ -48,11 +33,7 @@ export class ResourcesDefinition {
         return true;
     }
 
-    /**
-     *
-     * @returns {Boolean}
-     */
-    hasMissingResources() {
+    hasMissingResources(): boolean {
         let hasMissingResources = false;
         Object.keys(this.definitions).forEach((resourceClass) => {
             if (this.definitions[resourceClass].amountMatched < this.definitions[resourceClass].amountRequested) {

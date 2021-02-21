@@ -6,33 +6,30 @@ import { LocationEntity } from "./entities/location-entity";
 import { Resource } from "./resource";
 
 export class Job extends Instance {
-    /**
-     *
-     * @param {LocationEntity} source
-     * @param {LocationEntity} destination
-     * @param {Resource} resource
-     */
-    constructor(source, destination, resource) {
+    public source : LocationEntity;
+    public destination : LocationEntity;
+    public resourceId ?: string;
+    public agentId ?: string;
+    public started : boolean;
+    public finished : boolean;
+
+    constructor(source: LocationEntity, destination: LocationEntity, resource: Resource) {
         super();
         this.source = source;
         this.destination = destination;
-        this.resourceId = resource ? resource.id : null;
-        this.agentId = null;
+        this.resourceId = resource ? resource.id : undefined;
+        this.agentId = undefined;
         this.started = false;
         this.finished = false;
     }
 
-    /**
-     *
-     * @param {AgentEntity|null} agent
-     */
-    setAgent(agent) {
-        let assignedAgent;
+    setAgent(agent: AgentEntity | null) {
+        let assignedAgent: AgentEntity | null;
 
         if (!agent) {
             assignedAgent = this.getAgent();
 
-            this.agentId = null;
+            this.agentId = undefined;
 
             if (assignedAgent && assignedAgent.getJob() === this) {
                 assignedAgent.setJob(null);
@@ -50,31 +47,21 @@ export class Job extends Instance {
         }
     }
 
-    /**
-     *
-     * @returns {AgentEntity|null}
-     */
-    getAgent() {
+    getAgent(): AgentEntity | null {
+        // @ts-ignore
         return this.agentId
             ? this.game.agents.findOneById(this.agentId)
             : null;
     }
 
-    /**
-     *
-     * @returns {any|null}
-     */
-    getResource() {
+    getResource(): Resource | null {
+        // @ts-ignore
         return this.resourceId
             ? this.game.resources.findOneById(this.resourceId)
             : null;
     }
 
-    /**
-     *
-     * @returns {LocationEntity}
-     */
-    getCurrentTargetLocation() {
+    getCurrentTargetLocation(): LocationEntity {
         return this.started
             ? this.destination
             : this.source;

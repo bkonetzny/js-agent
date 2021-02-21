@@ -1,15 +1,10 @@
-// @ts-check
-
 import { Ui } from "../ui/scripts/ui";
 import { Game } from "./game";
 
 export class OutputHandler {
-    /**
-     *
-     * @param {Game} game
-     * @param {Ui} ui
-     */
-    constructor(game, ui) {
+    private ui : Ui;
+
+    constructor(game: Game, ui: Ui) {
         game.setOutputHandler(this);
         this.ui = ui;
     }

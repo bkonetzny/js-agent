@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { ResourcesDefinition } from "../../util/resources-definition";
 import { Entity } from "../entity";
 import { Resource } from "../resource";
@@ -17,41 +15,25 @@ export class LocationEntity extends Entity {
         this.onProcess();
     }
 
-    /**
-     *
-     * @returns {Resource[]}
-     */
-    getResources() {
-        return this.game.resources.findByLocation(this);
+    getResources(): Resource[] {
+        return this.game
+            ? this.game.resources.findByLocation(this)
+            : [];
     }
 
-    /**
-     *
-     * @param {Resource} resource
-     */
-    createResource(resource) {
+    createResource(resource: Resource) {
         this.attachResource(resource);
 
-        this.game.resources.add(resource);
+        this.game?.resources.add(resource);
     }
 
-    /**
-     *
-     * @param {Resource} resource
-     */
-    attachResource(resource) {
+    attachResource(resource: Resource) {
         resource.game = this.game;
         resource.locationId = this.id;
         resource.owner = 'location';
     }
 
-    /**
-     *
-     * @param {ResourcesDefinition} inputResourcesDefinition
-     * @param {ResourcesDefinition} outputResourcesDefinition
-     * @returns {Boolean}
-     */
-    convertResources(inputResourcesDefinition, outputResourcesDefinition) {
+    convertResources(inputResourcesDefinition: ResourcesDefinition, outputResourcesDefinition: ResourcesDefinition): boolean {
         const resources = this.getResources();
 
         resources.forEach((resource) => {
@@ -66,7 +48,7 @@ export class LocationEntity extends Entity {
 
         resources.forEach((resource) => {
             if (inputResourcesDefinition.matchResource(resource)) {
-                this.game.resources.remove(resource);
+                this.game?.resources.remove(resource);
             }
         });
 

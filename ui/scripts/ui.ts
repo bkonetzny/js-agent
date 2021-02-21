@@ -1,5 +1,3 @@
-// @ts-check
-
 import { Game } from "../../engine/game";
 import { InputHandler } from "../../engine/input-handler";
 import { OutputHandler } from "../../engine/output-handler";
@@ -30,7 +28,7 @@ class Boot extends Phaser.Scene {
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
-    private inputHandler?: InputHandler;
+    private inputHandler ?: InputHandler;
     private controlsSelector: any;
     private sceneSelector : HTMLElement | null;
     private detailsSelector: any;

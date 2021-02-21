@@ -1,5 +1,3 @@
-// @ts-check
-
 import { ResourcesDefinition } from "../../../util/resources-definition";
 import { Job } from "../../job";
 import { ItemA } from "../../resources/item-a";
@@ -7,6 +5,8 @@ import { ItemB } from "../../resources/item-b";
 import { LocationEntity } from "../location-entity";
 
 export class DestinationLocation extends LocationEntity {
+    public procesAfterTicks : integer;
+
     constructor(...args) {
         // @ts-ignore
         super(...args);
@@ -29,8 +29,7 @@ export class DestinationLocation extends LocationEntity {
 
         this.convertResources(inputResourcesDefinition, outputResourcesDefinition);
 
-        // @ts-ignore
-        let matchingResource = this.game.resources.findOneClosestByType(new ItemA(), this.position);
+        let matchingResource = this.game?.resources.findOneClosestByType(new ItemA(), this.position);
 
         if (!matchingResource) {
             return;
@@ -41,7 +40,6 @@ export class DestinationLocation extends LocationEntity {
 
         matchingResource.assignToJob(job);
 
-        // @ts-ignore
-        this.game.addJob(job);
+        this.game?.addJob(job);
     }
 }

@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/bkonetzny/js-agent#readme",
   "devDependencies": {
+    "@types/lodash-es": "^4.17.4",
     "copy-webpack-plugin": "^7.0.0",
     "css-loader": "^5.0.2",
     "html-webpack-plugin": "^5.0.0",
