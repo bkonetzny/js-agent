@@ -13,6 +13,8 @@ export class AgentEntity extends Entity {
     constructor(position) {
         super(position);
         this.jobId = null;
+        this.velocityIdle = 5;
+        this.velocityJob = 1;
     }
 
     process() {
@@ -78,8 +80,8 @@ export class AgentEntity extends Entity {
         let job = this.getJob();
 
         return (job && job.started)
-            ? 2
-            : 10;
+            ? this.velocityJob
+            : this.velocityIdle;
     }
 
     /**

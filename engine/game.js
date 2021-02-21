@@ -50,9 +50,9 @@ export class Game {
         this.process();
         this.publish();
 
-        setTimeout(() => {
+        //setTimeout(() => {
             this.scheduleMainLoop();
-        }, this.timeout);
+        //}, this.timeout);
     }
 
     scheduleMainLoop() {

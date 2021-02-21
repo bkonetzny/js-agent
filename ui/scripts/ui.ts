@@ -6,6 +6,7 @@ import { OutputHandler } from "../../engine/output-handler";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
+import { UiMeta } from "./ui-meta";
 import * as Phaser from "phaser";
 import { GameLevel } from "../scenes/Level";
 
@@ -33,12 +34,14 @@ export class Ui {
     private controlsSelector: any;
     private sceneSelector : HTMLElement | null;
     private detailsSelector: any;
+    private metaSelector: any;
     private controlsDomElement: any;
     private detailsDomElement: any;
+    private metaDomElement: any;
     private details: any;
     private scene: any;
     private controls: any;
-
+    private meta: any;
 
     /**
      * Creates an instance of Ui. The entry point of the whole game ui
@@ -48,21 +51,24 @@ export class Ui {
      * @param {*} detailsSelector
      * @memberof Ui
      */
-    constructor(domDocument: Document, controlsSelector: String, sceneSelector: any, detailsSelector: any) {
+    constructor(domDocument: Document, controlsSelector: String, sceneSelector: any, detailsSelector: any, metaSelector: any) {
         this.inputHandler = undefined;
 
         this.controlsSelector = controlsSelector;
         this.sceneSelector = domDocument.querySelector<HTMLElement>(sceneSelector);
         this.detailsSelector = detailsSelector;
+        this.metaSelector = metaSelector;
 
         this.controlsDomElement = domDocument.querySelector(this.controlsSelector);
         this.detailsDomElement = domDocument.querySelector(this.detailsSelector);
+        this.metaDomElement = domDocument.querySelector(this.metaSelector);
 
         this.details = new UiDetails(this.detailsDomElement);
         // sceneSelector might be undefined, this we will enforce it for now
         // TODO: Needs to be reworked - prone to fail at any time.
         this.scene = new UiScene(this, this.sceneSelector!, domDocument, this.details);
         this.controls = new UiControls(this, this.controlsDomElement, this.scene);
+        this.meta = new UiMeta(this, this.metaDomElement);
 
         /*
         const game = new Phaser.Game({
@@ -115,11 +121,12 @@ export class Ui {
         */
 
         this.scene.render(locations, agents);
+        this.meta.render();
     }
 }
 
 var game = new Game();
-var ui = new Ui(document, '#controls', '#scene', '#details');
+var ui = new Ui(document, '#controls', '#scene', '#details', '#meta');
 
 new InputHandler(game, ui);
 new OutputHandler(game, ui);
