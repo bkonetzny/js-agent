@@ -1,12 +1,12 @@
 // @ts-check
 
 import { Game } from "../game";
-import { Helper } from "./helper";
+import { v4 as uuidv4 } from 'uuid';
 
 export class Instance {
     constructor() {
         this.game = null;
-        this.id = Helper.createUuid();
+        this.id = uuidv4();
     }
 
     /**
@@ -22,7 +22,7 @@ export class Instance {
      */
     getClonedInstance() {
         const clonedInstance = Object.assign(Object.create(this), this);
-        clonedInstance.id = Helper.createUuid();
+        clonedInstance.id = uuidv4();
 
         return clonedInstance;
     }

@@ -25,6 +25,7 @@ export class UiScene {
         this.clickMode = null;
         this.focusedObjectId = null;
         this.locationCache = null;
+        this.domElementIdPrefix = 'id-';
 
         this.domElement.addEventListener('click', (/** @type {MouseEvent} */ event) => {
             this.processClickEvent(event);
@@ -141,7 +142,7 @@ export class UiScene {
     domRemoveObsoleteLocations(locations) {
         let domLocations = this.domElement.querySelectorAll('.building');
         let locationIds = locations.map((location) => {
-            return location.id;
+            return `${this.domElementIdPrefix}${location.id}`;
         });
 
         domLocations.forEach((domLocation) => {
@@ -206,11 +207,11 @@ export class UiScene {
      */
     domEnsureElementForTyoe(type, id) {
         /** @type {HTMLDivElement} */
-        let element = this.domElement.querySelector('#' + id);
+        let element = this.domElement.querySelector(`#${this.domElementIdPrefix}${id}`);
 
         if (!element) {
             element = this.domDocument.createElement('div');
-            element.id = id;
+            element.id = `${this.domElementIdPrefix}${id}`;
 
             this.domElement.appendChild(element);
         }
@@ -247,7 +248,7 @@ export class UiScene {
         }
 
         const matchingLocation = this.locationCache.find((location) => {
-            return location.id === id;
+            return `${this.domElementIdPrefix}${location.id}` === id;
         });
 
         if (!matchingLocation) {

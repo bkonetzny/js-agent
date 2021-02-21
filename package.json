@@ -30,7 +30,9 @@
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "lodash-es": "^4.17.21",
     "phaser": "^3.52.0",
-    "save": "^2.4.0"
+    "save": "^2.4.0",
+    "uuid": "^3.4.0"
   }
 }

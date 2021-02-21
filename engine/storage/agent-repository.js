@@ -1,9 +1,9 @@
 // @ts-nocheck
 
-import { Helper } from "../objects/helper";
 import { AgentEntity } from "../objects/instances/entities/agent-entity";
 import { Position } from "../objects/position";
 import { ArrayStorage } from "./array-storage";
+import { shuffle } from 'lodash-es';
 
 export class AgentRepository extends ArrayStorage {
     /**
@@ -54,10 +54,9 @@ export class AgentRepository extends ArrayStorage {
      */
     findOneRandomIdle() {
         let idleAgents = this.findIdle();
+        let shuffledIdleAgents = shuffle(idleAgents);
 
-        Helper.shuffleArray(idleAgents);
-
-        return idleAgents.shift();
+        return shuffledIdleAgents.shift();
     }
 
     /**
