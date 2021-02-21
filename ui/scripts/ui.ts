@@ -12,19 +12,20 @@ import { GameLevel } from "../scenes/Level";
 const stylesUi = require('../styles/ui.css');
 const stylesScene = require('../styles/scene.css');
 
+/*
 class Boot extends Phaser.Scene {
 
-	preload() {
-		
-		this.load.pack("pack", "assets/asset-pack.json");
-	}
+    preload() {
+        this.load.pack("pack", "assets/asset-pack.json");
+    }
 
-	create() {
-		
+    create() {
         this.scene.start("Level");
-	}
+    }
 
 }
+*/
+
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
@@ -38,7 +39,7 @@ export class Ui {
     private scene: any;
     private controls: any;
 
-    
+
     /**
      * Creates an instance of Ui. The entry point of the whole game ui
      * @param {Document} domDocument
@@ -63,6 +64,7 @@ export class Ui {
         this.scene = new UiScene(this, this.sceneSelector!, domDocument, this.details);
         this.controls = new UiControls(this, this.controlsDomElement, this.scene);
 
+        /*
         const game = new Phaser.Game({
             width: 800,
             height: 600,
@@ -75,6 +77,7 @@ export class Ui {
         });
         game.scene.add("Level", GameLevel);
         game.scene.add("Boot", Boot, true);
+        */
     }
 
     /**

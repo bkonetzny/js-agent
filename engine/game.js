@@ -3,7 +3,6 @@
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
-import { Helper } from "./objects/helper";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
@@ -12,6 +11,7 @@ import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { ResourceRepository } from "./storage/resource-repository";
+import { cloneDeep, cloneDeepWith } from 'lodash-es';
 
 export class Game {
     constructor(settings) {
@@ -194,12 +194,20 @@ export class Game {
     exportState() {
         this.controlPause();
 
+        const filterGame = (value, index, object, stack) => {
+            if (value instanceof Game) {
+                return null;
+            }
+
+            return undefined;
+        };
+
         const state = {
             settings: this.settings,
-            locations: Helper.deepCopy(this.locations.findAll(), ['game']),
-            agents: Helper.deepCopy(this.agents.findAll(), ['game']),
-            jobs: Helper.deepCopy(this.jobs.findAll(), ['game']),
-            resources: Helper.deepCopy(this.resources.findAll(), ['game']),
+            locations: cloneDeepWith(this.locations.findAll(), filterGame),
+            agents: cloneDeepWith(this.agents.findAll(), filterGame),
+            jobs: cloneDeepWith(this.jobs.findAll(), filterGame),
+            resources: cloneDeepWith(this.resources.findAll(), filterGame),
         };
 
         return JSON.stringify(state);
