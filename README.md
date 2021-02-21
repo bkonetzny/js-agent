@@ -4,9 +4,12 @@ Simulation to let Agents transport Items from source Location to destination Loc
 
 Locations and Agents can be managed via UI in the browser.
 
+[Try Demo](https://bkonetzny.github.io/js-agent/)
+
 ## Build
+
 ```shell
-$ npm run build
+$ npm install && npm run build
 ```
 
 ## Run
