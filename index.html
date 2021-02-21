@@ -1,0 +1,44 @@
+<html class="js-agent">
+	<head>
+		<meta charset="utf-8"/>
+		<title>JS DEV</title>
+		
+	<script defer src="vendor.js"></script><script defer src="ui.js"></script><script defer src="engine.js"></script></head>
+	<body style="padding: 0; margin: 0;">
+		<div id="controls">
+            <fieldset>
+                <legend>Simulation</legend>
+                <button id="start">Start</button>
+                <button id="pause">Pause</button>
+            </fieldset>
+            <fieldset>
+                <legend>Entity</legend>
+                <button id="addSource">Add Source</button>
+                <button id="addDestination">Add Destination</button>
+                <button id="addBusyDestination">Add Busy Destination</button>
+                <button id="addAgent">Add Agent</button>
+            </fieldset>
+            <fieldset>
+                <legend>Setting</legend>
+                <select id="updateSettingKey">
+                    <option value="assignIdleAgentToOpenJobStrategy">assignIdleAgentToOpenJobStrategy</option>
+                </select>
+                <input id="updateSettingValue" type="text">
+                <button id="updateSetting">Update</button>
+            </fieldset>
+            <fieldset>
+                <legend>Data</legend>
+                <button id="export">Export</button>
+                <button id="import">Import</button>
+            </fieldset>
+        </div>
+        <div id="scene">
+
+        </div>
+        <fieldset>
+            <legend>Details</legend>
+            <div id="details"></div>
+        </fieldset>
+	</body>
+
+</html>
