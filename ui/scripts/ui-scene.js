@@ -21,7 +21,6 @@ export class UiScene {
         this.domDocument = domDocument;
         this.uiDetails = uiDetails;
 
-        this.sceneRect = this.domElement.getBoundingClientRect();
         this.clickMode = null;
         this.focusedObjectId = null;
         this.locationCache = null;
@@ -115,7 +114,9 @@ export class UiScene {
      * @returns {Position}
      */
     getPositionForEvent(event) {
-        return new Position(event.clientX - this.sceneRect.left, event.clientY - this.sceneRect.top);
+        const sceneRect = this.domElement.getBoundingClientRect();
+
+        return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
     }
 
     /**
