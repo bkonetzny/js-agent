@@ -1,6 +1,6 @@
 import { Instance } from "../objects/instance";
 
-export class ArrayStorage<T extends Instance> {
+export abstract class ArrayStorage<T extends Instance> {
     public data : Array<T>;
 
     constructor() {

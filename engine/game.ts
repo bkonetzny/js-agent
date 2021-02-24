@@ -182,9 +182,6 @@ export class Game {
     importState(state: string): boolean {
         this.controlPause();
 
-        /**
-         * @type {Object}
-         */
         const parsedState: object = JSON.parse(state);
 
         console.log('TODO: importState', parsedState);

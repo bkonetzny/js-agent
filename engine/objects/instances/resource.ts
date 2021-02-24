@@ -2,7 +2,7 @@ import { Instance } from "../instance";
 import { LocationEntity } from "./entities/location-entity";
 import { Job } from "./job";
 
-export class Resource extends Instance {
+export abstract class Resource extends Instance {
     public owner : string;
     public locationId ?: string;
     public jobId ?: string;

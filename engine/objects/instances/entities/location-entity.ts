@@ -2,7 +2,7 @@ import { ResourcesDefinition } from "../../util/resources-definition";
 import { Entity } from "../entity";
 import { Resource } from "../resource";
 
-export class LocationEntity extends Entity {
+export abstract class LocationEntity extends Entity {
     /**
      * To be overwritten in locations.
      */

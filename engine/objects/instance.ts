@@ -1,7 +1,7 @@
 import { Game } from "../game";
 import { v4 as uuidv4 } from 'uuid';
 
-export class Instance {
+export abstract class Instance {
     public game ?: Game;
     public id : string;
 
