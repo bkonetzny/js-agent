@@ -1,25 +1,17 @@
-// @ts-check
-
 import { Instance } from "../objects/instance";
 
-export class ArrayStorage {
+export class ArrayStorage<T> {
+    public data : Array<T>;
+
     constructor() {
         this.data = [];
     }
 
-    /**
-     *
-     * @param {Instance} item
-     */
-    add(item) {
+    add(item: T) {
         this.data.push(item);
     }
 
-    /**
-     *
-     * @param {Instance} item
-     */
-    remove(item) {
+    remove(item: T) {
         let index = this.data.indexOf(item);
 
         if (index === -1) {
@@ -31,22 +23,14 @@ export class ArrayStorage {
         return true;
     }
 
-    /**
-     *
-     * @param {String} id
-     * @returns {Instance}
-     */
-    findOneById(id) {
+    findOneById(id: string): T | undefined {
         return this.data.find((item) => {
+            // @ts-ignore
             return item.id === id;
         });
     }
 
-    /**
-     *
-     * @returns {Instance[]}
-     */
-    findAll() {
+    findAll(): T[] {
         return this.data;
     }
 }

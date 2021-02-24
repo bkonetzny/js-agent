@@ -18,10 +18,10 @@ export class Resource extends Instance {
         this.pickable = false;
     }
 
-    getLocation(): LocationEntity | null {
+    getLocation(): LocationEntity | undefined {
         return this.locationId
             ? this.game.locations.findOneById(this.locationId)
-            : null;
+            : undefined;
     }
 
     assignToLocation(location: LocationEntity) {

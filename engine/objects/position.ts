@@ -9,9 +9,9 @@ export class Position {
         this.y = parseInt(y, 10);
     }
 
-    static findClosestEntity(position: Position, entities: Entity[]): Entity | undefined {
-        let closestDistance;
-        let closestEntity;
+    static findClosestEntity<T extends Entity>(position: Position, entities: T[]): T | undefined {
+        let closestDistance: number;
+        let closestEntity: T | undefined = undefined;
 
         entities.forEach((entity) => {
             let distance = Math.abs(position.x - entity.position.x) + Math.abs(position.y - entity.position.y);

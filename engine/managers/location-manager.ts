@@ -1,13 +1,7 @@
-// @ts-check
-
 import { Game } from "../game";
 
 export class LocationManager {
-    /**
-     *
-     * @param {Game} game
-     */
-    static process(game) {
+    static process(game: Game) {
         game.locations.findAll().forEach((location) => {
             location.process();
         });

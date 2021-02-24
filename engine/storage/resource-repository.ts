@@ -1,17 +1,10 @@
-// @ts-nocheck
-
 import { LocationEntity } from "../objects/instances/entities/location-entity";
 import { Resource } from "../objects/instances/resource";
 import { Position } from "../objects/position";
 import { ArrayStorage } from "./array-storage";
 
-export class ResourceRepository extends ArrayStorage {
-    /**
-     *
-     * @param {LocationEntity} location
-     * @returns {Resource[]}
-     */
-    findByLocation(location) {
+export class ResourceRepository extends ArrayStorage<Resource> {
+    findByLocation(location: LocationEntity): Resource[] {
         return this.data.filter((resource) => {
             return (
                 resource.owner === 'location'
@@ -20,12 +13,7 @@ export class ResourceRepository extends ArrayStorage {
         });
     }
 
-    /**
-     * @param {Resource} type
-     * @param {Position} position
-     * @returns {Resource|undefined|null}
-     */
-    findOneClosestByType(type, position) {
+    findOneClosestByType(type: Resource, position: Position): Resource | undefined {
         let pickableResources = this.data.filter((resource) => {
             return (
                 resource.pickable
@@ -34,13 +22,13 @@ export class ResourceRepository extends ArrayStorage {
         });
 
         if (!pickableResources.length) {
-            return null;
+            return undefined;
         }
 
-        let locationIds = [];
+        let locationIds: Array<String> = [];
 
         let uniqueLocationResources = pickableResources.filter((resource) => {
-            if (locationIds.includes(resource.locationId)) {
+            if (!resource.locationId || locationIds.includes(resource.locationId)) {
                 return false;
             }
 
@@ -53,14 +41,27 @@ export class ResourceRepository extends ArrayStorage {
             return resource.getLocation();
         });
 
+        if (!possibleLocations.length) {
+            return undefined;
+        }
+
+        possibleLocations = possibleLocations.filter((location) => {
+            return !!location;
+        });
+
+        if (!possibleLocations.length) {
+            return undefined;
+        }
+
+        // @ts-ignore
         let closestLocation = Position.findClosestEntity(position, possibleLocations);
 
         if (!closestLocation) {
-            return null;
+            return undefined;
         }
 
         return uniqueLocationResources.find((resource) => {
-            return resource.locationId === closestLocation.id;
+            return resource.locationId === closestLocation?.id;
         });
     }
 }

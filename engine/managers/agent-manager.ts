@@ -1,13 +1,7 @@
-// @ts-check
-
 import { Game } from "../game";
 
 export class AgentManager {
-    /**
-     *
-     * @param {Game} game
-     */
-    static process(game) {
+    static process(game: Game) {
         game.agents.findBusy().forEach((agent) => {
             agent.process();
         });

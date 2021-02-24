@@ -1,20 +1,14 @@
-// @ts-check
-
 import { Game } from "../game";
 import { AgentEntity } from "../objects/instances/entities/agent-entity";
 import { Job } from "../objects/instances/job";
 
 export class JobManager {
-    /**
-     *
-     * @param {Game} game
-     */
-    static process(game) {
+    static process(game: Game) {
         if (!game.agents.hasIdle() || !game.jobs.hasOpen()) {
             return;
         }
 
-        let openJob, idleAgent;
+        let openJob: Job | undefined, idleAgent: AgentEntity | undefined;
 
         while (
             (openJob = game.jobs.findOneNextOpen())
@@ -24,13 +18,7 @@ export class JobManager {
         }
     }
 
-    /**
-     *
-     * @param {Game} game
-     * @param {Job} openJob
-     * @returns {AgentEntity|null}
-     */
-    static findIdleAgentForOpenJob(game, openJob) {
+    static findIdleAgentForOpenJob(game: Game, openJob: Job): AgentEntity | undefined {
         switch (game.settings.assignIdleAgentToOpenJobStrategy) {
             case 'next':
                 return game.agents.findOneNextIdle();
@@ -39,7 +27,7 @@ export class JobManager {
             case 'closest':
                 return game.agents.findOneClosestIdle(openJob.source.position);
             default:
-                throw new Error('Invalid value for assignIdleAgentToOpenJobStrategy: ' + game.settings.assignIdleAgentToOpenJobStrategy);
+                throw new Error(`Invalid value for assignIdleAgentToOpenJobStrategy: ${game.settings.assignIdleAgentToOpenJobStrategy}`);
         }
     }
 }
