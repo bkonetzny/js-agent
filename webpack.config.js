@@ -7,7 +7,7 @@ module.exports = (argv) => {
 		mode: argv.mode || "development",
 		entry: {
 			"ui": './ui/scripts/ui.ts',
-			"engine": "./engine/game.js"
+			"engine": "./engine/game.ts"
 		},
 		optimization: {
 			splitChunks: {

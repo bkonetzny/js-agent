@@ -1,5 +1,3 @@
-// @ts-check
-
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
@@ -14,16 +12,20 @@ import { ResourceRepository } from "./storage/resource-repository";
 import { cloneDeepWith } from 'lodash-es';
 
 export class Game {
-    /**
-     *
-     * @param {Object} settings
-     * @param {Function} tickFunction
-     */
-    constructor(settings, tickFunction) {
+    public settings : any;
+    public outputHandler : OutputHandler | undefined;
+    public running : boolean;
+    public locations : LocationRepository;
+    public agents : AgentRepository;
+    public jobs : JobRepository;
+    public resources : ResourceRepository;
+    public tickFunction : CallableFunction;
+
+    constructor(settings: any, tickFunction: Function) {
         this.settings = {...{
             assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest
         }, ...settings};
-        this.outputHandler = null;
+        this.outputHandler = undefined;
         this.running = false;
         this.locations = new LocationRepository();
         this.agents = new AgentRepository();
@@ -70,7 +72,7 @@ export class Game {
             return;
         }
 
-        this.outputHandler.update(
+        this.outputHandler?.update(
             this.locations.findAll(),
             this.agents.findAll(),
             this.jobs.findAll(),
@@ -86,20 +88,11 @@ export class Game {
         this.publish();
     }
 
-    /**
-     *
-     * @param {OutputHandler} outputHandler
-     */
-    setOutputHandler(outputHandler) {
+    setOutputHandler(outputHandler: OutputHandler) {
         this.outputHandler = outputHandler;
     }
 
-    /**
-     *
-     * @param {String} command
-     * @param {Object} data
-     */
-    command(command, data) {
+    command(command: string, data: any) {
         switch (command) {
             case 'control:start':
                 return this.controlStart();
@@ -127,12 +120,7 @@ export class Game {
         }
     }
 
-    /**
-     *
-     * @param {LocationEntity} location
-     * @returns {String}
-     */
-    addLocation(location) {
+    addLocation(location: LocationEntity): string {
         location.setGame(this);
         this.locations.add(location);
         location.onCreate();
@@ -142,12 +130,7 @@ export class Game {
         return location.id;
     }
 
-    /**
-     *
-     * @param {AgentEntity} agent
-     * @returns {String}
-     */
-    addAgent(agent) {
+    addAgent(agent: AgentEntity): string {
         agent.setGame(this);
         this.agents.add(agent);
 
@@ -156,25 +139,14 @@ export class Game {
         return agent.id;
     }
 
-    /**
-     *
-     * @param {Job} job
-     * @returns {String}
-     */
-    addJob(job) {
+    addJob(job: Job): string {
         job.setGame(this);
         this.jobs.add(job);
 
         return job.id;
     }
 
-    /**
-     *
-     * @param {String} key
-     * @param {String} value
-     * @returns {Object}
-     */
-    updateSetting(key, value) {
+    updateSetting(key: string, value: string): object {
         let oldValue = this.settings[key];
 
         this.settings[key] = value;
@@ -185,11 +157,7 @@ export class Game {
         };
     }
 
-    /**
-     *
-     * @returns {String}
-     */
-    exportState() {
+    exportState(): string {
         this.controlPause();
 
         const filterGame = (value, index, object, stack) => {
@@ -211,18 +179,13 @@ export class Game {
         return JSON.stringify(state);
     }
 
-    /**
-     *
-     * @param {String} state
-     * @returns {Boolean}
-     */
-    importState(state) {
+    importState(state: string): boolean {
         this.controlPause();
 
         /**
          * @type {Object}
          */
-        const parsedState = JSON.parse(state);
+        const parsedState: object = JSON.parse(state);
 
         console.log('TODO: importState', parsedState);
 
