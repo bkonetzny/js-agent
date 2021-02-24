@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { Instance } from "../instance";
 import { AgentEntity } from "./entities/agent-entity";
 import { LocationEntity } from "./entities/location-entity";
@@ -23,8 +21,8 @@ export class Job extends Instance {
         this.finished = false;
     }
 
-    setAgent(agent: AgentEntity | null) {
-        let assignedAgent: AgentEntity | null;
+    setAgent(agent: AgentEntity | undefined) {
+        let assignedAgent: AgentEntity | undefined;
 
         if (!agent) {
             assignedAgent = this.getAgent();
@@ -47,18 +45,16 @@ export class Job extends Instance {
         }
     }
 
-    getAgent(): AgentEntity | null {
-        // @ts-ignore
+    getAgent(): AgentEntity | undefined {
         return this.agentId
-            ? this.game.agents.findOneById(this.agentId)
-            : null;
+            ? this.game?.agents.findOneById(this.agentId)
+            : undefined;
     }
 
-    getResource(): Resource | null {
-        // @ts-ignore
+    getResource(): Resource | undefined {
         return this.resourceId
-            ? this.game.resources.findOneById(this.resourceId)
-            : null;
+            ? this.game?.resources.findOneById(this.resourceId)
+            : undefined;
     }
 
     getCurrentTargetLocation(): LocationEntity {
@@ -72,7 +68,7 @@ export class Job extends Instance {
             return;
         }
 
-        this.getResource().assignToAgent();
+        this.getResource()?.assignToAgent();
 
         this.started = true;
     }
@@ -82,7 +78,7 @@ export class Job extends Instance {
             return;
         }
 
-        this.getResource().assignToLocation(this.destination);
+        this.getResource()?.assignToLocation(this.destination);
 
         this.finished = true;
     }

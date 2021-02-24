@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import { Instance } from "../instance";
 import { LocationEntity } from "./entities/location-entity";
 import { Job } from "./job";
@@ -20,7 +18,7 @@ export class Resource extends Instance {
 
     getLocation(): LocationEntity | undefined {
         return this.locationId
-            ? this.game.locations.findOneById(this.locationId)
+            ? this.game?.locations.findOneById(this.locationId)
             : undefined;
     }
 

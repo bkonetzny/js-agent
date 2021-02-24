@@ -3,7 +3,7 @@ import { ArrayStorage } from "./array-storage";
 
 export class JobRepository extends ArrayStorage<Job> {
     remove(job: Job) {
-        job.setAgent(null);
+        job.setAgent(undefined);
 
         return super.remove(job);
     }

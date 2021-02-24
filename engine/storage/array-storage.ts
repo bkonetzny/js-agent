@@ -1,6 +1,6 @@
 import { Instance } from "../objects/instance";
 
-export class ArrayStorage<T> {
+export class ArrayStorage<T extends Instance> {
     public data : Array<T>;
 
     constructor() {
@@ -25,7 +25,6 @@ export class ArrayStorage<T> {
 
     findOneById(id: string): T | undefined {
         return this.data.find((item) => {
-            // @ts-ignore
             return item.id === id;
         });
     }
