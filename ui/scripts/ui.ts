@@ -5,8 +5,12 @@ import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiScene } from "./ui-scene";
 import { UiMeta } from "./ui-meta";
-import * as Phaser from "phaser";
-import { GameLevel } from "../scenes/Level";
+import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
+import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
+import { Job } from "../../engine/objects/instances/job";
+import { Resource } from "../../engine/objects/instances/resource";
+/* import * as Phaser from "phaser";
+import { GameLevel } from "../scenes/Level"; */
 
 const stylesUi = require('../styles/ui.css');
 const stylesScene = require('../styles/scene.css');
@@ -43,13 +47,9 @@ export class Ui {
 
     /**
      * Creates an instance of Ui. The entry point of the whole game ui
-     * @param {Document} domDocument
-     * @param {String} controlsSelector
-     * @param {*} sceneSelector
-     * @param {*} detailsSelector
      * @memberof Ui
      */
-    constructor(domDocument: Document, controlsSelector: String, sceneSelector: any, detailsSelector: any, metaSelector: any) {
+    constructor(domDocument: Document, controlsSelector: string, sceneSelector: any, detailsSelector: any, metaSelector: any) {
         this.inputHandler = undefined;
 
         this.controlsSelector = controlsSelector;
@@ -84,32 +84,15 @@ export class Ui {
         */
     }
 
-    /**
-     *
-     * @param {InputHandler} inputHandler
-     */
-    setInputHandler(inputHandler) {
+    setInputHandler(inputHandler: InputHandler) {
         this.inputHandler = inputHandler;
     }
 
-    /**
-     *
-     * @param {String} command
-     * @param {Object} data
-     * @returns {any}
-     */
-    handleInput(command, data) {
+    handleInput(command: string, data: object): any {
         return this.inputHandler?.command(command, data);
     }
 
-    /**
-     *
-     * @param {LocationEntity[]} locations
-     * @param {AgentEntity[]} agents
-     * @param {Job[]} jobs
-     * @param {Resource[]} resources
-     */
-    updateState(locations, agents, jobs, resources) {
+    updateState(locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[]) {
         /*
         console.clear();
         console.table(locations);
@@ -130,4 +113,3 @@ var ui = new Ui(document, '#controls', '#scene', '#details', '#meta');
 
 new InputHandler(game, ui);
 new OutputHandler(game, ui);
-

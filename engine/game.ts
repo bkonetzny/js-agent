@@ -13,7 +13,7 @@ import { cloneDeepWith } from 'lodash-es';
 
 export class Game {
     public settings : any;
-    public outputHandler : OutputHandler | undefined;
+    public outputHandler ?: OutputHandler;
     public running : boolean;
     public locations : LocationRepository;
     public agents : AgentRepository;

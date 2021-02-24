@@ -1,4 +1,5 @@
 import { Position } from "../../position";
+import { Pathfinder } from "../../util/pathfinder";
 import { Entity } from "../entity";
 import { Job } from "../job";
 import { LocationEntity } from "./location-entity";
@@ -32,8 +33,8 @@ export class AgentEntity extends Entity {
         }
     }
 
-    setJob(job: Job | null) {
-        let assignedJob;
+    setJob(job?: Job) {
+        let assignedJob: Job | undefined;
 
         if (!job) {
             assignedJob = this.getJob();
@@ -41,7 +42,7 @@ export class AgentEntity extends Entity {
             this.jobId = undefined;
 
             if (assignedJob && assignedJob.getAgent() === this) {
-                assignedJob.setAgent(null);
+                assignedJob.setAgent(undefined);
             }
 
             return;
@@ -56,10 +57,10 @@ export class AgentEntity extends Entity {
         }
     }
 
-    getJob(): any | null {
+    getJob(): Job | undefined {
         return this.jobId
             ? this.game?.jobs.findOneById(this.jobId)
-            : null;
+            : undefined;
     }
 
     getSpeed(): number {
@@ -71,23 +72,7 @@ export class AgentEntity extends Entity {
     }
 
     moveToTarget(target: LocationEntity) {
-        let speed = this.getSpeed();
-        let distanceX = Math.abs(this.position.x - target.position.x);
-        let distanceY = Math.abs(this.position.y - target.position.y);
-
-        if (this.position.x > target.position.x) {
-            this.position.x = this.position.x - Math.min(distanceX, speed);
-        }
-        if (this.position.x < target.position.x) {
-            this.position.x = this.position.x + Math.min(distanceX, speed);
-        }
-
-        if (this.position.y > target.position.y) {
-            this.position.y = this.position.y - Math.min(distanceY, speed);
-        }
-        if (this.position.y < target.position.y) {
-            this.position.y = this.position.y + Math.min(distanceY, speed);
-        }
+        this.position = Pathfinder.proceedToPosition(this.position, target.position, this.getSpeed());
     }
 
     arrivedAtJobDestinationLocation(): boolean {
@@ -97,9 +82,7 @@ export class AgentEntity extends Entity {
             return false;
         }
 
-        if (this.position.x === job.destination.position.x
-            && this.position.y === job.destination.position.y
-        ) {
+        if (Position.isSamePosition(this.position, job.destination.position)) {
             job.finish();
 
             this.game?.jobs.remove(job);
@@ -122,9 +105,7 @@ export class AgentEntity extends Entity {
             return true;
         }
 
-        if (this.position.x === job.source.position.x
-            && this.position.y === job.source.position.y
-        ) {
+        if (Position.isSamePosition(this.position, job.source.position)) {
             job.start();
         }
 

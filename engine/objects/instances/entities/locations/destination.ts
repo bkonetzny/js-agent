@@ -5,7 +5,7 @@ import { ItemB } from "../../resources/item-b";
 import { LocationEntity } from "../location-entity";
 
 export class DestinationLocation extends LocationEntity {
-    public procesAfterTicks : integer;
+    public procesAfterTicks : number;
 
     constructor(...args) {
         // @ts-ignore

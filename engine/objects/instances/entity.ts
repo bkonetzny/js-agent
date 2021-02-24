@@ -3,7 +3,7 @@ import { Position } from "../position";
 
 export abstract class Entity extends Instance {
     public position : Position;
-    public processTicks : integer;
+    public processTicks : number;
 
     constructor(position: Position) {
         super();

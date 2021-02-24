@@ -21,7 +21,7 @@ export class Job extends Instance {
         this.finished = false;
     }
 
-    setAgent(agent: AgentEntity | undefined) {
+    setAgent(agent?: AgentEntity) {
         let assignedAgent: AgentEntity | undefined;
 
         if (!agent) {
@@ -30,7 +30,7 @@ export class Job extends Instance {
             this.agentId = undefined;
 
             if (assignedAgent && assignedAgent.getJob() === this) {
-                assignedAgent.setJob(null);
+                assignedAgent.setJob(undefined);
             }
 
             return;
