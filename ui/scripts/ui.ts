@@ -88,7 +88,7 @@ export class Ui {
         this.inputHandler = inputHandler;
     }
 
-    handleInput(command: string, data: object): any {
+    handleInput(command: string, data?: object): any {
         return this.inputHandler?.command(command, data);
     }
 

@@ -9,7 +9,7 @@ export class InputHandler {
         ui.setInputHandler(this);
     }
 
-    command(command: string, data: object): any {
+    command(command: string, data?: object): any {
         return this.game.command(command, data);
     }
 }

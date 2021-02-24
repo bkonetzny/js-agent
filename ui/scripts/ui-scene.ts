@@ -8,43 +8,38 @@ import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
 
 export class UiScene {
-    /**
-     *
-     * @param {Ui} ui
-     * @param {Element} domElement
-     * @param {Document} domDocument
-     * @param {UiDetails} uiDetails
-     */
-    constructor(ui, domElement, domDocument, uiDetails) {
+    private ui: Ui;
+    private domElement: Element;
+    private domDocument: Document;
+    private uiDetails: UiDetails;
+    private clickMode?: string;
+    private focusedObjectId?: string;
+    private locationCache: LocationEntity[];
+    private domElementIdPrefix: string;
+
+    constructor(ui: Ui, domElement: Element, domDocument: Document, uiDetails: UiDetails) {
         this.ui = ui;
         this.domElement = domElement;
         this.domDocument = domDocument;
         this.uiDetails = uiDetails;
 
-        this.clickMode = null;
-        this.focusedObjectId = null;
-        this.locationCache = null;
+        this.clickMode = undefined;
+        this.focusedObjectId = undefined;
+        this.locationCache = [];
         this.domElementIdPrefix = 'id-';
 
-        this.domElement.addEventListener('click', (/** @type {MouseEvent} */ event) => {
+        // @ts-ignore
+        this.domElement.addEventListener('click', (event: MouseEvent) => {
             this.processClickEvent(event);
         });
     }
 
-    /**
-     *
-     * @param {String} clickMode
-     */
-    setClickMode(clickMode) {
+    setClickMode(clickMode: string) {
         this.clickMode = clickMode;
     }
 
-    /**
-     *
-     * @param {MouseEvent} event
-     */
-    processClickEvent(event) {
-        this.focusedObjectId = null;
+    processClickEvent(event: MouseEvent) {
+        this.focusedObjectId = undefined;
 
         if (event.target !== this.domElement) {
             this.processClickEventOnObject(event);
@@ -54,11 +49,7 @@ export class UiScene {
         }
     }
 
-    /**
-     *
-     * @param {MouseEvent} event
-     */
-    processClickEventOnScene(event) {
+    processClickEventOnScene(event: MouseEvent) {
         if (!this.clickMode) {
             return;
         }
@@ -99,32 +90,18 @@ export class UiScene {
         // this.clickMode = null;
     }
 
-    /**
-     *
-     * @param {MouseEvent} event
-     */
-    processClickEventOnObject(event) {
-        this.focusedObjectId = event.target.id;
+    processClickEventOnObject(event: MouseEvent) {
+        this.focusedObjectId = (event.target as Element)?.id;
         this.updateDetails();
     }
 
-    /**
-     *
-     * @param {MouseEvent} event
-     * @returns {Position}
-     */
-    getPositionForEvent(event) {
+    getPositionForEvent(event: MouseEvent): Position {
         const sceneRect = this.domElement.getBoundingClientRect();
 
         return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
     }
 
-    /**
-     *
-     * @param {LocationEntity[]} locations
-     * @param {AgentEntity[]} agents
-     */
-    render(locations, agents) {
+    render(locations: LocationEntity[], agents: AgentEntity[]) {
         this.locationCache = locations;
 
         this.domRemoveObsoleteLocations(locations);
@@ -136,11 +113,7 @@ export class UiScene {
         this.updateDetails();
     }
 
-    /**
-     *
-     * @param {LocationEntity[]} locations
-     */
-    domRemoveObsoleteLocations(locations) {
+    domRemoveObsoleteLocations(locations: LocationEntity[]) {
         let domLocations = this.domElement.querySelectorAll('.building');
         let locationIds = locations.map((location) => {
             return `${this.domElementIdPrefix}${location.id}`;
@@ -153,11 +126,7 @@ export class UiScene {
         });
     }
 
-    /**
-     *
-     * @param {AgentEntity[]} agents
-     */
-    domRemoveObsoleteAgents(agents) {
+    domRemoveObsoleteAgents(agents: AgentEntity[]) {
         let domAgents = this.domElement.querySelectorAll('.agent');
         let agentIds = agents.map((agent) => {
             return agent.id;
@@ -170,11 +139,7 @@ export class UiScene {
         });
     }
 
-    /**
-     *
-     * @param {LocationEntity[]} locations
-     */
-    domUpdateLocations(locations) {
+    domUpdateLocations(locations: LocationEntity[]) {
         locations.forEach((building) => {
             let domBuilding = this.domEnsureElementForTyoe('building', building.id);
 
@@ -184,11 +149,7 @@ export class UiScene {
         });
     }
 
-    /**
-     *
-     * @param {AgentEntity[]} agents
-     */
-    domUpdateAgents(agents) {
+    domUpdateAgents(agents: AgentEntity[]) {
         agents.forEach((agent) => {
             let domAgent = this.domEnsureElementForTyoe('agent', agent.id);
 
@@ -200,15 +161,8 @@ export class UiScene {
         });
     }
 
-    /**
-     *
-     * @param {String} type
-     * @param {String} id
-     * @returns {HTMLDivElement}
-     */
-    domEnsureElementForTyoe(type, id) {
-        /** @type {HTMLDivElement} */
-        let element = this.domElement.querySelector(`#${this.domElementIdPrefix}${id}`);
+    domEnsureElementForTyoe(type: string, id: string): HTMLDivElement {
+        let element: HTMLDivElement | null = this.domElement.querySelector(`#${this.domElementIdPrefix}${id}`);
 
         if (!element) {
             element = this.domDocument.createElement('div');
@@ -217,31 +171,23 @@ export class UiScene {
             this.domElement.appendChild(element);
         }
 
+        // @ts-ignore
         element.classList.remove(...element.classList);
         element.classList.add(type);
 
         return element;
     }
 
-    /**
-     *
-     * @param {HTMLDivElement} element
-     * @param {Position} position
-     */
-    domUpdateElementPosition(element, position) {
-        element.style.left = position.x + 'px';
-        element.style.top = position.y + 'px';
+    domUpdateElementPosition(element: HTMLDivElement, position: Position) {
+        element.style.left = `${position.x}px`;
+        element.style.top = `${position.y}px`;
     }
 
     updateDetails() {
         this.showDetails(this.focusedObjectId);
     }
 
-    /**
-     *
-     * @param {String|null} id
-     */
-    showDetails(id) {
+    showDetails(id?: string) {
         if (!id) {
             this.uiDetails.render('');
 

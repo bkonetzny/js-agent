@@ -92,7 +92,7 @@ export class Game {
         this.outputHandler = outputHandler;
     }
 
-    command(command: string, data: any) {
+    command(command: string, data?: any) {
         switch (command) {
             case 'control:start':
                 return this.controlStart();

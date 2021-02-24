@@ -1,12 +1,11 @@
 import { Ui } from "./ui";
 
 export class UiMeta {
-    /**
-     *
-     * @param {Ui} ui
-     * @param {Element} domElement
-     */
-    constructor(ui, domElement) {
+    private ui: Ui;
+    private domElement: Element;
+    private counter: number;
+
+    constructor(ui: Ui, domElement: Element) {
         this.ui = ui;
         this.domElement = domElement;
         this.counter = 0;
