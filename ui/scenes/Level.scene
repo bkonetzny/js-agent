@@ -1,0 +1,82 @@
+{
+    "id": "6f556dd4-77bf-4bb8-9b63-38dbb4625334",
+    "sceneType": "SCENE",
+    "settings": {
+        "preloadPackFiles": [],
+        "sceneKey": "Level",
+        "compilerOutputLanguage": "TYPE_SCRIPT"
+    },
+    "displayList": [
+        {
+            "type": "Text",
+            "id": "9a5ebf25-d774-4035-b779-608d99945bf3",
+            "label": "text_1",
+            "components": [],
+            "x": 400,
+            "y": 400,
+            "originY": 0,
+            "text": "Challo Basti!",
+            "fontSize": "24px",
+            "fontStyle": "bold"
+        },
+        {
+            "type": "Image",
+            "id": "de3c6a23-1029-417f-9aa4-7966d2c77875",
+            "label": "image",
+            "components": [],
+            "texture": {},
+            "x": 582,
+            "y": 96
+        },
+        {
+            "type": "Image",
+            "id": "3c05904d-4eb4-41fa-8787-1ee6942e2ce1",
+            "label": "dino_1",
+            "components": [],
+            "texture": {
+                "key": "dino"
+            },
+            "x": 200,
+            "y": 316
+        },
+        {
+            "type": "Image",
+            "id": "7cfc8f8a-59cb-4f43-8ea2-07258ba720c3",
+            "label": "image_1",
+            "components": [],
+            "texture": {},
+            "x": 436,
+            "y": 245
+        },
+        {
+            "type": "Image",
+            "id": "9a6f48e6-4c47-4164-afac-0ef596799fea",
+            "label": "mars",
+            "components": [],
+            "texture": {
+                "key": "mars"
+            },
+            "x": 711,
+            "y": 357,
+            "scaleX": 0.1,
+            "scaleY": 0.1
+        },
+        {
+            "type": "Text",
+            "id": "26afec51-cf3d-4bfb-9a6e-cd4b6c6babdf",
+            "label": "text",
+            "components": [],
+            "x": 188,
+            "y": 54,
+            "originX": 0,
+            "originY": 0,
+            "text": "Phaser Pew Pew\n"
+        }
+    ],
+    "plainObjects": [],
+    "meta": {
+        "app": "Phaser Editor 2D - Scene Editor",
+        "url": "https://phasereditor2d.com",
+        "contentType": "phasereditor2d.core.scene.SceneContentType"
+    }
+}

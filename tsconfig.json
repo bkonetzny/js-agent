@@ -1,0 +1,42 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"sourceMap": true,
+		"allowJs": true,
+		"jsx": "react",
+		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
+		"noImplicitReturns": true,
+		"noImplicitThis": true,
+		"noImplicitAny": false, // TODO: REACTIVATE!
+		"importHelpers": true,
+		"strictNullChecks": true,
+		"suppressImplicitAnyIndexErrors": true,
+		"noUnusedLocals": false,
+		"target": "es6",
+		"experimentalDecorators": true,
+		"lib": [
+			"es5",
+			"es2015",
+			"es2017",
+			"dom",
+			"scripthost"
+		],
+		"noEmit": false,
+		"skipLibCheck": false,
+		"esModuleInterop": false,
+		"allowSyntheticDefaultImports": true,
+		"strict": true,
+		"module": "commonjs",
+		"resolveJsonModule": true,
+		"isolatedModules": false
+	},
+	"exclude": [
+		"./dev"
+	],
+	"include": [
+		"./src",
+		"./typings",
+		".eslintrc.js"
+	]
+}

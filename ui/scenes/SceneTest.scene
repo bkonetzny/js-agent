@@ -1,0 +1,20 @@
+{
+  "id": "c0fbbcb9-793b-4d03-871c-5dfe1bcf1ec2",
+  "settings": {
+    "compilerOutputLanguage": "TYPE_SCRIPT",
+    "compilerInsertSpaces": false,
+    "compilerTabSize": 4,
+    "borderWidth": 800,
+    "borderHeight": 600,
+    "borderX": 0,
+    "borderY": 0,
+    "sceneKey": "SceneTest"
+  },
+  "sceneType": "SCENE",
+  "displayList": [],
+  "meta": {
+    "app": "Phaser Editor 2D - Scene Editor",
+    "url": "https://phasereditor2d.com",
+    "contentType": "phasereditor2d.core.scene.SceneContentType"
+  }
+}
