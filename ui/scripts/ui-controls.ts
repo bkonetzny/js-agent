@@ -42,10 +42,14 @@ export class UiControls {
     addEventListeners() {
         this.btnStart?.addEventListener('click', (event) => {
             this.ui.handleInput('control:start');
+            this.btnStart?.setAttribute('disabled', 'disabled');
+            this.btnPause?.removeAttribute('disabled');
         });
 
         this.btnPause?.addEventListener('click', (event) => {
             this.ui.handleInput('control:pause');
+            this.btnPause?.setAttribute('disabled', 'disabled');
+            this.btnStart?.removeAttribute('disabled');
         });
 
         this.btnAddSource?.addEventListener('click', (event) => {
@@ -112,7 +116,7 @@ export class UiControls {
                 clientY: 50,
             }));
 
-            this.ui.handleInput('control:start');
+            this.btnStart?.dispatchEvent(new MouseEvent('click'));
         });
     }
 }
