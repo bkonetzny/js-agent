@@ -35,12 +35,20 @@ export class Game {
     }
 
     controlStart() {
+        if (this.running) {
+            return;
+        }
+
         console.log('game started');
         this.running = true;
         this.scheduleMainLoop();
     }
 
     controlPause() {
+        if (!this.running) {
+            return;
+        }
+
         console.log('game paused');
         this.running = false;
     }
