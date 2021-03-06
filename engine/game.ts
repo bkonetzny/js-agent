@@ -1,6 +1,8 @@
+import { cloneDeepWith } from 'lodash-es';
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
+import { OrderManager } from "./managers/order-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
@@ -8,9 +10,8 @@ import { OutputHandler } from "./output-handler";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
-import { ResourceRepository } from "./storage/resource-repository";
-import { cloneDeepWith } from 'lodash-es';
 import { OrdersRepository } from "./storage/orders-repository";
+import { ResourceRepository } from "./storage/resource-repository";
 
 export class Game {
     public settings : any;
@@ -73,6 +74,7 @@ export class Game {
     }
 
     process() {
+        OrderManager.process(this);
         LocationManager.process(this);
         JobManager.process(this);
         AgentManager.process(this);

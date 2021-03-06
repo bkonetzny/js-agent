@@ -1,5 +1,4 @@
 import { ResourcesDefinition } from "../../../util/resources-definition";
-import { Job } from "../../job";
 import { Order } from "../../order";
 import { ItemA } from "../../resources/item-a";
 import { ItemB } from "../../resources/item-b";
