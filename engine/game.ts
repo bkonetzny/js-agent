@@ -10,6 +10,7 @@ import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { ResourceRepository } from "./storage/resource-repository";
 import { cloneDeepWith } from 'lodash-es';
+import { OrdersRepository } from "./storage/orders-repository";
 
 export class Game {
     public settings : any;
@@ -19,6 +20,7 @@ export class Game {
     public agents : AgentRepository;
     public jobs : JobRepository;
     public resources : ResourceRepository;
+    public orders : OrdersRepository;
     public tickFunction : CallableFunction;
 
     constructor(settings: any, tickFunction: Function) {
@@ -31,6 +33,7 @@ export class Game {
         this.agents = new AgentRepository();
         this.jobs = new JobRepository();
         this.resources = new ResourceRepository();
+        this.orders = new OrdersRepository();
         this.tickFunction = tickFunction;
     }
 
