@@ -1,4 +1,3 @@
-import { cloneDeepWith } from 'lodash-es';
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
@@ -91,7 +90,8 @@ export class Game {
             this.locations.findAll(),
             this.agents.findAll(),
             this.jobs.findAll(),
-            this.resources.findAll()
+            this.resources.findAll(),
+            this.orders.findAll()
         );
     }
 
@@ -188,6 +188,7 @@ export class Game {
             agents: this.agents.findAll(),
             jobs: this.jobs.findAll(),
             resources: this.resources.findAll(),
+            orders: this.orders.findAll(),
         });
     }
 

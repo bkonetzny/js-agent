@@ -13,7 +13,6 @@ export class OrderManager {
 
             order.forEachMissingResource((resourceClass, resourceDefinition): Resource | undefined => {
                 const matchingResource = game.resources.findOneClosestByType(resourceDefinition.resource, location.position);
-                console.log('matchingResource', matchingResource);
 
                 if (!matchingResource) {
                     return undefined;

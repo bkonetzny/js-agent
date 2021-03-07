@@ -17,6 +17,18 @@ export class Order extends Instance {
         this.resources = [];
     }
 
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            ...{
+                locationId: this.locationId,
+                type: this.type,
+                resourcesDefinition: this.resourcesDefinition,
+                resources: this.resources,
+            }
+        };
+    }
+
     isFulfilled(): boolean {
         return !this.resourcesDefinition.hasMissingResources();
     }
