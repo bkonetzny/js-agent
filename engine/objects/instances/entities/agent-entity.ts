@@ -16,6 +16,15 @@ export class AgentEntity extends Entity {
         this.velocityJob = 1;
     }
 
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            ...{
+                jobId: this.jobId,
+            }
+        };
+    }
+
     process() {
         super.process();
 
