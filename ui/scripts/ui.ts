@@ -92,7 +92,7 @@ export class Ui {
         return this.inputHandler?.command(command, data);
     }
 
-    updateState(locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[]) {
+    updateState(running: boolean, locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[]) {
         /*
         console.clear();
         console.table(locations);
@@ -103,6 +103,7 @@ export class Ui {
 
         this.scene.render(locations, agents);
         this.meta.render();
+        this.controls.render(running);
     }
 }
 

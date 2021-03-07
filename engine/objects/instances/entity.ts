@@ -11,6 +11,15 @@ export abstract class Entity extends Instance {
         this.processTicks = 0;
     }
 
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            ...{
+                position: this.position,
+            }
+        };
+    }
+
     process() {
         this.processTicks++;
     }

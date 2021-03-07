@@ -51,14 +51,16 @@ module.exports = (argv) => {
 		plugins: [
 			new HtmlWebpackPlugin({
 				chunks: ["ui", "engine", "vendor"],
-				title:"JS DEV",
+				title:"JS Agent",
 				template:"ui/index.ejs"
 			}),
+			/*
 			new CopyPlugin({
 				patterns: [
 					{ from: "ui/assets", to: "assets" }
 				],
-			})
+			}),
+			*/
 		]
 	}
 

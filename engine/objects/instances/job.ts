@@ -21,6 +21,20 @@ export class Job extends Instance {
         this.finished = false;
     }
 
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            ...{
+                source: this.source,
+                destination: this.destination,
+                resourceId: this.resourceId,
+                agentId: this.agentId,
+                started: this.started,
+                finished: this.finished,
+            }
+        };
+    }
+
     setAgent(agent?: AgentEntity) {
         let assignedAgent: AgentEntity | undefined;
 
