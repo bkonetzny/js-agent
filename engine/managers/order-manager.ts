@@ -4,8 +4,6 @@ import { Resource } from "../objects/instances/resource";
 
 export class OrderManager {
     static process(game: Game) {
-        console.log('orders', game.orders.findAll().length);
-
         game.orders.findAll().forEach((order) => {
             const location = order.getLocation();
 
