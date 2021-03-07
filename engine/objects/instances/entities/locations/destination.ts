@@ -22,21 +22,6 @@ export class DestinationLocation extends LocationEntity {
         this.resetProcessTicks();
         this.convertResourcesIfPossible();
         this.createOrderIfNotExists();
-
-        /*
-        let matchingResource = this.game?.resources.findOneClosestByType(new ItemA(), this.position);
-
-        if (!matchingResource) {
-            return;
-        }
-
-        // @ts-ignore
-        let job = new Job(matchingResource.getLocation(), this, matchingResource);
-
-        matchingResource.assignToJob(job);
-
-        this.game?.addJob(job);
-        */
     }
 
     convertResourcesIfPossible() {
@@ -59,6 +44,6 @@ export class DestinationLocation extends LocationEntity {
 
         const order = new Order(this, 'default', orderResourcesDefinition);
 
-        this.game?.orders.add(order);
+        this.game?.addOrder(order);
     }
 }

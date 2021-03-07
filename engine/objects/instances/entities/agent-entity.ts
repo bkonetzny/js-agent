@@ -25,7 +25,7 @@ export class AgentEntity extends Entity {
 
         this.arrivedAtJobSourceLocation();
 
-        let job = this.getJob();
+        const job = this.getJob();
 
         if (job) {
             const jobTarget = job.getCurrentTargetLocation();
@@ -64,7 +64,7 @@ export class AgentEntity extends Entity {
     }
 
     getSpeed(): number {
-        let job = this.getJob();
+        const job = this.getJob();
 
         return (job && job.started)
             ? this.velocityJob
@@ -76,26 +76,25 @@ export class AgentEntity extends Entity {
     }
 
     arrivedAtJobDestinationLocation(): boolean {
-        let job = this.getJob();
+        const job = this.getJob();
 
-        if (!job || !job.started) {
+        if (!job
+            || !job.started
+            || !Position.isSamePosition(this.position, job.destination.position)
+        ) {
             return false;
         }
 
-        if (Position.isSamePosition(this.position, job.destination.position)) {
-            job.finish();
+        job.finish();
 
-            this.game?.jobs.remove(job);
-            this.jobId = undefined;
+        this.game?.jobs.remove(job);
+        this.jobId = undefined;
 
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     arrivedAtJobSourceLocation(): boolean {
-        let job = this.getJob();
+        const job = this.getJob();
 
         if (!job) {
             return false;

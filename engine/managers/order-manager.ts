@@ -1,9 +1,39 @@
 import { Game } from "../game";
+import { Job } from "../objects/instances/job";
+import { Resource } from "../objects/instances/resource";
 
 export class OrderManager {
     static process(game: Game) {
+        console.log('orders', game.orders.findAll().length);
+
         game.orders.findAll().forEach((order) => {
-            console.log('process', order.resourcesDefinition);
+            const location = order.getLocation();
+
+            if (!location) {
+                return;
+            }
+
+            order.forEachMissingResource((resourceClass, resourceDefinition): Resource | undefined => {
+                const matchingResource = game.resources.findOneClosestByType(resourceDefinition.resource, location.position);
+                console.log('matchingResource', matchingResource);
+
+                if (!matchingResource) {
+                    return undefined;
+                }
+
+                // @ts-ignore
+                const job = new Job(matchingResource.getLocation(), location, matchingResource);
+
+                matchingResource.assignToJob(job);
+
+                game.addJob(job);
+
+                return matchingResource;
+            });
+
+            if (order.isFulfilled()) {
+                game.orders.remove(order);
+            }
         });
     }
 }

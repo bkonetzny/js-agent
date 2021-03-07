@@ -54,7 +54,7 @@ export class UiScene {
             return;
         }
 
-        let position = this.getPositionForEvent(event);
+        const position = this.getPositionForEvent(event);
 
         console.log('click on:', position);
         console.log('click mode:', this.clickMode);
@@ -114,8 +114,8 @@ export class UiScene {
     }
 
     domRemoveObsoleteLocations(locations: LocationEntity[]) {
-        let domLocations = this.domElement.querySelectorAll('.building');
-        let locationIds = locations.map((location) => {
+        const domLocations = this.domElement.querySelectorAll('.building');
+        const locationIds = locations.map((location) => {
             return `${this.domElementIdPrefix}${location.id}`;
         });
 
@@ -127,8 +127,8 @@ export class UiScene {
     }
 
     domRemoveObsoleteAgents(agents: AgentEntity[]) {
-        let domAgents = this.domElement.querySelectorAll('.agent');
-        let agentIds = agents.map((agent) => {
+        const domAgents = this.domElement.querySelectorAll('.agent');
+        const agentIds = agents.map((agent) => {
             return agent.id;
         });
 
@@ -141,7 +141,7 @@ export class UiScene {
 
     domUpdateLocations(locations: LocationEntity[]) {
         locations.forEach((building) => {
-            let domBuilding = this.domEnsureElementForTyoe('building', building.id);
+            const domBuilding = this.domEnsureElementForTyoe('building', building.id);
 
             this.domUpdateElementPosition(domBuilding, building.position);
 
@@ -151,11 +151,11 @@ export class UiScene {
 
     domUpdateAgents(agents: AgentEntity[]) {
         agents.forEach((agent) => {
-            let domAgent = this.domEnsureElementForTyoe('agent', agent.id);
+            const domAgent = this.domEnsureElementForTyoe('agent', agent.id);
 
             this.domUpdateElementPosition(domAgent, agent.position);
 
-            let job = agent.getJob();
+            const job = agent.getJob();
 
             domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
         });
@@ -203,7 +203,7 @@ export class UiScene {
         }
 
         const resources = matchingLocation.getResources();
-        let resourcesByType = {};
+        const resourcesByType = {};
 
         resources.forEach((resource) => {
             if (!resourcesByType[resource.constructor.name]) {

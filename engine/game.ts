@@ -6,6 +6,7 @@ import { OrderManager } from "./managers/order-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
+import { Order } from './objects/instances/order';
 import { OutputHandler } from "./output-handler";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
@@ -157,6 +158,13 @@ export class Game {
         this.jobs.add(job);
 
         return job.id;
+    }
+
+    addOrder(order: Order): string {
+        order.setGame(this);
+        this.orders.add(order);
+
+        return order.id;
     }
 
     updateSetting(key: string, value: string): object {
