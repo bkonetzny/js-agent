@@ -10,6 +10,13 @@ export abstract class Instance {
         this.id = uuidv4();
     }
 
+    toJSON() {
+        return {
+            id: this.id,
+            class: this.constructor.name
+        };
+    }
+
     setGame(game: Game) {
         this.game = game;
     }

@@ -42,14 +42,10 @@ export class UiControls {
     addEventListeners() {
         this.btnStart?.addEventListener('click', (event) => {
             this.ui.handleInput('control:start');
-            this.btnStart?.setAttribute('disabled', 'disabled');
-            this.btnPause?.removeAttribute('disabled');
         });
 
         this.btnPause?.addEventListener('click', (event) => {
             this.ui.handleInput('control:pause');
-            this.btnPause?.setAttribute('disabled', 'disabled');
-            this.btnStart?.removeAttribute('disabled');
         });
 
         this.btnAddSource?.addEventListener('click', (event) => {
@@ -77,7 +73,8 @@ export class UiControls {
         });
 
         this.btnExport?.addEventListener('click', (event) => {
-            console.log('Export:', this.ui.handleInput('gamestate:export'));
+            const exportData = this.ui.handleInput('gamestate:export');
+            console.log('Export:', exportData, JSON.parse(exportData));
         });
 
         this.btnImport?.addEventListener('click', (event) => {
@@ -128,7 +125,17 @@ export class UiControls {
                 clientY: 400,
             }));
 
-            this.btnStart?.dispatchEvent(new MouseEvent('click'));
+            this.ui.handleInput('control:start');
         });
+    }
+
+    render(running: boolean) {
+        if (running) {
+            this.btnStart?.setAttribute('disabled', 'disabled');
+            this.btnPause?.removeAttribute('disabled');
+        } else {
+            this.btnPause?.setAttribute('disabled', 'disabled');
+            this.btnStart?.removeAttribute('disabled');
+        }
     }
 }

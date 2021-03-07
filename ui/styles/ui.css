@@ -9,6 +9,12 @@ body {
     float: right;
     clear: both;
     width: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+#controls fieldset.simulation {
+    flex-direction: row;
 }
 
 input, select, button {
@@ -16,4 +22,16 @@ input, select, button {
     clear: both;
     width: 90px;
     margin: 1px;
+}
+
+#controls fieldset.simulation button {
+    width: 40px;
+}
+
+button#start:before {
+    content: '▶';
+}
+
+button#pause:before {
+    content: '⏸';
 }

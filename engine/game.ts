@@ -44,7 +44,6 @@ export class Game {
             return;
         }
 
-        console.log('game started');
         this.running = true;
         this.scheduleMainLoop();
     }
@@ -54,8 +53,9 @@ export class Game {
             return;
         }
 
-        console.log('game paused');
         this.running = false;
+
+        this.forcePublish();
     }
 
     mainLoop() {
@@ -87,6 +87,7 @@ export class Game {
         }
 
         this.outputHandler?.update(
+            this.running,
             this.locations.findAll(),
             this.agents.findAll(),
             this.jobs.findAll(),
@@ -181,23 +182,13 @@ export class Game {
     exportState(): string {
         this.controlPause();
 
-        const filterGame = (value, index, object, stack) => {
-            if (value instanceof Game) {
-                return null;
-            }
-
-            return undefined;
-        };
-
-        const state = {
+        return JSON.stringify({
             settings: this.settings,
-            locations: cloneDeepWith(this.locations.findAll(), filterGame),
-            agents: cloneDeepWith(this.agents.findAll(), filterGame),
-            jobs: cloneDeepWith(this.jobs.findAll(), filterGame),
-            resources: cloneDeepWith(this.resources.findAll(), filterGame),
-        };
-
-        return JSON.stringify(state);
+            locations: this.locations.findAll(),
+            agents: this.agents.findAll(),
+            jobs: this.jobs.findAll(),
+            resources: this.resources.findAll(),
+        });
     }
 
     importState(state: string): boolean {
