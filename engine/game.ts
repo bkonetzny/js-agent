@@ -1,13 +1,16 @@
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
+import { OrderManager } from "./managers/order-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
+import { Order } from './objects/instances/order';
 import { OutputHandler } from "./output-handler";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
+import { OrdersRepository } from "./storage/orders-repository";
 import { ResourceRepository } from "./storage/resource-repository";
 
 export class Game {
@@ -18,6 +21,7 @@ export class Game {
     public agents : AgentRepository;
     public jobs : JobRepository;
     public resources : ResourceRepository;
+    public orders : OrdersRepository;
     public tickFunction : CallableFunction;
 
     constructor(settings: any, tickFunction: Function) {
@@ -30,6 +34,7 @@ export class Game {
         this.agents = new AgentRepository();
         this.jobs = new JobRepository();
         this.resources = new ResourceRepository();
+        this.orders = new OrdersRepository();
         this.tickFunction = tickFunction;
     }
 
@@ -69,6 +74,7 @@ export class Game {
     }
 
     process() {
+        OrderManager.process(this);
         LocationManager.process(this);
         JobManager.process(this);
         AgentManager.process(this);
@@ -84,7 +90,8 @@ export class Game {
             this.locations.findAll(),
             this.agents.findAll(),
             this.jobs.findAll(),
-            this.resources.findAll()
+            this.resources.findAll(),
+            this.orders.findAll()
         );
     }
 
@@ -154,6 +161,13 @@ export class Game {
         return job.id;
     }
 
+    addOrder(order: Order): string {
+        order.setGame(this);
+        this.orders.add(order);
+
+        return order.id;
+    }
+
     updateSetting(key: string, value: string): object {
         let oldValue = this.settings[key];
 
@@ -174,6 +188,7 @@ export class Game {
             agents: this.agents.findAll(),
             jobs: this.jobs.findAll(),
             resources: this.resources.findAll(),
+            orders: this.orders.findAll(),
         });
     }
 

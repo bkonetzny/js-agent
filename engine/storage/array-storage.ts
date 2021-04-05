@@ -12,7 +12,7 @@ export abstract class ArrayStorage<T extends Instance> {
     }
 
     remove(item: T) {
-        let index = this.data.indexOf(item);
+        const index = this.data.indexOf(item);
 
         if (index === -1) {
             return false;

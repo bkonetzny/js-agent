@@ -9,6 +9,7 @@ import { LocationEntity } from "../../engine/objects/instances/entities/location
 import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
 import { Job } from "../../engine/objects/instances/job";
 import { Resource } from "../../engine/objects/instances/resource";
+import { Order } from "../../engine/objects/instances/order";
 /* import * as Phaser from "phaser";
 import { GameLevel } from "../scenes/Level"; */
 
@@ -92,7 +93,7 @@ export class Ui {
         return this.inputHandler?.command(command, data);
     }
 
-    updateState(running: boolean, locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[]) {
+    updateState(running: boolean, locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[], orders: Order[]) {
         /*
         console.clear();
         console.table(locations);

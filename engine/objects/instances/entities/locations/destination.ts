@@ -1,5 +1,5 @@
 import { ResourcesDefinition } from "../../../util/resources-definition";
-import { Job } from "../../job";
+import { Order } from "../../order";
 import { ItemA } from "../../resources/item-a";
 import { ItemB } from "../../resources/item-b";
 import { LocationEntity } from "../location-entity";
@@ -20,26 +20,30 @@ export class DestinationLocation extends LocationEntity {
         }
 
         this.resetProcessTicks();
+        this.convertResourcesIfPossible();
+        this.createOrderIfNotExists();
+    }
 
-        let inputResourcesDefinition = new ResourcesDefinition();
+    convertResourcesIfPossible() {
+        const inputResourcesDefinition = new ResourcesDefinition();
         inputResourcesDefinition.addDefinition(new ItemA(), 5);
 
-        let outputResourcesDefinition = new ResourcesDefinition();
+        const outputResourcesDefinition = new ResourcesDefinition();
         outputResourcesDefinition.addDefinition(new ItemB(), 2);
 
         this.convertResources(inputResourcesDefinition, outputResourcesDefinition);
+    }
 
-        let matchingResource = this.game?.resources.findOneClosestByType(new ItemA(), this.position);
-
-        if (!matchingResource) {
+    createOrderIfNotExists() {
+        if (this.game?.orders.hasOpenOrderForLocation(this, 'default')) {
             return;
         }
 
-        // @ts-ignore
-        let job = new Job(matchingResource.getLocation(), this, matchingResource);
+        const orderResourcesDefinition = new ResourcesDefinition();
+        orderResourcesDefinition.addDefinition(new ItemA(), 5);
 
-        matchingResource.assignToJob(job);
+        const order = new Order(this, 'default', orderResourcesDefinition);
 
-        this.game?.addJob(job);
+        this.game?.addOrder(order);
     }
 }

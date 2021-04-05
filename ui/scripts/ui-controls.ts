@@ -66,7 +66,7 @@ export class UiControls {
 
         this.btnUpdateSetting?.addEventListener('click', (event) => {
             // @ts-ignore
-            let oldValue = this.ui.handleInput('setting:update', {key: this.inputUpdateSettingKey.value, value: this.inputUpdateSettingValue.value}).oldValue;
+            const oldValue = this.ui.handleInput('setting:update', {key: this.inputUpdateSettingKey.value, value: this.inputUpdateSettingValue.value}).oldValue;
 
             // @ts-ignore
             console.log('Update setting ' + this.inputUpdateSettingKey.value + ' from "' + oldValue + '" to "' + this.inputUpdateSettingValue.value + '"');
@@ -102,6 +102,10 @@ export class UiControls {
                 clientX: 200,
                 clientY: 200,
             }));
+            this.scene.processClickEventOnScene(new MouseEvent('click', {
+                clientX: 400,
+                clientY: 50,
+            }));
 
             this.scene.setClickMode('addAgent');
             this.scene.processClickEventOnScene(new MouseEvent('click', {
@@ -111,6 +115,14 @@ export class UiControls {
             this.scene.processClickEventOnScene(new MouseEvent('click', {
                 clientX: 250,
                 clientY: 50,
+            }));
+            this.scene.processClickEventOnScene(new MouseEvent('click', {
+                clientX: 50,
+                clientY: 180,
+            }));
+            this.scene.processClickEventOnScene(new MouseEvent('click', {
+                clientX: 100,
+                clientY: 400,
             }));
 
             this.ui.handleInput('control:start');

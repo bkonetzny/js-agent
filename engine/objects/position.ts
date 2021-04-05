@@ -16,7 +16,7 @@ export class Position {
         let closestEntity: T | undefined = undefined;
 
         entities.forEach((entity) => {
-            let distance = this.getDistance(position.x, entity.position.x) + this.getDistance(position.y, entity.position.y);
+            const distance = this.getDistance(position.x, entity.position.x) + this.getDistance(position.y, entity.position.y);
 
             if (!closestEntity || distance < closestDistance) {
                 closestEntity = entity;
