@@ -16,6 +16,7 @@ export class UiScene {
     private focusedObjectId?: string;
     private locationCache: LocationEntity[];
     private domElementIdPrefix: string;
+    private domHoverLayerElement: HTMLDivElement;
     private domHoverElement: HTMLDivElement;
 
     constructor(ui: Ui, domElement: Element, domDocument: Document, uiDetails: UiDetails) {
@@ -28,18 +29,28 @@ export class UiScene {
         this.focusedObjectId = undefined;
         this.locationCache = [];
         this.domElementIdPrefix = 'id-';
+
+        this.domHoverLayerElement = this.domDocument.createElement('div');
+        this.domHoverLayerElement.classList.add('hover-layer');
+        this.domElement.appendChild(this.domHoverLayerElement);
+
         this.domHoverElement = this.domDocument.createElement('div');
         this.domHoverElement.classList.add('hover');
         this.domElement.appendChild(this.domHoverElement);
 
         // @ts-ignore
-        this.domElement.addEventListener('pointermove', (event: PointerEvent) => {
+        this.domHoverLayerElement.addEventListener('pointermove', (event: PointerEvent) => {
             this.processHoverEvent(event);
         });
 
         // @ts-ignore
-        this.domElement.addEventListener('mouseout', (event: PointerEvent) => {
-            this.processHoverEndEvent(event);
+        this.domHoverLayerElement.addEventListener('mouseout', (event: PointerEvent) => {
+            this.processHoverEndEvent();
+        });
+
+        // @ts-ignore
+        this.domHoverLayerElement.addEventListener('click', (event: MouseEvent) => {
+            this.processClickEvent(event);
         });
 
         // @ts-ignore
@@ -50,6 +61,10 @@ export class UiScene {
 
     setClickMode(clickMode: string) {
         this.clickMode = clickMode;
+
+        if (!this.domHoverLayerElement.classList.contains('active')) {
+            this.domHoverLayerElement.classList.add('active');
+        }
     }
 
     processHoverEvent(event: PointerEvent) {
@@ -59,10 +74,6 @@ export class UiScene {
     processHoverEventOnScene(event: PointerEvent) {
         if (!this.clickMode) {
             return;
-        }
-
-        if (!this.domHoverElement.classList.contains('active')) {
-            this.domHoverElement.classList.add('active');
         }
 
         const position = this.getPositionForEvent(event);
@@ -87,6 +98,10 @@ export class UiScene {
                 return;
         }
 
+        if (!this.domHoverElement.classList.contains('active')) {
+            this.domHoverElement.classList.add('active');
+        }
+
         this.domHoverElement.style.left = position.x + 'px';
         this.domHoverElement.style.top = position.y + 'px';
 
@@ -100,14 +115,17 @@ export class UiScene {
         }
     }
 
-    processHoverEndEvent(event: PointerEvent) {
+    processHoverEndEvent() {
+        this.domHoverLayerElement.classList.remove('active');
         this.domHoverElement.classList.remove('active');
     }
 
     processClickEvent(event: MouseEvent) {
         this.focusedObjectId = undefined;
 
-        if (event.target !== this.domElement) {
+        if (event.target !== this.domElement
+            && event.target !== this.domHoverLayerElement
+        ) {
             this.processClickEventOnObject(event);
         }
         else {
@@ -121,9 +139,6 @@ export class UiScene {
         }
 
         const position = this.getPositionForEvent(event);
-
-        console.log('click on:', position);
-        console.log('click mode:', this.clickMode);
 
         let handleInputResult: string | Error;
 
@@ -149,11 +164,12 @@ export class UiScene {
                 return;
         }
 
-        if (handleInputResult) {
-            console.log('handleInputResult:', handleInputResult);
-        }
+        console.log('handleInputResult:', handleInputResult);
 
-        this.clickMode = undefined;
+        if (!(handleInputResult instanceof Error)) {
+            this.clickMode = undefined;
+            this.processHoverEndEvent();
+        }
     }
 
     processClickEventOnObject(event: MouseEvent) {
