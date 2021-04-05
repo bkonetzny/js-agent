@@ -124,6 +124,9 @@ export class Game {
             case 'gamestate:export':
                 return this.exportState();
 
+            case 'location:add:check':
+                return this.checkAddLocation(data);
+
             case 'location:add':
                 return this.addLocation(data);
 
@@ -135,7 +138,20 @@ export class Game {
         }
     }
 
-    addLocation(location: LocationEntity): string {
+    checkAddLocation(location: LocationEntity): boolean | Error {
+        if (location.position.x > 210 && location.position.x < 240) {
+            return new Error('INVALID_LOCATION');
+        }
+
+        return true;
+    }
+
+    addLocation(location: LocationEntity): string | Error {
+        const check = this.checkAddLocation(location);
+        if (check instanceof Error) {
+            return check;
+        }
+
         location.setGame(this);
         this.locations.add(location);
         location.onCreate();

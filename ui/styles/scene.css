@@ -4,6 +4,7 @@
     width: 500px;
     height: 400px;
     position: relative;
+    overflow: hidden;
 }
 
 #scene > div {
@@ -53,4 +54,23 @@
 
 .agent-state-packed:before {
     content: '🥵';
+}
+
+.hover {
+    z-index: 10;
+    width: 40px;
+    height: 40px;
+    display: none;
+}
+
+.hover.active {
+    display: block;
+}
+
+.hover.invalid {
+    background-color: red;
+}
+
+.hover.valid {
+    background-color: green;
 }

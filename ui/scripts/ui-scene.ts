@@ -16,6 +16,7 @@ export class UiScene {
     private focusedObjectId?: string;
     private locationCache: LocationEntity[];
     private domElementIdPrefix: string;
+    private domHoverElement: HTMLDivElement;
 
     constructor(ui: Ui, domElement: Element, domDocument: Document, uiDetails: UiDetails) {
         this.ui = ui;
@@ -27,6 +28,19 @@ export class UiScene {
         this.focusedObjectId = undefined;
         this.locationCache = [];
         this.domElementIdPrefix = 'id-';
+        this.domHoverElement = this.domDocument.createElement('div');
+        this.domHoverElement.classList.add('hover');
+        this.domElement.appendChild(this.domHoverElement);
+
+        // @ts-ignore
+        this.domElement.addEventListener('pointermove', (event: PointerEvent) => {
+            this.processHoverEvent(event);
+        });
+
+        // @ts-ignore
+        this.domElement.addEventListener('mouseout', (event: PointerEvent) => {
+            this.processHoverEndEvent(event);
+        });
 
         // @ts-ignore
         this.domElement.addEventListener('click', (event: MouseEvent) => {
@@ -36,6 +50,58 @@ export class UiScene {
 
     setClickMode(clickMode: string) {
         this.clickMode = clickMode;
+    }
+
+    processHoverEvent(event: PointerEvent) {
+        this.processHoverEventOnScene(event);
+    }
+
+    processHoverEventOnScene(event: PointerEvent) {
+        if (!this.clickMode) {
+            return;
+        }
+
+        if (!this.domHoverElement.classList.contains('active')) {
+            this.domHoverElement.classList.add('active');
+        }
+
+        const position = this.getPositionForEvent(event);
+
+        let handleInputResult: boolean | Error;
+
+        switch (this.clickMode) {
+            case 'addSource':
+                handleInputResult = this.ui.handleInput('location:add:check', new SourceLocation(position));
+                break;
+
+            case 'addDestination':
+                handleInputResult = this.ui.handleInput('location:add:check', new DestinationLocation(position));
+                break;
+
+            case 'addBusyDestination':
+                handleInputResult = this.ui.handleInput('location:add:check', new DestinationBusyLocation(position));
+                break;
+
+            default:
+                console.log('Unknown clickMode: ', this.clickMode);
+                return;
+        }
+
+        this.domHoverElement.style.left = position.x + 'px';
+        this.domHoverElement.style.top = position.y + 'px';
+
+        if (handleInputResult === true) {
+            this.domHoverElement.classList.remove('invalid');
+            this.domHoverElement.classList.add('valid');
+        }
+        else {
+            this.domHoverElement.classList.remove('valid');
+            this.domHoverElement.classList.add('invalid');
+        }
+    }
+
+    processHoverEndEvent(event: PointerEvent) {
+        this.domHoverElement.classList.remove('active');
     }
 
     processClickEvent(event: MouseEvent) {
@@ -59,35 +125,35 @@ export class UiScene {
         console.log('click on:', position);
         console.log('click mode:', this.clickMode);
 
-        let instanceId;
+        let handleInputResult: string | Error;
 
         switch (this.clickMode) {
             case 'addSource':
-                instanceId = this.ui.handleInput('location:add', new SourceLocation(position));
+                handleInputResult = this.ui.handleInput('location:add', new SourceLocation(position));
                 break;
 
             case 'addDestination':
-                instanceId = this.ui.handleInput('location:add', new DestinationLocation(position));
+                handleInputResult = this.ui.handleInput('location:add', new DestinationLocation(position));
                 break;
 
             case 'addBusyDestination':
-                instanceId = this.ui.handleInput('location:add', new DestinationBusyLocation(position));
+                handleInputResult = this.ui.handleInput('location:add', new DestinationBusyLocation(position));
                 break;
 
             case 'addAgent':
-                instanceId = this.ui.handleInput('agent:add', new AgentEntity(position));
+                handleInputResult = this.ui.handleInput('agent:add', new AgentEntity(position));
                 break;
 
             default:
                 console.log('Unknown clickMode: ', this.clickMode);
-                break;
+                return;
         }
 
-        if (instanceId) {
-            console.log('Added instance:', instanceId);
+        if (handleInputResult) {
+            console.log('handleInputResult:', handleInputResult);
         }
 
-        // this.clickMode = null;
+        this.clickMode = undefined;
     }
 
     processClickEventOnObject(event: MouseEvent) {
@@ -95,7 +161,7 @@ export class UiScene {
         this.updateDetails();
     }
 
-    getPositionForEvent(event: MouseEvent): Position {
+    getPositionForEvent(event: MouseEvent | PointerEvent): Position {
         const sceneRect = this.domElement.getBoundingClientRect();
 
         return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);

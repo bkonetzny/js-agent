@@ -102,6 +102,8 @@ export class UiControls {
                 clientX: 200,
                 clientY: 200,
             }));
+
+            this.scene.setClickMode('addDestination');
             this.scene.processClickEventOnScene(new MouseEvent('click', {
                 clientX: 400,
                 clientY: 50,
@@ -112,14 +114,20 @@ export class UiControls {
                 clientX: 300,
                 clientY: 150,
             }));
+
+            this.scene.setClickMode('addAgent');
             this.scene.processClickEventOnScene(new MouseEvent('click', {
                 clientX: 250,
                 clientY: 50,
             }));
+
+            this.scene.setClickMode('addAgent');
             this.scene.processClickEventOnScene(new MouseEvent('click', {
                 clientX: 50,
                 clientY: 180,
             }));
+
+            this.scene.setClickMode('addAgent');
             this.scene.processClickEventOnScene(new MouseEvent('click', {
                 clientX: 100,
                 clientY: 400,
