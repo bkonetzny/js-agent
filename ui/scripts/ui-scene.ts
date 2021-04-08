@@ -76,6 +76,8 @@ export class UiScene {
             return;
         }
 
+        this.domHoverElement.innerText = '';
+
         const position = this.getPositionForEvent(event);
 
         let handleInputResult: boolean | Error;
@@ -105,19 +107,21 @@ export class UiScene {
         this.domHoverElement.style.left = position.x + 'px';
         this.domHoverElement.style.top = position.y + 'px';
 
-        if (handleInputResult === true) {
-            this.domHoverElement.classList.remove('invalid');
-            this.domHoverElement.classList.add('valid');
-        }
-        else {
+        if (handleInputResult instanceof Error) {
+            this.domHoverElement.innerText = handleInputResult.message;
             this.domHoverElement.classList.remove('valid');
             this.domHoverElement.classList.add('invalid');
+        }
+        else {
+            this.domHoverElement.classList.remove('invalid');
+            this.domHoverElement.classList.add('valid');
         }
     }
 
     processHoverEndEvent() {
         this.domHoverLayerElement.classList.remove('active');
         this.domHoverElement.classList.remove('active');
+        this.domHoverElement.innerText = '';
     }
 
     processClickEvent(event: MouseEvent) {
@@ -166,10 +170,13 @@ export class UiScene {
 
         console.log('handleInputResult:', handleInputResult);
 
-        if (!(handleInputResult instanceof Error)) {
-            this.clickMode = undefined;
-            this.processHoverEndEvent();
+        if (handleInputResult instanceof Error) {
+            this.domHoverElement.innerText = handleInputResult.message;
+            return;
         }
+
+        this.clickMode = undefined;
+        this.processHoverEndEvent();
     }
 
     processClickEventOnObject(event: MouseEvent) {
