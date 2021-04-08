@@ -5,8 +5,8 @@ export class OutputHandler {
     private ui : Ui;
 
     constructor(game: Game, ui: Ui) {
-        game.setOutputHandler(this);
         this.ui = ui;
+        game.setOutputHandler(this);
     }
 
     update(...args) {

@@ -6,23 +6,25 @@ import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
 import { Order } from './objects/instances/order';
+import { Position } from "./objects/position";
 import { OutputHandler } from "./output-handler";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
 import { ResourceRepository } from "./storage/resource-repository";
+import { LocationRegistry } from "./registries/location-registry";
 
 export class Game {
-    public settings : any;
-    public outputHandler ?: OutputHandler;
-    public running : boolean;
-    public locations : LocationRepository;
-    public agents : AgentRepository;
-    public jobs : JobRepository;
-    public resources : ResourceRepository;
-    public orders : OrdersRepository;
-    public tickFunction : CallableFunction;
+    public settings: any;
+    public outputHandler?: OutputHandler;
+    public running: boolean;
+    public locations: LocationRepository;
+    public agents: AgentRepository;
+    public jobs: JobRepository;
+    public resources: ResourceRepository;
+    public orders: OrdersRepository;
+    public tickFunction: CallableFunction;
 
     constructor(settings: any, tickFunction: Function) {
         this.settings = {...{
@@ -87,6 +89,9 @@ export class Game {
 
         this.outputHandler?.update(
             this.running,
+            {
+                locations: LocationRegistry.getLocations(),
+            },
             this.locations.findAll(),
             this.agents.findAll(),
             this.jobs.findAll(),
@@ -105,6 +110,7 @@ export class Game {
 
     setOutputHandler(outputHandler: OutputHandler) {
         this.outputHandler = outputHandler;
+        this.forcePublish();
     }
 
     command(command: string, data?: any) {
@@ -138,19 +144,24 @@ export class Game {
         }
     }
 
-    checkAddLocation(location: LocationEntity): boolean | Error {
-        if (location.position.x > 210 && location.position.x < 240) {
+    checkAddLocation(data: any): boolean | Error {
+        const position: Position = data.position;
+
+        if (position.x > 210 && position.x < 240) {
             return new Error('INVALID_LOCATION');
         }
 
         return true;
     }
 
-    addLocation(location: LocationEntity): string | Error {
-        const check = this.checkAddLocation(location);
+    addLocation(data: any): string | Error {
+        const check = this.checkAddLocation(data);
         if (check instanceof Error) {
             return check;
         }
+
+        const position: Position = data.position;
+        const location = LocationRegistry.createLocation(data.id, position);
 
         location.setGame(this);
         this.locations.add(location);
@@ -161,7 +172,10 @@ export class Game {
         return location.id;
     }
 
-    addAgent(agent: AgentEntity): string {
+    addAgent(data: any): string {
+        const position: Position = data.position;
+        const agent = new AgentEntity(position);
+
         agent.setGame(this);
         this.agents.add(agent);
 

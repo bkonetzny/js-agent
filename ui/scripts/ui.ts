@@ -33,9 +33,9 @@ class Boot extends Phaser.Scene {
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
-    private inputHandler ?: InputHandler;
+    private inputHandler?: InputHandler;
     private controlsSelector: any;
-    private sceneSelector : HTMLElement | null;
+    private sceneSelector: HTMLElement;
     private detailsSelector: any;
     private metaSelector: any;
     private controlsDomElement: any;
@@ -54,7 +54,7 @@ export class Ui {
         this.inputHandler = undefined;
 
         this.controlsSelector = controlsSelector;
-        this.sceneSelector = domDocument.querySelector<HTMLElement>(sceneSelector);
+        this.sceneSelector = domDocument.querySelector<HTMLElement>(sceneSelector)!;
         this.detailsSelector = detailsSelector;
         this.metaSelector = metaSelector;
 
@@ -65,8 +65,8 @@ export class Ui {
         this.details = new UiDetails(this.detailsDomElement);
         // sceneSelector might be undefined, this we will enforce it for now
         // TODO: Needs to be reworked - prone to fail at any time.
-        this.scene = new UiScene(this, this.sceneSelector!, domDocument, this.details);
-        this.controls = new UiControls(this, this.controlsDomElement, this.scene);
+        this.scene = new UiScene(this, this.sceneSelector, domDocument, this.details);
+        this.controls = new UiControls(this, domDocument, this.controlsDomElement, this.scene);
         this.meta = new UiMeta(this, this.metaDomElement);
 
         /*
@@ -93,7 +93,15 @@ export class Ui {
         return this.inputHandler?.command(command, data);
     }
 
-    updateState(running: boolean, locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[], orders: Order[]) {
+    updateState(
+        running: boolean,
+        settings: Object,
+        locations: LocationEntity[],
+        agents: AgentEntity[],
+        jobs: Job[],
+        resources: Resource[],
+        orders: Order[]
+    ) {
         /*
         console.clear();
         console.table(locations);
@@ -104,7 +112,7 @@ export class Ui {
 
         this.scene.render(locations, agents);
         this.meta.render();
-        this.controls.render(running);
+        this.controls.render(running, settings);
     }
 }
 
