@@ -51,6 +51,7 @@ export class UiControls {
         });
 
         this.btnLocationsWrapper.addEventListener('click', (event) => {
+            console.log('clicked', (event.target as Element)!.id);
             this.scene.setClickMode((event.target as Element)!.id);
         });
 
@@ -140,8 +141,10 @@ export class UiControls {
             this.btnStart.removeAttribute('disabled');
         }
 
-        if (settings?.locations) {
+        // TODO: allow updates to the buttons, for now it's only rendered once.
+        if (this.btnLocationsWrapper.innerHTML === '' && settings?.locations) {
             this.btnLocationsWrapper.innerHTML = '';
+
             settings.locations.forEach(location => {
                 const button = this.domDocument.createElement('button');
                 button.id = `location:add:${location.id}`;

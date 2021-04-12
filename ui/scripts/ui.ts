@@ -34,38 +34,28 @@ export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
     private inputHandler?: InputHandler;
-    private controlsSelector: any;
-    private sceneSelector: HTMLElement;
-    private detailsSelector: any;
-    private metaSelector: any;
-    private controlsDomElement: any;
-    private detailsDomElement: any;
-    private metaDomElement: any;
-    private details: any;
-    private scene: any;
-    private controls: any;
-    private meta: any;
+    private controlsDomElement: HTMLElement;
+    private sceneDomElement: HTMLElement;
+    private detailsDomElement: HTMLElement;
+    private metaDomElement: HTMLElement;
+    private details: UiDetails;
+    private scene: UiScene;
+    private controls: UiControls;
+    private meta: UiMeta;
 
     /**
      * Creates an instance of Ui. The entry point of the whole game ui
-     * @memberof Ui
      */
-    constructor(domDocument: Document, controlsSelector: string, sceneSelector: any, detailsSelector: any, metaSelector: any) {
+    constructor(domDocument: Document, controlsSelector: string, sceneSelector: string, detailsSelector: string, metaSelector: string) {
         this.inputHandler = undefined;
 
-        this.controlsSelector = controlsSelector;
-        this.sceneSelector = domDocument.querySelector<HTMLElement>(sceneSelector)!;
-        this.detailsSelector = detailsSelector;
-        this.metaSelector = metaSelector;
-
-        this.controlsDomElement = domDocument.querySelector(this.controlsSelector);
-        this.detailsDomElement = domDocument.querySelector(this.detailsSelector);
-        this.metaDomElement = domDocument.querySelector(this.metaSelector);
+        this.controlsDomElement = domDocument.querySelector<HTMLElement>(controlsSelector)!;
+        this.sceneDomElement = domDocument.querySelector<HTMLElement>(sceneSelector)!;
+        this.detailsDomElement = domDocument.querySelector<HTMLElement>(detailsSelector)!;
+        this.metaDomElement = domDocument.querySelector<HTMLElement>(metaSelector)!;
 
         this.details = new UiDetails(this.detailsDomElement);
-        // sceneSelector might be undefined, this we will enforce it for now
-        // TODO: Needs to be reworked - prone to fail at any time.
-        this.scene = new UiScene(this, this.sceneSelector, domDocument, this.details);
+        this.scene = new UiScene(this, this.sceneDomElement, domDocument, this.details);
         this.controls = new UiControls(this, domDocument, this.controlsDomElement, this.scene);
         this.meta = new UiMeta(this, this.metaDomElement);
 
