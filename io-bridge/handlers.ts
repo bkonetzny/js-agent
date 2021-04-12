@@ -1,6 +1,7 @@
 import { Game } from "../engine/game";
 import { Ui } from "../ui/scripts/ui";
 import { InputCommandInterface } from "./input-commands";
+import { OutputStateInterface } from "./output-state";
 
 class InputHandler {
     private game : Game;
@@ -23,9 +24,8 @@ class OutputHandler {
         game.setOutputHandler(this);
     }
 
-    update(...args) {
-        // @ts-ignore
-        this.ui.updateState(...args);
+    update(outputState: OutputStateInterface) {
+        this.ui.updateState(outputState);
     }
 }
 

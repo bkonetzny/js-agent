@@ -1,14 +1,10 @@
-import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
-import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
-import { Job } from "../../engine/objects/instances/job";
-import { Order } from "../../engine/objects/instances/order";
-import { Resource } from "../../engine/objects/instances/resource";
 import { InputCommandInterface } from "../../io-bridge/input-commands";
 import { InputHandler } from "../../io-bridge/handlers";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiMeta } from "./ui-meta";
 import { UiScene } from "./ui-scene";
+import { OutputStateInterface } from "../../io-bridge/output-state";
 /* import * as Phaser from "phaser";
 import { GameLevel } from "../scenes/Level"; */
 
@@ -79,25 +75,9 @@ export class Ui {
         return this.inputHandler?.command(inputCommand);
     }
 
-    updateState(
-        running: boolean,
-        settings: Object,
-        locations: LocationEntity[],
-        agents: AgentEntity[],
-        jobs: Job[],
-        resources: Resource[],
-        orders: Order[]
-    ) {
-        /*
-        console.clear();
-        console.table(locations);
-        console.table(agents);
-        console.table(jobs);
-        console.table(resources);
-        */
-
-        this.scene.render(locations, agents);
+    updateState(outputState: OutputStateInterface) {
+        this.scene.render(outputState.locations, outputState.agents);
         this.meta.render();
-        this.controls.render(running, settings);
+        this.controls.render(outputState.running, outputState.settings);
     }
 }

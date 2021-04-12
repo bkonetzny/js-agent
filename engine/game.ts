@@ -87,17 +87,17 @@ export class Game {
             return;
         }
 
-        this.outputHandler?.update(
-            this.running,
-            {
+        this.outputHandler?.update({
+            running: this.running,
+            settings: {
                 locations: LocationRegistry.getLocations(),
             },
-            this.locations.findAll(),
-            this.agents.findAll(),
-            this.jobs.findAll(),
-            this.resources.findAll(),
-            this.orders.findAll()
-        );
+            locations: this.locations.findAll(),
+            agents: this.agents.findAll(),
+            jobs: this.jobs.findAll(),
+            resources: this.resources.findAll(),
+            orders: this.orders.findAll(),
+        });
     }
 
     forcePublish() {
