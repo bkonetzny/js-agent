@@ -1,20 +1,12 @@
-import { Game } from "../../engine/game";
-import { InputHandler } from "../../engine/input-handler";
-import { OutputHandler } from "../../engine/output-handler";
+import { InputCommandInterface } from "../../io-bridge/input-commands";
+import { InputHandler } from "../../io-bridge/handlers";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
-import { UiScene } from "./ui-scene";
 import { UiMeta } from "./ui-meta";
-import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
-import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
-import { Job } from "../../engine/objects/instances/job";
-import { Resource } from "../../engine/objects/instances/resource";
-import { Order } from "../../engine/objects/instances/order";
+import { UiScene } from "./ui-scene";
+import { OutputStateInterface } from "../../io-bridge/output-state";
 /* import * as Phaser from "phaser";
 import { GameLevel } from "../scenes/Level"; */
-
-const stylesUi = require('../styles/ui.css');
-const stylesScene = require('../styles/scene.css');
 
 /*
 class Boot extends Phaser.Scene {
@@ -33,40 +25,30 @@ class Boot extends Phaser.Scene {
 export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
-    private inputHandler ?: InputHandler;
-    private controlsSelector: any;
-    private sceneSelector : HTMLElement | null;
-    private detailsSelector: any;
-    private metaSelector: any;
-    private controlsDomElement: any;
-    private detailsDomElement: any;
-    private metaDomElement: any;
-    private details: any;
-    private scene: any;
-    private controls: any;
-    private meta: any;
+    private inputHandler?: InputHandler;
+    private controlsDomElement: HTMLElement;
+    private sceneDomElement: HTMLElement;
+    private detailsDomElement: HTMLElement;
+    private metaDomElement: HTMLElement;
+    private details: UiDetails;
+    private scene: UiScene;
+    private controls: UiControls;
+    private meta: UiMeta;
 
     /**
      * Creates an instance of Ui. The entry point of the whole game ui
-     * @memberof Ui
      */
-    constructor(domDocument: Document, controlsSelector: string, sceneSelector: any, detailsSelector: any, metaSelector: any) {
+    constructor(domDocument: Document, controlsSelector: string, sceneSelector: string, detailsSelector: string, metaSelector: string) {
         this.inputHandler = undefined;
 
-        this.controlsSelector = controlsSelector;
-        this.sceneSelector = domDocument.querySelector<HTMLElement>(sceneSelector);
-        this.detailsSelector = detailsSelector;
-        this.metaSelector = metaSelector;
-
-        this.controlsDomElement = domDocument.querySelector(this.controlsSelector);
-        this.detailsDomElement = domDocument.querySelector(this.detailsSelector);
-        this.metaDomElement = domDocument.querySelector(this.metaSelector);
+        this.controlsDomElement = domDocument.querySelector<HTMLElement>(controlsSelector)!;
+        this.sceneDomElement = domDocument.querySelector<HTMLElement>(sceneSelector)!;
+        this.detailsDomElement = domDocument.querySelector<HTMLElement>(detailsSelector)!;
+        this.metaDomElement = domDocument.querySelector<HTMLElement>(metaSelector)!;
 
         this.details = new UiDetails(this.detailsDomElement);
-        // sceneSelector might be undefined, this we will enforce it for now
-        // TODO: Needs to be reworked - prone to fail at any time.
-        this.scene = new UiScene(this, this.sceneSelector!, domDocument, this.details);
-        this.controls = new UiControls(this, this.controlsDomElement, this.scene);
+        this.scene = new UiScene(this, this.sceneDomElement, domDocument, this.details);
+        this.controls = new UiControls(this, domDocument, this.controlsDomElement, this.scene);
         this.meta = new UiMeta(this, this.metaDomElement);
 
         /*
@@ -89,29 +71,13 @@ export class Ui {
         this.inputHandler = inputHandler;
     }
 
-    handleInput(command: string, data?: object): any {
-        return this.inputHandler?.command(command, data);
+    handleInput(inputCommand: InputCommandInterface): any {
+        return this.inputHandler?.command(inputCommand);
     }
 
-    updateState(running: boolean, locations: LocationEntity[], agents: AgentEntity[], jobs: Job[], resources: Resource[], orders: Order[]) {
-        /*
-        console.clear();
-        console.table(locations);
-        console.table(agents);
-        console.table(jobs);
-        console.table(resources);
-        */
-
-        this.scene.render(locations, agents);
+    updateState(outputState: OutputStateInterface) {
+        this.scene.render(outputState.locations, outputState.agents);
         this.meta.render();
-        this.controls.render(running);
+        this.controls.render(outputState.running, outputState.settings);
     }
 }
-
-var game = new Game({}, (callback) => {
-    window.requestAnimationFrame(callback);
-});
-var ui = new Ui(document, '#controls', '#scene', '#details', '#meta');
-
-new InputHandler(game, ui);
-new OutputHandler(game, ui);

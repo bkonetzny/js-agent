@@ -1,12 +1,14 @@
+import { InputCommandInterface } from "../io-bridge/input-commands";
+import { OutputHandler } from "../io-bridge/handlers";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
 import { OrderManager } from "./managers/order-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
-import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
 import { Order } from './objects/instances/order';
-import { OutputHandler } from "./output-handler";
+import { Position } from "./objects/position";
+import { LocationRegistry } from "./registries/location-registry";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
@@ -14,15 +16,15 @@ import { OrdersRepository } from "./storage/orders-repository";
 import { ResourceRepository } from "./storage/resource-repository";
 
 export class Game {
-    public settings : any;
-    public outputHandler ?: OutputHandler;
-    public running : boolean;
-    public locations : LocationRepository;
-    public agents : AgentRepository;
-    public jobs : JobRepository;
-    public resources : ResourceRepository;
-    public orders : OrdersRepository;
-    public tickFunction : CallableFunction;
+    public settings: any;
+    public outputHandler?: OutputHandler;
+    public running: boolean;
+    public locations: LocationRepository;
+    public agents: AgentRepository;
+    public jobs: JobRepository;
+    public resources: ResourceRepository;
+    public orders: OrdersRepository;
+    public tickFunction: CallableFunction;
 
     constructor(settings: any, tickFunction: Function) {
         this.settings = {...{
@@ -85,14 +87,17 @@ export class Game {
             return;
         }
 
-        this.outputHandler?.update(
-            this.running,
-            this.locations.findAll(),
-            this.agents.findAll(),
-            this.jobs.findAll(),
-            this.resources.findAll(),
-            this.orders.findAll()
-        );
+        this.outputHandler?.update({
+            running: this.running,
+            settings: {
+                locations: LocationRegistry.getLocations(),
+            },
+            locations: this.locations.findAll(),
+            agents: this.agents.findAll(),
+            jobs: this.jobs.findAll(),
+            resources: this.resources.findAll(),
+            orders: this.orders.findAll(),
+        });
     }
 
     forcePublish() {
@@ -105,10 +110,11 @@ export class Game {
 
     setOutputHandler(outputHandler: OutputHandler) {
         this.outputHandler = outputHandler;
+        this.forcePublish();
     }
 
-    command(command: string, data?: any) {
-        switch (command) {
+    command(inputCommand: InputCommandInterface) {
+        switch (inputCommand.command) {
             case 'control:start':
                 return this.controlStart();
 
@@ -116,41 +122,46 @@ export class Game {
                 return this.controlPause();
 
             case 'setting:update':
-                return this.updateSetting(data.key, data.value);
+                return this.updateSetting(inputCommand.data.key, inputCommand.data.value);
 
             case 'gamestate:import':
-                return this.importState(data.state);
+                return this.importState(inputCommand.data.state);
 
             case 'gamestate:export':
                 return this.exportState();
 
             case 'location:add:check':
-                return this.checkAddLocation(data);
+                return this.checkAddLocation(inputCommand.data);
 
             case 'location:add':
-                return this.addLocation(data);
+                return this.addLocation(inputCommand.data);
 
             case 'agent:add':
-                return this.addAgent(data);
+                return this.addAgent(inputCommand.data);
 
             default:
-                throw new Error(`Unknown command "${command}"`);
+                throw new Error(`Unknown command "${inputCommand.command}"`);
         }
     }
 
-    checkAddLocation(location: LocationEntity): boolean | Error {
-        if (location.position.x > 210 && location.position.x < 240) {
+    checkAddLocation(data: any): boolean | Error {
+        const position: Position = data.position;
+
+        if (position.x > 210 && position.x < 240) {
             return new Error('INVALID_LOCATION');
         }
 
         return true;
     }
 
-    addLocation(location: LocationEntity): string | Error {
-        const check = this.checkAddLocation(location);
+    addLocation(data: any): string | Error {
+        const check = this.checkAddLocation(data);
         if (check instanceof Error) {
             return check;
         }
+
+        const position: Position = data.position;
+        const location = LocationRegistry.createLocation(data.id, position);
 
         location.setGame(this);
         this.locations.add(location);
@@ -161,7 +172,10 @@ export class Game {
         return location.id;
     }
 
-    addAgent(agent: AgentEntity): string {
+    addAgent(data: any): string {
+        const position: Position = data.position;
+        const agent = new AgentEntity(position);
+
         agent.setGame(this);
         this.agents.add(agent);
 

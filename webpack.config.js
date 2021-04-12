@@ -1,12 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CopyPlugin = require("copy-webpack-plugin");
+// const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = (argv) => {
 	const config = {
 		mode: argv.mode || "development",
 		entry: {
-			"ui": './ui/scripts/ui.ts',
+			"ui": './ui/scripts/init.ts',
 			"engine": "./engine/game.ts"
 		},
 		optimization: {
