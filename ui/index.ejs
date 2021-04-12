@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="js-agent">
-	<head>
-		<meta charset="utf-8"/>
-		<title><%= htmlWebpackPlugin.options.title %></title>
-		<% for(var i=0; i < htmlWebpackPlugin.files.css.length; i++) { %>
-			<link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[i] %>" />
-		<% } %>
-	</head>
-	<body style="padding: 0; margin: 0;">
-		<div id="controls">
+    <head>
+        <meta charset="utf-8"/>
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <% for(var i=0; i < htmlWebpackPlugin.files.css.length; i++) { %>
+        <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[i] %>" />
+        <% } %>
+    </head>
+    <body style="padding: 0; margin: 0;">
+        <div id="controls">
             <fieldset class="simulation">
                 <legend>Simulation</legend>
                 <button id="start"></button>
@@ -42,6 +42,5 @@
             <legend>Details</legend>
             <div id="details"></div>
         </fieldset>
-	</body>
-
+    </body>
 </html>

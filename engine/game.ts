@@ -1,19 +1,19 @@
+import { InputCommandInterface } from "../io-bridge/input-commands";
+import { OutputHandler } from "../io-bridge/handlers";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
 import { OrderManager } from "./managers/order-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
-import { LocationEntity } from "./objects/instances/entities/location-entity";
 import { Job } from "./objects/instances/job";
 import { Order } from './objects/instances/order';
 import { Position } from "./objects/position";
-import { OutputHandler } from "./output-handler";
+import { LocationRegistry } from "./registries/location-registry";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
 import { ResourceRepository } from "./storage/resource-repository";
-import { LocationRegistry } from "./registries/location-registry";
 
 export class Game {
     public settings: any;
@@ -113,8 +113,8 @@ export class Game {
         this.forcePublish();
     }
 
-    command(command: string, data?: any) {
-        switch (command) {
+    command(inputCommand: InputCommandInterface) {
+        switch (inputCommand.command) {
             case 'control:start':
                 return this.controlStart();
 
@@ -122,25 +122,25 @@ export class Game {
                 return this.controlPause();
 
             case 'setting:update':
-                return this.updateSetting(data.key, data.value);
+                return this.updateSetting(inputCommand.data.key, inputCommand.data.value);
 
             case 'gamestate:import':
-                return this.importState(data.state);
+                return this.importState(inputCommand.data.state);
 
             case 'gamestate:export':
                 return this.exportState();
 
             case 'location:add:check':
-                return this.checkAddLocation(data);
+                return this.checkAddLocation(inputCommand.data);
 
             case 'location:add':
-                return this.addLocation(data);
+                return this.addLocation(inputCommand.data);
 
             case 'agent:add':
-                return this.addAgent(data);
+                return this.addAgent(inputCommand.data);
 
             default:
-                throw new Error(`Unknown command "${command}"`);
+                throw new Error(`Unknown command "${inputCommand.command}"`);
         }
     }
 

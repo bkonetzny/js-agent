@@ -1,3 +1,4 @@
+import { ControlPauseInputCommand, ControlStartInputCommand, GamestateExportInputCommand, GamestateImportInputCommand } from "../../io-bridge/input-commands";
 import { Ui } from "./ui";
 import { UiScene } from "./ui-scene";
 
@@ -43,11 +44,11 @@ export class UiControls {
 
     addEventListeners() {
         this.btnStart.addEventListener('click', (event) => {
-            this.ui.handleInput('control:start');
+            this.ui.handleInput(new ControlStartInputCommand());
         });
 
         this.btnPause.addEventListener('click', (event) => {
-            this.ui.handleInput('control:pause');
+            this.ui.handleInput(new ControlPauseInputCommand());
         });
 
         this.btnLocationsWrapper.addEventListener('click', (event) => {
@@ -68,19 +69,17 @@ export class UiControls {
         */
 
         this.btnExport.addEventListener('click', (event) => {
-            const exportData = this.ui.handleInput('gamestate:export');
+            const exportData = this.ui.handleInput(new GamestateExportInputCommand);
             console.log('Export:', exportData, JSON.parse(exportData));
         });
 
         this.btnImport.addEventListener('click', (event) => {
-            const state = {
+            this.ui.handleInput(new GamestateImportInputCommand({
                 settings: {},
                 locations: [],
                 agents: [],
                 jobs: [],
-            };
-
-            this.ui.handleInput('gamestate:import', {state: JSON.stringify(state)});
+            }));
         });
 
         this.btnDemo.addEventListener('click', (event) => {
@@ -128,7 +127,7 @@ export class UiControls {
                 clientY: 400,
             }));
 
-            this.ui.handleInput('control:start');
+            this.ui.handleInput(new ControlStartInputCommand());
         });
     }
 

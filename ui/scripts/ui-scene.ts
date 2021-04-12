@@ -1,6 +1,7 @@
 import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
 import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
 import { Position } from "../../engine/objects/position";
+import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
 import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
 
@@ -79,16 +80,13 @@ export class UiScene {
             return;
         }
 
-        const locationId = this.clickMode.split(':').pop();
+        const locationId = this.clickMode.split(':').pop()!;
 
         this.domHoverElement.innerText = '';
 
         const position = this.getPositionForEvent(event);
 
-        const handleInputResult = this.ui.handleInput('location:add:check', {
-            id: locationId,
-            position: position
-        });
+        const handleInputResult = this.ui.handleInput(new LocationAddInputCommand(locationId, position, true));
 
         if (!this.domHoverElement.classList.contains('active')) {
             this.domHoverElement.classList.add('active');
@@ -132,22 +130,17 @@ export class UiScene {
             return;
         }
 
-        const locationId = this.clickMode.split(':').pop();
+        const locationId = this.clickMode.split(':').pop()!;
 
         const position = this.getPositionForEvent(event);
 
         let handleInputResult: boolean | Error = false;
 
         if (this.clickMode.startsWith('location:add:')) {
-            handleInputResult = this.ui.handleInput('location:add', {
-                id: locationId,
-                position: position,
-            });
+            handleInputResult = this.ui.handleInput(new LocationAddInputCommand(locationId, position));
         }
         else if (this.clickMode.startsWith('agent:add')) {
-            handleInputResult = this.ui.handleInput('agent:add', {
-                position: position,
-            });
+            handleInputResult = this.ui.handleInput(new AgentAddInputCommand(position));
         }
 
         console.log('handleInputResult:', handleInputResult);

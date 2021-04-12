@@ -1,20 +1,16 @@
-import { Game } from "../../engine/game";
-import { InputHandler } from "../../engine/input-handler";
-import { OutputHandler } from "../../engine/output-handler";
+import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
+import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
+import { Job } from "../../engine/objects/instances/job";
+import { Order } from "../../engine/objects/instances/order";
+import { Resource } from "../../engine/objects/instances/resource";
+import { InputCommandInterface } from "../../io-bridge/input-commands";
+import { InputHandler } from "../../io-bridge/handlers";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
-import { UiScene } from "./ui-scene";
 import { UiMeta } from "./ui-meta";
-import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
-import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
-import { Job } from "../../engine/objects/instances/job";
-import { Resource } from "../../engine/objects/instances/resource";
-import { Order } from "../../engine/objects/instances/order";
+import { UiScene } from "./ui-scene";
 /* import * as Phaser from "phaser";
 import { GameLevel } from "../scenes/Level"; */
-
-const stylesUi = require('../styles/ui.css');
-const stylesScene = require('../styles/scene.css');
 
 /*
 class Boot extends Phaser.Scene {
@@ -79,8 +75,8 @@ export class Ui {
         this.inputHandler = inputHandler;
     }
 
-    handleInput(command: string, data?: object): any {
-        return this.inputHandler?.command(command, data);
+    handleInput(inputCommand: InputCommandInterface): any {
+        return this.inputHandler?.command(inputCommand);
     }
 
     updateState(
@@ -105,11 +101,3 @@ export class Ui {
         this.controls.render(running, settings);
     }
 }
-
-var game = new Game({}, (callback) => {
-    window.requestAnimationFrame(callback);
-});
-var ui = new Ui(document, '#controls', '#scene', '#details', '#meta');
-
-new InputHandler(game, ui);
-new OutputHandler(game, ui);
