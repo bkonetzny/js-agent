@@ -76,7 +76,7 @@ export class Ui {
     }
 
     updateState(outputState: OutputStateInterface) {
-        this.scene.render(outputState.locations, outputState.agents);
+        this.scene.render(outputState.locations, outputState.agents, outputState.paths);
         this.meta.render();
         this.controls.render(outputState.running, outputState.settings);
     }

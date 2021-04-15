@@ -1,5 +1,6 @@
 import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
 import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
+import { Path } from "../../engine/objects/instances/path";
 import { Position } from "../../engine/objects/position";
 import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
 import { Ui } from "./ui";
@@ -165,14 +166,16 @@ export class UiScene {
         return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
     }
 
-    render(locations: LocationEntity[], agents: AgentEntity[]) {
+    render(locations: LocationEntity[], agents: AgentEntity[], paths: Path[]) {
         this.locationCache = locations;
 
         this.domRemoveObsoleteLocations(locations);
         this.domRemoveObsoleteAgents(agents);
+        this.domRemoveObsoletePaths(paths);
 
         this.domUpdateLocations(locations);
         this.domUpdateAgents(agents);
+        this.domUpdatePaths(paths);
 
         this.updateDetails();
     }
@@ -203,6 +206,20 @@ export class UiScene {
         });
     }
 
+    domRemoveObsoletePaths(paths: Path[]) {
+        const domPaths = this.domElement.querySelectorAll('.path');
+        const pathIds = paths.map((path) => {
+            return path.id;
+        });
+
+        domPaths.forEach((domPath) => {
+            // @ts-ignore
+            if (!pathIds.includes(domPath.dataset.pathId)) {
+                domPath.remove();
+            }
+        });
+    }
+
     domUpdateLocations(locations: LocationEntity[]) {
         locations.forEach((building) => {
             const domBuilding = this.domEnsureElementForTyoe('building', building.id);
@@ -222,6 +239,21 @@ export class UiScene {
             const job = agent.getJob();
 
             domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
+        });
+    }
+
+    domUpdatePaths(paths: Path[]) {
+        paths.forEach((path) => {
+            path.steps.forEach((step: Position, index: number) => {
+                if (index % 3 !== 0) {
+                    return;
+                }
+
+                const domPathStep = this.domEnsureElementForTyoe('path', path.id + '-' + index);
+                domPathStep.dataset.pathId = path.id;
+
+                this.domUpdateElementPosition(domPathStep, step);
+            });
         });
     }
 
