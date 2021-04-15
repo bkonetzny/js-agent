@@ -10,7 +10,6 @@ export class PathManager {
 
         game.paths.findAll().forEach((path) => {
             if (!uniqueUsedPathIds.includes(path.id)) {
-                console.log('Removing obsolete path', path);
                 game.paths.remove(path);
             }
         });

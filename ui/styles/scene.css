@@ -55,6 +55,13 @@
     content: '🥵';
 }
 
+.path {
+    z-index: 2;
+    width: 1px;
+    height: 1px;
+    background: gray;
+}
+
 .hover-layer {
     z-index: 10;
     width: 100%;

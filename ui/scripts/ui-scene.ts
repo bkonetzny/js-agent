@@ -1,5 +1,6 @@
 import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
 import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
+import { Path } from "../../engine/objects/instances/path";
 import { Position } from "../../engine/objects/position";
 import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
 import { Ui } from "./ui";
@@ -165,7 +166,7 @@ export class UiScene {
         return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
     }
 
-    render(locations: LocationEntity[], agents: AgentEntity[]) {
+    render(locations: LocationEntity[], agents: AgentEntity[], paths: Path[]) {
         this.locationCache = locations;
 
         this.domRemoveObsoleteLocations(locations);
@@ -173,6 +174,7 @@ export class UiScene {
 
         this.domUpdateLocations(locations);
         this.domUpdateAgents(agents);
+        this.domUpdatePaths(paths);
 
         this.updateDetails();
     }
@@ -222,6 +224,26 @@ export class UiScene {
             const job = agent.getJob();
 
             domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
+        });
+    }
+
+    domUpdatePaths(paths: Path[]) {
+        const domPaths = this.domElement.querySelectorAll('.path');
+
+        domPaths.forEach((domPath) => {
+            domPath.remove();
+        });
+
+        paths.forEach((path) => {
+            path.steps.forEach((step: Position, index: number) => {
+                if (index % 2) {
+                    return;
+                }
+
+                const domPathStep = this.domEnsureElementForTyoe('path', path.id + '-' + index);
+
+                this.domUpdateElementPosition(domPathStep, step);
+            });
         });
     }
 
