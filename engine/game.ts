@@ -1,9 +1,10 @@
-import { InputCommandInterface } from "../io-bridge/input-commands";
 import { OutputHandler } from "../io-bridge/handlers";
+import { InputCommandInterface } from "../io-bridge/input-commands";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
 import { OrderManager } from "./managers/order-manager";
+import { PathManager } from "./managers/path-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { Job } from "./objects/instances/job";
 import { Order } from './objects/instances/order';
@@ -13,9 +14,8 @@ import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
-import { ResourceRepository } from "./storage/resource-repository";
 import { PathRepository } from "./storage/path-repository";
-import { PathManager } from "./managers/path-manager";
+import { ResourceRepository } from "./storage/resource-repository";
 
 export class Game {
     public settings: any;

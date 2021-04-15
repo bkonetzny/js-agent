@@ -1,6 +1,4 @@
 import { Game } from "../game";
-import { Job } from "../objects/instances/job";
-import { Resource } from "../objects/instances/resource";
 
 export class PathManager {
     static process(game: Game) {
