@@ -70,7 +70,7 @@ eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexpo
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
-eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.PathManager = void 0;\nclass PathManager {\n    static process(game) {\n        const usedPathIds = game.agents.findAll().map((agent) => {\n            return agent.pathId;\n        });\n        const uniqueUsedPathIds = [...new Set(usedPathIds)];\n        game.paths.findAll().forEach((path) => {\n            if (!uniqueUsedPathIds.includes(path.id)) {\n                console.log('Removing obsolete path', path);\n                game.paths.remove(path);\n            }\n        });\n    }\n}\nexports.PathManager = PathManager;\n\n\n//# sourceURL=webpack://js-agent/./engine/managers/path-manager.ts?");
+eval("\nObject.defineProperty(exports, \"__esModule\", ({ value: true }));\nexports.PathManager = void 0;\nclass PathManager {\n    static process(game) {\n        const usedPathIds = game.agents.findAll().map((agent) => {\n            return agent.pathId;\n        });\n        const uniqueUsedPathIds = [...new Set(usedPathIds)];\n        game.paths.findAll().forEach((path) => {\n            if (!uniqueUsedPathIds.includes(path.id)) {\n                game.paths.remove(path);\n            }\n        });\n    }\n}\nexports.PathManager = PathManager;\n\n\n//# sourceURL=webpack://js-agent/./engine/managers/path-manager.ts?");
 
 /***/ }),
 
