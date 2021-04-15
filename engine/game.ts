@@ -15,6 +15,7 @@ import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
 import { ResourceRepository } from "./storage/resource-repository";
 import { PathRepository } from "./storage/path-repository";
+import { PathManager } from "./managers/path-manager";
 
 export class Game {
     public settings: any;
@@ -83,6 +84,7 @@ export class Game {
         LocationManager.process(this);
         JobManager.process(this);
         AgentManager.process(this);
+        PathManager.process(this);
     }
 
     publish() {
@@ -172,6 +174,8 @@ export class Game {
         location.onCreate();
 
         this.forcePublish();
+
+        this.paths.removeAll();
 
         return location.id;
     }

@@ -6,13 +6,14 @@ import { LocationEntity } from "./location-entity";
 
 export class AgentEntity extends Entity {
     public jobId ?: string;
+    public pathId ?: string;
     private velocityIdle : number;
     private velocityJob : number;
-    private pathId ?: string;
 
     constructor(position: Position) {
         super(position);
         this.jobId = undefined;
+        this.pathId = undefined;
         this.velocityIdle = 5;
         this.velocityJob = 1;
     }

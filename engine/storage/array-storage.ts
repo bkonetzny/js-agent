@@ -23,6 +23,12 @@ export abstract class ArrayStorage<T extends Instance> {
         return true;
     }
 
+    removeAll() {
+        this.data = [];
+
+        return true;
+    }
+
     findOneById(id: string): T | undefined {
         return this.data.find((item) => {
             return item.id === id;
