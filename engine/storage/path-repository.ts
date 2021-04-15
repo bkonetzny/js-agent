@@ -4,15 +4,15 @@ import { ArrayStorage } from "./array-storage";
 
 export class PathRepository extends ArrayStorage<Path> {
     findOneBySourceAndDestinationOrCreate(source: Position, destination: Position): Path | undefined {
-        const path = this.data.find((path) => {
+        const matchedPath = this.data.find((path) => {
             return (
                 Position.isSamePosition(path.source, source)
                 && Position.isSamePosition(path.destination, destination)
             );
         });
 
-        if (path) {
-            return path;
+        if (matchedPath) {
+            return matchedPath;
         }
 
         const newPath = new Path(source, destination);

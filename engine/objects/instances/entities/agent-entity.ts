@@ -88,7 +88,9 @@ export class AgentEntity extends Entity {
             path = this.game?.paths.findOneById(this.pathId);
         }
 
-        if (!path || Position.isSamePosition(path.destination, target.position)) {
+        if (!path
+            || !Position.isSamePosition(path.destination, target.position)
+        ) {
             path = this.game?.paths.findOneBySourceAndDestinationOrCreate(this.position, target.position);
         }
 
@@ -124,7 +126,6 @@ export class AgentEntity extends Entity {
 
         this.game?.jobs.remove(job);
         this.jobId = undefined;
-        this.pathId = undefined;
 
         return true;
     }
@@ -142,7 +143,6 @@ export class AgentEntity extends Entity {
 
         if (Position.isSamePosition(this.position, job.source.position)) {
             job.start();
-            this.pathId = undefined;
         }
 
         return job.started;

@@ -6,6 +6,7 @@ interface OutputStateInterface {
     readonly jobs: Array<any>;
     readonly resources: Array<any>;
     readonly orders: Array<any>;
+    readonly paths: Array<any>;
 }
 
 export {

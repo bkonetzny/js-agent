@@ -100,6 +100,7 @@ export class Game {
             jobs: this.jobs.findAll(),
             resources: this.resources.findAll(),
             orders: this.orders.findAll(),
+            paths: this.paths.findAll(),
         });
     }
 
