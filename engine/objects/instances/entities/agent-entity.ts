@@ -1,17 +1,19 @@
 import { Position } from "../../position";
-import { Pathfinder } from "../../util/pathfinder";
 import { Entity } from "../entity";
 import { Job } from "../job";
+import { Path } from "../path";
 import { LocationEntity } from "./location-entity";
 
 export class AgentEntity extends Entity {
     public jobId ?: string;
+    public pathId ?: string;
     private velocityIdle : number;
     private velocityJob : number;
 
     constructor(position: Position) {
         super(position);
         this.jobId = undefined;
+        this.pathId = undefined;
         this.velocityIdle = 5;
         this.velocityJob = 1;
     }
@@ -81,7 +83,34 @@ export class AgentEntity extends Entity {
     }
 
     moveToTarget(target: LocationEntity) {
-        this.position = Pathfinder.proceedToPosition(this.position, target.position, this.getSpeed());
+        let path : Path | undefined;
+
+        if (this.pathId) {
+            path = this.game?.paths.findOneById(this.pathId);
+        }
+
+        if (!path
+            || !Position.isSamePosition(path.destination, target.position)
+        ) {
+            path = this.game?.paths.findOneBySourceAndDestinationOrCreate(this.position, target.position);
+        }
+
+        if (!path) {
+            console.error('No path found or created.');
+            this.pathId = undefined;
+            return;
+        }
+
+        this.pathId = path.id;
+
+        const newPosition = path.proceedOnPath(this.position, this.getSpeed());
+
+        if (!newPosition) {
+            console.error('No position to proceed to.');
+            return;
+        }
+
+        this.position = newPosition;
     }
 
     arrivedAtJobDestinationLocation(): boolean {

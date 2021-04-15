@@ -1,9 +1,10 @@
-import { InputCommandInterface } from "../io-bridge/input-commands";
 import { OutputHandler } from "../io-bridge/handlers";
+import { InputCommandInterface } from "../io-bridge/input-commands";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
 import { OrderManager } from "./managers/order-manager";
+import { PathManager } from "./managers/path-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { Job } from "./objects/instances/job";
 import { Order } from './objects/instances/order';
@@ -13,6 +14,7 @@ import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
+import { PathRepository } from "./storage/path-repository";
 import { ResourceRepository } from "./storage/resource-repository";
 
 export class Game {
@@ -24,6 +26,7 @@ export class Game {
     public jobs: JobRepository;
     public resources: ResourceRepository;
     public orders: OrdersRepository;
+    public paths: PathRepository;
     public tickFunction: CallableFunction;
 
     constructor(settings: any, tickFunction: Function) {
@@ -37,6 +40,7 @@ export class Game {
         this.jobs = new JobRepository();
         this.resources = new ResourceRepository();
         this.orders = new OrdersRepository();
+        this.paths = new PathRepository();
         this.tickFunction = tickFunction;
     }
 
@@ -80,6 +84,7 @@ export class Game {
         LocationManager.process(this);
         JobManager.process(this);
         AgentManager.process(this);
+        PathManager.process(this);
     }
 
     publish() {
@@ -97,6 +102,7 @@ export class Game {
             jobs: this.jobs.findAll(),
             resources: this.resources.findAll(),
             orders: this.orders.findAll(),
+            paths: this.paths.findAll(),
         });
     }
 
@@ -168,6 +174,8 @@ export class Game {
         location.onCreate();
 
         this.forcePublish();
+
+        this.paths.removeAll();
 
         return location.id;
     }
