@@ -14,6 +14,7 @@ import { JobRepository } from "./storage/job-repository";
 import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
 import { ResourceRepository } from "./storage/resource-repository";
+import { PathRepository } from "./storage/path-repository";
 
 export class Game {
     public settings: any;
@@ -24,6 +25,7 @@ export class Game {
     public jobs: JobRepository;
     public resources: ResourceRepository;
     public orders: OrdersRepository;
+    public paths: PathRepository;
     public tickFunction: CallableFunction;
 
     constructor(settings: any, tickFunction: Function) {
@@ -37,6 +39,7 @@ export class Game {
         this.jobs = new JobRepository();
         this.resources = new ResourceRepository();
         this.orders = new OrdersRepository();
+        this.paths = new PathRepository();
         this.tickFunction = tickFunction;
     }
 
