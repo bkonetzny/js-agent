@@ -171,6 +171,7 @@ export class UiScene {
 
         this.domRemoveObsoleteLocations(locations);
         this.domRemoveObsoleteAgents(agents);
+        this.domRemoveObsoletePaths(paths);
 
         this.domUpdateLocations(locations);
         this.domUpdateAgents(agents);
@@ -205,6 +206,20 @@ export class UiScene {
         });
     }
 
+    domRemoveObsoletePaths(paths: Path[]) {
+        const domPaths = this.domElement.querySelectorAll('.path');
+        const pathIds = paths.map((path) => {
+            return path.id;
+        });
+
+        domPaths.forEach((domPath) => {
+            // @ts-ignore
+            if (!pathIds.includes(domPath.dataset.pathId)) {
+                domPath.remove();
+            }
+        });
+    }
+
     domUpdateLocations(locations: LocationEntity[]) {
         locations.forEach((building) => {
             const domBuilding = this.domEnsureElementForTyoe('building', building.id);
@@ -228,19 +243,14 @@ export class UiScene {
     }
 
     domUpdatePaths(paths: Path[]) {
-        const domPaths = this.domElement.querySelectorAll('.path');
-
-        domPaths.forEach((domPath) => {
-            domPath.remove();
-        });
-
         paths.forEach((path) => {
             path.steps.forEach((step: Position, index: number) => {
-                if (index % 2) {
+                if (index % 3 !== 0) {
                     return;
                 }
 
                 const domPathStep = this.domEnsureElementForTyoe('path', path.id + '-' + index);
+                domPathStep.dataset.pathId = path.id;
 
                 this.domUpdateElementPosition(domPathStep, step);
             });
