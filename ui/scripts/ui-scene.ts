@@ -2,23 +2,25 @@ import { AgentEntity } from "../../engine/objects/instances/entities/agent-entit
 import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
 import { Path } from "../../engine/objects/instances/path";
 import { Position } from "../../engine/objects/position";
+import { Terrain } from "../../engine/objects/terrain";
 import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
 import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
 
 export class UiScene {
     private ui: Ui;
-    private domElement: Element;
+    private domElement: HTMLDivElement;
     private domDocument: Document;
     private uiDetails: UiDetails;
     private clickMode?: string;
     private focusedObjectId?: string;
     private locationCache: LocationEntity[];
     private domElementIdPrefix: string;
+    private domObjectLayerElement: HTMLDivElement;
     private domHoverLayerElement: HTMLDivElement;
     private domHoverElement: HTMLDivElement;
 
-    constructor(ui: Ui, domElement: Element, domDocument: Document, uiDetails: UiDetails) {
+    constructor(ui: Ui, domElement: HTMLDivElement, domDocument: Document, uiDetails: UiDetails) {
         this.ui = ui;
         this.domElement = domElement;
         this.domDocument = domDocument;
@@ -28,14 +30,9 @@ export class UiScene {
         this.focusedObjectId = undefined;
         this.locationCache = [];
         this.domElementIdPrefix = 'id-';
-
-        this.domHoverLayerElement = this.domDocument.createElement('div');
-        this.domHoverLayerElement.classList.add('hover-layer');
-        this.domElement.appendChild(this.domHoverLayerElement);
-
-        this.domHoverElement = this.domDocument.createElement('div');
-        this.domHoverElement.classList.add('hover');
-        this.domElement.appendChild(this.domHoverElement);
+        this.domObjectLayerElement = this.domElement.querySelector('.layer-objects')!;
+        this.domHoverLayerElement = this.domElement.querySelector('.layer-hover')!;
+        this.domHoverElement = this.domElement.querySelector('.hover')!;
 
         // @ts-ignore
         this.domHoverLayerElement.addEventListener('pointermove', (event: PointerEvent) => {
@@ -43,7 +40,8 @@ export class UiScene {
         });
 
         // @ts-ignore
-        this.domHoverLayerElement.addEventListener('mouseout', (event: PointerEvent) => {
+        this.domHoverLayerElement.addEventListener('contextmenu', (event: MouseEvent) => {
+            event.stopPropagation();
             this.processHoverEndEvent();
         });
 
@@ -166,7 +164,10 @@ export class UiScene {
         return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
     }
 
-    render(locations: LocationEntity[], agents: AgentEntity[], paths: Path[]) {
+    render(terrain: Terrain, locations: LocationEntity[], agents: AgentEntity[], paths: Path[]) {
+        this.domElement.style.width = `${terrain.x}px`;
+        this.domElement.style.height = `${terrain.y}px`;
+
         this.locationCache = locations;
 
         this.domRemoveObsoleteLocations(locations);
@@ -258,13 +259,13 @@ export class UiScene {
     }
 
     domEnsureElementForTyoe(type: string, id: string): HTMLDivElement {
-        let element: HTMLDivElement | null = this.domElement.querySelector(`#${this.domElementIdPrefix}${id}`);
+        let element: HTMLDivElement | null = this.domObjectLayerElement.querySelector(`#${this.domElementIdPrefix}${id}`);
 
         if (!element) {
             element = this.domDocument.createElement('div');
             element.id = `${this.domElementIdPrefix}${id}`;
 
-            this.domElement.appendChild(element);
+            this.domObjectLayerElement.appendChild(element);
         }
 
         // @ts-ignore

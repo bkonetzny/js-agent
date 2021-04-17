@@ -26,10 +26,10 @@ export class Ui {
     // We will type those as any for now, just to be able to start from here with typescript
     // TODO: implement interfaces
     private inputHandler?: InputHandler;
-    private controlsDomElement: HTMLElement;
-    private sceneDomElement: HTMLElement;
-    private detailsDomElement: HTMLElement;
-    private metaDomElement: HTMLElement;
+    private controlsDomElement: HTMLDivElement;
+    private sceneDomElement: HTMLDivElement;
+    private detailsDomElement: HTMLDivElement;
+    private metaDomElement: HTMLDivElement;
     private details: UiDetails;
     private scene: UiScene;
     private controls: UiControls;
@@ -41,10 +41,10 @@ export class Ui {
     constructor(domDocument: Document, controlsSelector: string, sceneSelector: string, detailsSelector: string, metaSelector: string) {
         this.inputHandler = undefined;
 
-        this.controlsDomElement = domDocument.querySelector<HTMLElement>(controlsSelector)!;
-        this.sceneDomElement = domDocument.querySelector<HTMLElement>(sceneSelector)!;
-        this.detailsDomElement = domDocument.querySelector<HTMLElement>(detailsSelector)!;
-        this.metaDomElement = domDocument.querySelector<HTMLElement>(metaSelector)!;
+        this.controlsDomElement = domDocument.querySelector<HTMLDivElement>(controlsSelector)!;
+        this.sceneDomElement = domDocument.querySelector<HTMLDivElement>(sceneSelector)!;
+        this.detailsDomElement = domDocument.querySelector<HTMLDivElement>(detailsSelector)!;
+        this.metaDomElement = domDocument.querySelector<HTMLDivElement>(metaSelector)!;
 
         this.details = new UiDetails(this.detailsDomElement);
         this.scene = new UiScene(this, this.sceneDomElement, domDocument, this.details);
@@ -76,7 +76,7 @@ export class Ui {
     }
 
     updateState(outputState: OutputStateInterface) {
-        this.scene.render(outputState.locations, outputState.agents, outputState.paths);
+        this.scene.render(outputState.terrain, outputState.locations, outputState.agents, outputState.paths);
         this.meta.render();
         this.controls.render(outputState.running, outputState.settings);
     }

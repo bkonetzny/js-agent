@@ -1,6 +1,7 @@
 interface OutputStateInterface {
     readonly running: boolean;
     readonly settings: Object;
+    readonly terrain: any;
     readonly locations: Array<any>;
     readonly agents: Array<any>;
     readonly jobs: Array<any>;

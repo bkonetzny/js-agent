@@ -5,10 +5,12 @@ import { JobManager } from "./managers/job-manager";
 import { LocationManager } from "./managers/location-manager";
 import { OrderManager } from "./managers/order-manager";
 import { PathManager } from "./managers/path-manager";
+import { TerrainManager } from "./managers/terrain-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { Job } from "./objects/instances/job";
 import { Order } from './objects/instances/order';
 import { Position } from "./objects/position";
+import { Terrain } from "./objects/terrain";
 import { LocationRegistry } from "./registries/location-registry";
 import { AgentRepository } from "./storage/agent-repository";
 import { JobRepository } from "./storage/job-repository";
@@ -17,7 +19,7 @@ import { OrdersRepository } from "./storage/orders-repository";
 import { PathRepository } from "./storage/path-repository";
 import { ResourceRepository } from "./storage/resource-repository";
 
-export class Game {
+class Game {
     public settings: any;
     public outputHandler?: OutputHandler;
     public running: boolean;
@@ -28,8 +30,9 @@ export class Game {
     public orders: OrdersRepository;
     public paths: PathRepository;
     public tickFunction: CallableFunction;
+    public terrain: Terrain;
 
-    constructor(settings: any, tickFunction: Function) {
+    constructor(settings: GameSettings, tickFunction: Function) {
         this.settings = {...{
             assignIdleAgentToOpenJobStrategy: 'closest', // next, random, closest
         }, ...settings};
@@ -42,6 +45,7 @@ export class Game {
         this.orders = new OrdersRepository();
         this.paths = new PathRepository();
         this.tickFunction = tickFunction;
+        this.terrain = TerrainManager.generate(this);
     }
 
     controlStart() {
@@ -97,6 +101,7 @@ export class Game {
             settings: {
                 locations: LocationRegistry.getLocations(),
             },
+            terrain: this.terrain,
             locations: this.locations.findAll(),
             agents: this.agents.findAll(),
             jobs: this.jobs.findAll(),
@@ -153,11 +158,7 @@ export class Game {
     checkAddLocation(data: any): boolean | Error {
         const position: Position = data.position;
 
-        if (position.x > 210 && position.x < 240) {
-            return new Error('INVALID_LOCATION');
-        }
-
-        return true;
+        return this.terrain.isPositionAvailable(position);
     }
 
     addLocation(data: any): string | Error {
@@ -249,4 +250,20 @@ export class Game {
 
         return true;
     }
+}
+
+interface GameSettings {
+    terrain: GameSettingsTerrain;
+    assignIdleAgentToOpenJobStrategy ?: string
+}
+
+interface GameSettingsTerrain {
+    x: number;
+    y: number;
+}
+
+export {
+    Game,
+    GameSettings,
+    GameSettingsTerrain,
 }
