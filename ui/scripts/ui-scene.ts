@@ -6,6 +6,7 @@ import { Terrain } from "../../engine/objects/terrain";
 import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
 import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
+import { difference } from "lodash-es";
 
 export class UiScene {
     private ui: Ui;
@@ -16,6 +17,7 @@ export class UiScene {
     private focusedObjectId?: string;
     private locationCache: LocationEntity[];
     private domElementIdPrefix: string;
+    private domTerrainLayerElement: HTMLCanvasElement;
     private domObjectLayerElement: HTMLDivElement;
     private domHoverLayerElement: HTMLDivElement;
     private domHoverElement: HTMLDivElement;
@@ -30,6 +32,7 @@ export class UiScene {
         this.focusedObjectId = undefined;
         this.locationCache = [];
         this.domElementIdPrefix = 'id-';
+        this.domTerrainLayerElement = this.domElement.querySelector('.layer-terrain')!;
         this.domObjectLayerElement = this.domElement.querySelector('.layer-objects')!;
         this.domHoverLayerElement = this.domElement.querySelector('.layer-hover')!;
         this.domHoverElement = this.domElement.querySelector('.hover')!;
@@ -168,11 +171,16 @@ export class UiScene {
         this.domElement.style.width = `${terrain.x}px`;
         this.domElement.style.height = `${terrain.y}px`;
 
+        if (this.domTerrainLayerElement.width !== terrain.x
+            || this.domTerrainLayerElement.height !== terrain.y
+        ) {
+            UiScene.canvasReset(this.domTerrainLayerElement, terrain);
+        }
+
         this.locationCache = locations;
 
         this.domRemoveObsoleteLocations(locations);
         this.domRemoveObsoleteAgents(agents);
-        this.domRemoveObsoletePaths(paths);
 
         this.domUpdateLocations(locations);
         this.domUpdateAgents(agents);
@@ -207,20 +215,6 @@ export class UiScene {
         });
     }
 
-    domRemoveObsoletePaths(paths: Path[]) {
-        const domPaths = this.domElement.querySelectorAll('.path');
-        const pathIds = paths.map((path) => {
-            return path.id;
-        });
-
-        domPaths.forEach((domPath) => {
-            // @ts-ignore
-            if (!pathIds.includes(domPath.dataset.pathId)) {
-                domPath.remove();
-            }
-        });
-    }
-
     domUpdateLocations(locations: LocationEntity[]) {
         locations.forEach((building) => {
             const domBuilding = this.domEnsureElementForTyoe('building', building.id);
@@ -244,17 +238,37 @@ export class UiScene {
     }
 
     domUpdatePaths(paths: Path[]) {
+        const pathIds = paths.map((path: Path) => {
+            return path.id;
+        });
+
+        if (!UiScene.canvasIsRenderCacheOutdated(this.domTerrainLayerElement, pathIds)) {
+            return;
+        }
+
+        UiScene.canvasReset(this.domTerrainLayerElement);
+
+        const ctx = this.domTerrainLayerElement.getContext('2d')!;
+
         paths.forEach((path) => {
+            ctx.beginPath();
+
+            const pathStart = path.steps[0];
+
+            if (!pathStart) {
+                return;
+            }
+
+            ctx.moveTo(pathStart.x, pathStart.y);
+
             path.steps.forEach((step: Position, index: number) => {
-                if (index % 3 !== 0) {
-                    return;
-                }
-
-                const domPathStep = this.domEnsureElementForTyoe('path', path.id + '-' + index);
-                domPathStep.dataset.pathId = path.id;
-
-                this.domUpdateElementPosition(domPathStep, step);
+                ctx.lineTo(step.x, step.y);
             });
+
+            ctx.stroke();
+            ctx.closePath();
+
+            UiScene.canvasAddToRenderCache(this.domTerrainLayerElement, path.id);
         });
     }
 
@@ -322,5 +336,39 @@ export class UiScene {
                 <dd><a href="#">Remove</a></dd>
             </dl>
         `);
+    }
+
+    static canvasReset(canvas: HTMLCanvasElement, terrain?: Terrain) {
+        if (terrain) {
+            canvas.width = terrain.x;
+            canvas.height = terrain.y;
+        } else {
+            canvas.width = canvas.width;
+            canvas.height = canvas.height;
+        }
+    }
+
+    static canvasAddToRenderCache(canvas: HTMLCanvasElement, id: string): void {
+        if (!canvas.dataset.renderCache) {
+            canvas.dataset.renderCache = '';
+        }
+
+        const renderCache = canvas.dataset.renderCache.split(',');
+        renderCache.push(id);
+
+        canvas.dataset.renderCache = renderCache.join(',');
+    }
+
+    static canvasIsRenderCacheOutdated(canvas: HTMLCanvasElement, ids: Array<string>): boolean {
+        if (!canvas.dataset.renderCache) {
+            return true;
+        }
+
+        const renderCache = canvas.dataset.renderCache.split(',');
+
+        return !(
+            !difference(renderCache, ids).length
+            || !difference(ids, renderCache).length
+        );
     }
 }

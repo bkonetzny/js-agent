@@ -8,16 +8,17 @@ export class Path extends Instance {
     public destination : Position;
     public steps : Array<Position>;
 
-    constructor(source: Position, destination: Position, terrain: Terrain) {
+    constructor(source: Position, destination: Position) {
         super();
         this.source = source;
         this.destination = destination;
         this.steps = [];
-        this.calculateSteps(terrain);
     }
 
-    calculateSteps(terrain: Terrain) {
-        this.steps = Pathfinder.findPath(this.source, this.destination, terrain);
+    calculateSteps(): boolean {
+        this.steps = Pathfinder.findPath(this.source, this.destination, this.game!.terrain);
+
+        return !!this.steps;
     }
 
     toJSON() {
