@@ -50,6 +50,7 @@ export class UiScene {
 
         // @ts-ignore
         this.domHoverLayerElement.addEventListener('click', (event: MouseEvent) => {
+            console.log('scene click', event);
             this.processClickEvent(event);
         });
 
@@ -119,6 +120,7 @@ export class UiScene {
 
         if (event.target !== this.domElement
             && event.target !== this.domHoverLayerElement
+            && event.target !== this.domHoverElement
         ) {
             this.processClickEventOnObject(event);
         }
