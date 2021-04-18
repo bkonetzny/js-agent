@@ -1,22 +1,16 @@
 import { Position } from "../position";
+import { AStarFinder, DiagonalMovement, Grid } from "pathfinding";
+import { Terrain } from "../terrain";
 
 export class Pathfinder {
-    static proceedToPosition(source: Position, destination: Position, speed: number): Position {
-        const x = this.proceedTowardsAxisValue(source.x, destination.x, speed);
-        const y = this.proceedTowardsAxisValue(source.y, destination.y, speed);
+    static findPath(source: Position, destination: Position, terrain: Terrain): Position[] {
+        const matrix = terrain.getMatrix();
+        const grid = new Grid(matrix);
+        const finder = new AStarFinder({diagonalMovement: DiagonalMovement.Always});
+        const path = finder.findPath(source.x, source.y, destination.x, destination.y, grid);
 
-        return new Position(x, y);
-    }
-
-    private static proceedTowardsAxisValue(source: number, destination: number, speed: number): number {
-        const distance = Position.getDistance(source, destination);
-
-        if (source > destination) {
-            return source - Math.min(distance, speed);
-        } else if (source < destination) {
-            return source + Math.min(distance, speed);
-        } else {
-            return source;
-        }
+        return path.map((pathSegment: any) => {
+            return new Position(pathSegment[0], pathSegment[1]);
+        });
     }
 }

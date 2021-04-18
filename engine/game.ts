@@ -38,12 +38,12 @@ class Game {
         }, ...settings};
         this.outputHandler = undefined;
         this.running = false;
-        this.locations = new LocationRepository();
-        this.agents = new AgentRepository();
-        this.jobs = new JobRepository();
-        this.resources = new ResourceRepository();
-        this.orders = new OrdersRepository();
-        this.paths = new PathRepository();
+        this.locations = new LocationRepository(this);
+        this.agents = new AgentRepository(this);
+        this.jobs = new JobRepository(this);
+        this.resources = new ResourceRepository(this);
+        this.orders = new OrdersRepository(this);
+        this.paths = new PathRepository(this);
         this.tickFunction = tickFunction;
         this.terrain = TerrainManager.generate(this);
     }

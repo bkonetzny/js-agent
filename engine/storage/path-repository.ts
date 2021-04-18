@@ -15,7 +15,8 @@ export class PathRepository extends ArrayStorage<Path> {
             return matchedPath;
         }
 
-        const newPath = new Path(source, destination);
+        const newPath = new Path(source, destination, this.game.terrain);
+        newPath.setGame(this.game);
 
         this.add(newPath);
 

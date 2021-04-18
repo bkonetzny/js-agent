@@ -1,5 +1,6 @@
 import { Instance } from "../instance";
 import { Position } from "../position";
+import { Terrain } from "../terrain";
 import { Pathfinder } from "../util/pathfinder";
 
 export class Path extends Instance {
@@ -7,22 +8,16 @@ export class Path extends Instance {
     public destination : Position;
     public steps : Array<Position>;
 
-    constructor(source: Position, destination: Position) {
+    constructor(source: Position, destination: Position, terrain: Terrain) {
         super();
         this.source = source;
         this.destination = destination;
         this.steps = [];
-        this.calculateSteps();
+        this.calculateSteps(terrain);
     }
 
-    calculateSteps() {
-        let lastPosition = this.source;
-        this.steps.push(lastPosition);
-
-        while (!Position.isSamePosition(lastPosition, this.destination)) {
-            lastPosition = Pathfinder.proceedToPosition(lastPosition, this.destination, 1);
-            this.steps.push(lastPosition);
-        }
+    calculateSteps(terrain: Terrain) {
+        this.steps = Pathfinder.findPath(this.source, this.destination, terrain);
     }
 
     toJSON() {
