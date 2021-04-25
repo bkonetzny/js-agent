@@ -251,6 +251,7 @@ export class UiScene {
         UiScene.canvasReset(this.domTerrainLayerElement);
 
         const ctx = this.domTerrainLayerElement.getContext('2d')!;
+        ctx.setLineDash([5, 15]);
 
         paths.forEach((path) => {
             ctx.beginPath();
