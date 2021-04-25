@@ -1,6 +1,5 @@
 import { Instance } from "../instance";
 import { Position } from "../position";
-import { Terrain } from "../terrain";
 import { Pathfinder } from "../util/pathfinder";
 
 export class Path extends Instance {

@@ -22,7 +22,7 @@ export class AgentEntity extends Entity {
         return {
             ...super.toJSON(),
             ...{
-                jobId: this.jobId,
+                job: this.getJob(),
             }
         };
     }

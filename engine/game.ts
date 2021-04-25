@@ -96,7 +96,7 @@ class Game {
             return;
         }
 
-        this.outputHandler?.update({
+        this.outputHandler?.update(JSON.parse(JSON.stringify({
             running: this.running,
             settings: {
                 locations: LocationRegistry.getLocations(),
@@ -108,7 +108,7 @@ class Game {
             resources: this.resources.findAll(),
             orders: this.orders.findAll(),
             paths: this.paths.findAll(),
-        });
+        })));
     }
 
     forcePublish() {
@@ -146,6 +146,9 @@ class Game {
 
             case 'location:add':
                 return this.addLocation(inputCommand.data);
+
+            case 'location:action':
+                return this.triggerLocationAction(inputCommand.data);
 
             case 'agent:add':
                 return this.addAgent(inputCommand.data);
@@ -249,6 +252,16 @@ class Game {
         this.controlStart();
 
         return true;
+    }
+
+    triggerLocationAction(data: any): boolean | Error {
+        const location = this.locations.findOneById(data.id);
+
+        if (!location) {
+            return new Error('Location not found.');
+        }
+
+        return location.handleAction(data.action, data);
     }
 }
 

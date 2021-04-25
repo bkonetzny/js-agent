@@ -13,7 +13,7 @@ export abstract class Instance {
     toJSON() {
         return {
             id: this.id,
-            class: this.constructor.name
+            type: this.constructor.name
         };
     }
 

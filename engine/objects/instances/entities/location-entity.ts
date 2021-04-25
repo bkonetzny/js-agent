@@ -1,8 +1,28 @@
+import { Position } from "../../position";
 import { ResourcesDefinition } from "../../util/resources-definition";
 import { Entity } from "../entity";
 import { Resource } from "../resource";
 
 export abstract class LocationEntity extends Entity {
+    actions: any;
+
+    constructor(position: Position) {
+        super(position);
+        this.actions = {
+            destroy: this.handleActionDestroy,
+        };
+    }
+
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            ...{
+                actions: Object.keys(this.actions),
+                resources: this.getResources(),
+            }
+        };
+    }
+
     /**
      * To be overwritten in locations.
      */
@@ -60,5 +80,17 @@ export abstract class LocationEntity extends Entity {
         });
 
         return true;
+    }
+
+    handleAction(action: string, data: any): boolean | Error {
+        if (!Object.keys(this.actions).includes(action)) {
+            return new Error(`Action ${action} not found.`);
+        }
+
+        return this.actions[action](data);
+    }
+
+    handleActionDestroy(data: any): boolean | Error {
+        return this.game!.locations.remove(this);
     }
 }

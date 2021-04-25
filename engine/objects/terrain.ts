@@ -9,6 +9,13 @@ export class Terrain {
         this.y = y;
     }
 
+    toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+        };
+    }
+
     getMatrix(): Array<any> {
         const matrix: Array<Array<number>> = [];
         for (let indexY = 0; indexY < this.y; indexY++) {

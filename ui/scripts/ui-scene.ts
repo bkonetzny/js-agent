@@ -1,12 +1,12 @@
-import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
-import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
-import { Path } from "../../engine/objects/instances/path";
-import { Position } from "../../engine/objects/position";
-import { Terrain } from "../../engine/objects/terrain";
-import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
+import { difference } from "lodash-es";
+import { AgentAddInputCommand, LocationAddInputCommand } from "../../io-bridge/input-commands";
+import { Agent } from "../../io-bridge/types/agent";
+import { Location } from "../../io-bridge/types/location";
+import { Path } from "../../io-bridge/types/path";
+import { Position } from "../../io-bridge/types/position";
+import { Terrain } from "../../io-bridge/types/terrain";
 import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
-import { difference } from "lodash-es";
 
 export class UiScene {
     private ui: Ui;
@@ -15,7 +15,7 @@ export class UiScene {
     private uiDetails: UiDetails;
     private clickMode?: string;
     private focusedObjectId?: string;
-    private locationCache: LocationEntity[];
+    private locationCache: Location[];
     private domElementIdPrefix: string;
     private domTerrainLayerElement: HTMLCanvasElement;
     private domObjectLayerElement: HTMLDivElement;
@@ -166,10 +166,13 @@ export class UiScene {
     getPositionForEvent(event: MouseEvent | PointerEvent): Position {
         const sceneRect = this.domElement.getBoundingClientRect();
 
-        return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
+        return {
+            x: event.clientX - sceneRect.left,
+            y: event.clientY - sceneRect.top,
+        };
     }
 
-    render(terrain: Terrain, locations: LocationEntity[], agents: AgentEntity[], paths: Path[]) {
+    render(terrain: Terrain, locations: Location[], agents: Agent[], paths: Path[]) {
         this.domElement.style.width = `${terrain.x}px`;
         this.domElement.style.height = `${terrain.y}px`;
 
@@ -191,7 +194,7 @@ export class UiScene {
         this.updateDetails();
     }
 
-    domRemoveObsoleteLocations(locations: LocationEntity[]) {
+    domRemoveObsoleteLocations(locations: Location[]) {
         const domLocations = this.domElement.querySelectorAll('.building');
         const locationIds = locations.map((location) => {
             return `${this.domElementIdPrefix}${location.id}`;
@@ -204,7 +207,7 @@ export class UiScene {
         });
     }
 
-    domRemoveObsoleteAgents(agents: AgentEntity[]) {
+    domRemoveObsoleteAgents(agents: Agent[]) {
         const domAgents = this.domElement.querySelectorAll('.agent');
         const agentIds = agents.map((agent) => {
             return agent.id;
@@ -217,30 +220,28 @@ export class UiScene {
         });
     }
 
-    domUpdateLocations(locations: LocationEntity[]) {
+    domUpdateLocations(locations: Location[]) {
         locations.forEach((building) => {
             const domBuilding = this.domEnsureElementForTyoe('building', building.id);
 
             this.domUpdateElementPosition(domBuilding, building.position);
 
-            domBuilding.classList.add('building-' + building.constructor.name);
+            domBuilding.classList.add('building-' + building.type);
         });
     }
 
-    domUpdateAgents(agents: AgentEntity[]) {
+    domUpdateAgents(agents: Agent[]) {
         agents.forEach((agent) => {
             const domAgent = this.domEnsureElementForTyoe('agent', agent.id);
 
             this.domUpdateElementPosition(domAgent, agent.position);
 
-            const job = agent.getJob();
-
-            domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
+            domAgent.classList.add('agent-state-' + (agent.job ? (agent.job.started ? 'packed' : 'busy') : 'idle'));
         });
     }
 
     domUpdatePaths(paths: Path[]) {
-        const pathIds = paths.map((path: Path) => {
+        const pathIds = paths.map((path) => {
             return path.id;
         });
 
@@ -316,15 +317,18 @@ export class UiScene {
             return;
         }
 
-        const resources = matchingLocation.getResources();
         const resourcesByType = {};
 
-        resources.forEach((resource) => {
-            if (!resourcesByType[resource.constructor.name]) {
-                resourcesByType[resource.constructor.name] = 0;
+        matchingLocation.resources.forEach((resource) => {
+            if (!resourcesByType[resource.type]) {
+                resourcesByType[resource.type] = 0;
             }
 
-            resourcesByType[resource.constructor.name]++;
+            resourcesByType[resource.type]++;
+        });
+
+        const actions = matchingLocation.actions.map((action) => {
+            return `<a href="#">${action.toLocaleUpperCase()}</a>`;
         });
 
         this.uiDetails.render(`
@@ -332,11 +336,11 @@ export class UiScene {
                 <dt>ID</dt>
                 <dd>${matchingLocation.id}</dd>
                 <dt>Type</dt>
-                <dd>${matchingLocation.constructor.name}</dd>
-                <dt>Resources (${resources.length})</dt>
+                <dd>${matchingLocation.type}</dd>
+                <dt>Resources (${matchingLocation.resources.length})</dt>
                 <dd>${JSON.stringify(resourcesByType)}</dd>
                 <dt>Actions</dt>
-                <dd><a href="#">Remove</a></dd>
+                <dd>${actions.join(' | ')}</dd>
             </dl>
         `);
     }

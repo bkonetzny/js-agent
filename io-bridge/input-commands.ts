@@ -1,4 +1,4 @@
-import { Position } from "../engine/objects/position";
+import { Position } from "./types/position";
 
 interface InputCommandInterface {
     readonly command: string;
