@@ -1,4 +1,4 @@
-import { OutputHandler } from "../io-bridge/handlers";
+import { OutputHandlerInterface } from "../io-bridge/handlers";
 import { InputCommandInterface } from "../io-bridge/input-commands";
 import { AgentManager } from "./managers/agent-manager";
 import { JobManager } from "./managers/job-manager";
@@ -19,7 +19,7 @@ import { ResourceRepository } from "./storage/resource-repository";
 
 class Game {
     public settings: any;
-    public outputHandler?: OutputHandler;
+    public outputHandler?: OutputHandlerInterface;
     public running: boolean;
     public locations: LocationRepository;
     public agents: AgentRepository;
@@ -117,7 +117,7 @@ class Game {
         this.publish();
     }
 
-    setOutputHandler(outputHandler: OutputHandler) {
+    setOutputHandler(outputHandler: OutputHandlerInterface) {
         this.outputHandler = outputHandler;
         this.forcePublish();
     }

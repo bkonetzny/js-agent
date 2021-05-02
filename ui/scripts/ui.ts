@@ -1,5 +1,5 @@
 import { InputCommandInterface } from "../../io-bridge/input-commands";
-import { InputHandler } from "../../io-bridge/handlers";
+import { InputHandlerInterface } from "../../io-bridge/handlers";
 import { UiControls } from "./ui-controls";
 import { UiDetails } from "./ui-details";
 import { UiMeta } from "./ui-meta";
@@ -23,7 +23,7 @@ class Boot extends Phaser.Scene {
 */
 
 export class Ui {
-    private inputHandler?: InputHandler;
+    private inputHandler?: InputHandlerInterface;
     private controlsDomElement: HTMLDivElement;
     private sceneDomElement: HTMLDivElement;
     private detailsDomElement: HTMLDivElement;
@@ -65,7 +65,7 @@ export class Ui {
         */
     }
 
-    setInputHandler(inputHandler: InputHandler) {
+    setInputHandler(inputHandler: InputHandlerInterface) {
         this.inputHandler = inputHandler;
     }
 
