@@ -23,8 +23,6 @@ class Boot extends Phaser.Scene {
 */
 
 export class Ui {
-    // We will type those as any for now, just to be able to start from here with typescript
-    // TODO: implement interfaces
     private inputHandler?: InputHandler;
     private controlsDomElement: HTMLDivElement;
     private sceneDomElement: HTMLDivElement;
@@ -46,7 +44,7 @@ export class Ui {
         this.detailsDomElement = domDocument.querySelector<HTMLDivElement>(detailsSelector)!;
         this.metaDomElement = domDocument.querySelector<HTMLDivElement>(metaSelector)!;
 
-        this.details = new UiDetails(this.detailsDomElement);
+        this.details = new UiDetails(this, this.detailsDomElement);
         this.scene = new UiScene(this, this.sceneDomElement, domDocument, this.details);
         this.controls = new UiControls(this, domDocument, this.controlsDomElement, this.scene);
         this.meta = new UiMeta(this, this.metaDomElement);
@@ -72,7 +70,13 @@ export class Ui {
     }
 
     handleInput(inputCommand: InputCommandInterface): any {
-        return this.inputHandler?.command(inputCommand);
+        console.log('handleInput', inputCommand);
+
+        const handleInputResult = this.inputHandler?.command(inputCommand);
+
+        console.log('handleInputResult', handleInputResult);
+
+        return handleInputResult;
     }
 
     updateState(outputState: OutputStateInterface) {

@@ -31,6 +31,7 @@
     "webpack-dev-server": "^3"
   },
   "dependencies": {
+    "hash-it": "^5.0.0",
     "lodash-es": "^4",
     "pathfinding": "^0",
     "phaser": "^3",

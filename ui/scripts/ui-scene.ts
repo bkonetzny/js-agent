@@ -147,8 +147,6 @@ export class UiScene {
             handleInputResult = this.ui.handleInput(new AgentAddInputCommand(position));
         }
 
-        console.log('handleInputResult:', handleInputResult);
-
         if (handleInputResult instanceof Error) {
             this.domHoverElement.innerText = handleInputResult.message;
             return;
@@ -328,7 +326,7 @@ export class UiScene {
         });
 
         const actions = matchingLocation.actions.map((action) => {
-            return `<a href="#">${action.toLocaleUpperCase()}</a>`;
+            return `<button data-locationid="${matchingLocation.id}" data-action="${action}">${action.toLocaleUpperCase()}</button>`;
         });
 
         this.uiDetails.render(`

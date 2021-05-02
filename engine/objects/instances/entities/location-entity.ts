@@ -9,6 +9,7 @@ export abstract class LocationEntity extends Entity {
     constructor(position: Position) {
         super(position);
         this.actions = {
+            // destroy: 'handleActionDestroy',
             destroy: this.handleActionDestroy,
         };
     }
@@ -87,7 +88,8 @@ export abstract class LocationEntity extends Entity {
             return new Error(`Action ${action} not found.`);
         }
 
-        return this.actions[action](data);
+        // return this[this.actions[action]](data);
+        return this.actions[action].call(this, data);
     }
 
     handleActionDestroy(data: any): boolean | Error {
