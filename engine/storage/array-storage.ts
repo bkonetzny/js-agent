@@ -11,11 +11,17 @@ export abstract class ArrayStorage<T extends Instance> {
         this.data = [];
     }
 
-    add(item: T) {
+    add(item: T): T {
+        if (!item.game) {
+            item.setGame(this.game);
+        }
+
         this.data.push(item);
+
+        return item;
     }
 
-    remove(item: T) {
+    remove(item: T): boolean {
         const index = this.data.indexOf(item);
 
         if (index === -1) {
@@ -27,7 +33,7 @@ export abstract class ArrayStorage<T extends Instance> {
         return true;
     }
 
-    removeAll() {
+    removeAll(): boolean {
         this.data = [];
 
         return true;

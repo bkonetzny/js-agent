@@ -4,6 +4,14 @@ import { Position } from "../objects/position";
 import { ArrayStorage } from "./array-storage";
 
 export class ResourceRepository extends ArrayStorage<Resource> {
+    removeByLocation(location: LocationEntity): boolean {
+        this.findByLocation(location).forEach((resource) => {
+            this.remove(resource);
+        });
+
+        return true;
+    }
+
     findByLocation(location: LocationEntity): Resource[] {
         return this.data.filter((resource) => {
             return (

@@ -83,5 +83,11 @@ export class Ui {
         this.scene.render(outputState.terrain, outputState.locations, outputState.agents, outputState.paths);
         this.meta.render();
         this.controls.render(outputState.running, outputState.settings);
+
+        /*
+        console.clear();
+        console.log(outputState.locations);
+        console.log(outputState.jobs);
+        */
     }
 }

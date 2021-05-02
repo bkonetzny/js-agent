@@ -7,8 +7,6 @@ import { OrderManager } from "./managers/order-manager";
 import { PathManager } from "./managers/path-manager";
 import { TerrainManager } from "./managers/terrain-manager";
 import { AgentEntity } from "./objects/instances/entities/agent-entity";
-import { Job } from "./objects/instances/job";
-import { Order } from './objects/instances/order';
 import { Position } from "./objects/position";
 import { Terrain } from "./objects/terrain";
 import { LocationRegistry } from "./registries/location-registry";
@@ -173,7 +171,6 @@ class Game {
         const position: Position = data.position;
         const location = LocationRegistry.createLocation(data.id, position);
 
-        location.setGame(this);
         this.locations.add(location);
         location.onCreate();
 
@@ -188,26 +185,11 @@ class Game {
         const position: Position = data.position;
         const agent = new AgentEntity(position);
 
-        agent.setGame(this);
         this.agents.add(agent);
 
         this.forcePublish();
 
         return agent.id;
-    }
-
-    addJob(job: Job): string {
-        job.setGame(this);
-        this.jobs.add(job);
-
-        return job.id;
-    }
-
-    addOrder(order: Order): string {
-        order.setGame(this);
-        this.orders.add(order);
-
-        return order.id;
     }
 
     updateSetting(key: string, value: string): object {
@@ -260,6 +242,8 @@ class Game {
         if (!location) {
             return new Error('Location not found.');
         }
+
+        this.forcePublish();
 
         return location.handleAction(data.action, data);
     }
