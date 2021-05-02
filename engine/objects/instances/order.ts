@@ -22,7 +22,7 @@ export class Order extends Instance {
             ...super.toJSON(),
             ...{
                 locationId: this.locationId,
-                type: this.type,
+                orderType: this.type,
                 resourcesDefinition: this.resourcesDefinition,
                 resources: this.resources,
             }

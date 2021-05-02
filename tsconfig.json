@@ -24,7 +24,7 @@
 		],
 		"noEmit": false,
 		"skipLibCheck": false,
-		"esModuleInterop": false,
+		"esModuleInterop": true,
 		"allowSyntheticDefaultImports": true,
 		"strict": true,
 		"module": "commonjs",

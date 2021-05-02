@@ -16,6 +16,13 @@ export class PathRepository extends ArrayStorage<Path> {
         }
 
         const newPath = new Path(source, destination);
+        newPath.setGame(this.game);
+
+        if (!newPath.calculateSteps()) {
+            console.log('Failed to calculate steps for path', newPath.source, newPath.destination);
+
+            return undefined;
+        }
 
         this.add(newPath);
 

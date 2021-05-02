@@ -1,9 +1,13 @@
+
+import { Game } from "../game";
 import { Instance } from "../objects/instance";
 
 export abstract class ArrayStorage<T extends Instance> {
-    public data : Array<T>;
+    public game: Game;
+    public data: Array<T>;
 
-    constructor() {
+    constructor(game: Game) {
+        this.game = game;
         this.data = [];
     }
 

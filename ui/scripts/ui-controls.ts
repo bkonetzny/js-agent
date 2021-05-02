@@ -52,7 +52,6 @@ export class UiControls {
         });
 
         this.btnLocationsWrapper.addEventListener('click', (event) => {
-            console.log('clicked', (event.target as Element)!.id);
             this.scene.setClickMode((event.target as Element)!.id);
         });
 

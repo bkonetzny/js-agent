@@ -22,7 +22,7 @@ export class AgentEntity extends Entity {
         return {
             ...super.toJSON(),
             ...{
-                jobId: this.jobId,
+                job: this.getJob(),
             }
         };
     }
@@ -106,7 +106,7 @@ export class AgentEntity extends Entity {
         const newPosition = path.proceedOnPath(this.position, this.getSpeed());
 
         if (!newPosition) {
-            console.error('No position to proceed to.');
+            console.error('No position to proceed to.', this.position, path);
             return;
         }
 

@@ -12,17 +12,12 @@ export class Path extends Instance {
         this.source = source;
         this.destination = destination;
         this.steps = [];
-        this.calculateSteps();
     }
 
-    calculateSteps() {
-        let lastPosition = this.source;
-        this.steps.push(lastPosition);
+    calculateSteps(): boolean {
+        this.steps = Pathfinder.findPath(this.source, this.destination, this.game!.terrain);
 
-        while (!Position.isSamePosition(lastPosition, this.destination)) {
-            lastPosition = Pathfinder.proceedToPosition(lastPosition, this.destination, 1);
-            this.steps.push(lastPosition);
-        }
+        return !!this.steps;
     }
 
     toJSON() {

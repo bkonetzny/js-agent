@@ -1,4 +1,4 @@
-import { Position } from "../engine/objects/position";
+import { Position } from "./types/position";
 
 interface InputCommandInterface {
     readonly command: string;
@@ -44,6 +44,18 @@ class LocationAddInputCommand implements InputCommandInterface {
     }
 }
 
+class LocationActionInputCommand implements InputCommandInterface {
+    command = 'location:action';
+    data: any;
+
+    constructor(locationId: string, action: string) {
+        this.data = {
+            id: locationId,
+            action,
+        };
+    }
+}
+
 class AgentAddInputCommand implements InputCommandInterface {
     command = 'agent:add';
     data: any;
@@ -62,5 +74,6 @@ export {
     GamestateExportInputCommand,
     GamestateImportInputCommand,
     LocationAddInputCommand,
+    LocationActionInputCommand,
     AgentAddInputCommand,
 }

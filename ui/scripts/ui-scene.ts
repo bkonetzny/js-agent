@@ -1,24 +1,28 @@
-import { AgentEntity } from "../../engine/objects/instances/entities/agent-entity";
-import { LocationEntity } from "../../engine/objects/instances/entities/location-entity";
-import { Path } from "../../engine/objects/instances/path";
-import { Position } from "../../engine/objects/position";
-import { LocationAddInputCommand, AgentAddInputCommand } from "../../io-bridge/input-commands";
+import { difference } from "lodash-es";
+import { AgentAddInputCommand, LocationAddInputCommand } from "../../io-bridge/input-commands";
+import { Agent } from "../../io-bridge/types/agent";
+import { Location } from "../../io-bridge/types/location";
+import { Path } from "../../io-bridge/types/path";
+import { Position } from "../../io-bridge/types/position";
+import { Terrain } from "../../io-bridge/types/terrain";
 import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
 
 export class UiScene {
     private ui: Ui;
-    private domElement: Element;
+    private domElement: HTMLDivElement;
     private domDocument: Document;
     private uiDetails: UiDetails;
     private clickMode?: string;
     private focusedObjectId?: string;
-    private locationCache: LocationEntity[];
+    private locationCache: Location[];
     private domElementIdPrefix: string;
+    private domTerrainLayerElement: HTMLCanvasElement;
+    private domObjectLayerElement: HTMLDivElement;
     private domHoverLayerElement: HTMLDivElement;
     private domHoverElement: HTMLDivElement;
 
-    constructor(ui: Ui, domElement: Element, domDocument: Document, uiDetails: UiDetails) {
+    constructor(ui: Ui, domElement: HTMLDivElement, domDocument: Document, uiDetails: UiDetails) {
         this.ui = ui;
         this.domElement = domElement;
         this.domDocument = domDocument;
@@ -28,14 +32,10 @@ export class UiScene {
         this.focusedObjectId = undefined;
         this.locationCache = [];
         this.domElementIdPrefix = 'id-';
-
-        this.domHoverLayerElement = this.domDocument.createElement('div');
-        this.domHoverLayerElement.classList.add('hover-layer');
-        this.domElement.appendChild(this.domHoverLayerElement);
-
-        this.domHoverElement = this.domDocument.createElement('div');
-        this.domHoverElement.classList.add('hover');
-        this.domElement.appendChild(this.domHoverElement);
+        this.domTerrainLayerElement = this.domElement.querySelector('.layer-terrain')!;
+        this.domObjectLayerElement = this.domElement.querySelector('.layer-objects')!;
+        this.domHoverLayerElement = this.domElement.querySelector('.layer-hover')!;
+        this.domHoverElement = this.domElement.querySelector('.hover')!;
 
         // @ts-ignore
         this.domHoverLayerElement.addEventListener('pointermove', (event: PointerEvent) => {
@@ -43,12 +43,14 @@ export class UiScene {
         });
 
         // @ts-ignore
-        this.domHoverLayerElement.addEventListener('mouseout', (event: PointerEvent) => {
+        this.domHoverLayerElement.addEventListener('contextmenu', (event: MouseEvent) => {
+            event.stopPropagation();
             this.processHoverEndEvent();
         });
 
         // @ts-ignore
         this.domHoverLayerElement.addEventListener('click', (event: MouseEvent) => {
+            console.log('scene click', event);
             this.processClickEvent(event);
         });
 
@@ -118,6 +120,7 @@ export class UiScene {
 
         if (event.target !== this.domElement
             && event.target !== this.domHoverLayerElement
+            && event.target !== this.domHoverElement
         ) {
             this.processClickEventOnObject(event);
         }
@@ -144,8 +147,6 @@ export class UiScene {
             handleInputResult = this.ui.handleInput(new AgentAddInputCommand(position));
         }
 
-        console.log('handleInputResult:', handleInputResult);
-
         if (handleInputResult instanceof Error) {
             this.domHoverElement.innerText = handleInputResult.message;
             return;
@@ -163,15 +164,26 @@ export class UiScene {
     getPositionForEvent(event: MouseEvent | PointerEvent): Position {
         const sceneRect = this.domElement.getBoundingClientRect();
 
-        return new Position(event.clientX - sceneRect.left, event.clientY - sceneRect.top);
+        return {
+            x: event.clientX - sceneRect.left,
+            y: event.clientY - sceneRect.top,
+        };
     }
 
-    render(locations: LocationEntity[], agents: AgentEntity[], paths: Path[]) {
+    render(terrain: Terrain, locations: Location[], agents: Agent[], paths: Path[]) {
+        this.domElement.style.width = `${terrain.x}px`;
+        this.domElement.style.height = `${terrain.y}px`;
+
+        if (this.domTerrainLayerElement.width !== terrain.x
+            || this.domTerrainLayerElement.height !== terrain.y
+        ) {
+            UiScene.canvasReset(this.domTerrainLayerElement, terrain);
+        }
+
         this.locationCache = locations;
 
         this.domRemoveObsoleteLocations(locations);
         this.domRemoveObsoleteAgents(agents);
-        this.domRemoveObsoletePaths(paths);
 
         this.domUpdateLocations(locations);
         this.domUpdateAgents(agents);
@@ -180,7 +192,7 @@ export class UiScene {
         this.updateDetails();
     }
 
-    domRemoveObsoleteLocations(locations: LocationEntity[]) {
+    domRemoveObsoleteLocations(locations: Location[]) {
         const domLocations = this.domElement.querySelectorAll('.building');
         const locationIds = locations.map((location) => {
             return `${this.domElementIdPrefix}${location.id}`;
@@ -193,7 +205,7 @@ export class UiScene {
         });
     }
 
-    domRemoveObsoleteAgents(agents: AgentEntity[]) {
+    domRemoveObsoleteAgents(agents: Agent[]) {
         const domAgents = this.domElement.querySelectorAll('.agent');
         const agentIds = agents.map((agent) => {
             return agent.id;
@@ -206,65 +218,70 @@ export class UiScene {
         });
     }
 
-    domRemoveObsoletePaths(paths: Path[]) {
-        const domPaths = this.domElement.querySelectorAll('.path');
-        const pathIds = paths.map((path) => {
-            return path.id;
-        });
-
-        domPaths.forEach((domPath) => {
-            // @ts-ignore
-            if (!pathIds.includes(domPath.dataset.pathId)) {
-                domPath.remove();
-            }
-        });
-    }
-
-    domUpdateLocations(locations: LocationEntity[]) {
+    domUpdateLocations(locations: Location[]) {
         locations.forEach((building) => {
             const domBuilding = this.domEnsureElementForTyoe('building', building.id);
 
             this.domUpdateElementPosition(domBuilding, building.position);
 
-            domBuilding.classList.add('building-' + building.constructor.name);
+            domBuilding.classList.add('building-' + building.type);
         });
     }
 
-    domUpdateAgents(agents: AgentEntity[]) {
+    domUpdateAgents(agents: Agent[]) {
         agents.forEach((agent) => {
             const domAgent = this.domEnsureElementForTyoe('agent', agent.id);
 
             this.domUpdateElementPosition(domAgent, agent.position);
 
-            const job = agent.getJob();
-
-            domAgent.classList.add('agent-state-' + (job ? (job.started ? 'packed' : 'busy') : 'idle'));
+            domAgent.classList.add('agent-state-' + (agent.job ? (agent.job.started ? 'packed' : 'busy') : 'idle'));
         });
     }
 
     domUpdatePaths(paths: Path[]) {
+        const pathIds = paths.map((path) => {
+            return path.id;
+        });
+
+        if (!UiScene.canvasIsRenderCacheOutdated(this.domTerrainLayerElement, pathIds)) {
+            return;
+        }
+
+        UiScene.canvasReset(this.domTerrainLayerElement);
+
+        const ctx = this.domTerrainLayerElement.getContext('2d')!;
+        ctx.setLineDash([5, 15]);
+
         paths.forEach((path) => {
+            ctx.beginPath();
+
+            const pathStart = path.steps[0];
+
+            if (!pathStart) {
+                return;
+            }
+
+            ctx.moveTo(pathStart.x, pathStart.y);
+
             path.steps.forEach((step: Position, index: number) => {
-                if (index % 3 !== 0) {
-                    return;
-                }
-
-                const domPathStep = this.domEnsureElementForTyoe('path', path.id + '-' + index);
-                domPathStep.dataset.pathId = path.id;
-
-                this.domUpdateElementPosition(domPathStep, step);
+                ctx.lineTo(step.x, step.y);
             });
+
+            ctx.stroke();
+            ctx.closePath();
+
+            UiScene.canvasAddToRenderCache(this.domTerrainLayerElement, path.id);
         });
     }
 
     domEnsureElementForTyoe(type: string, id: string): HTMLDivElement {
-        let element: HTMLDivElement | null = this.domElement.querySelector(`#${this.domElementIdPrefix}${id}`);
+        let element: HTMLDivElement | null = this.domObjectLayerElement.querySelector(`#${this.domElementIdPrefix}${id}`);
 
         if (!element) {
             element = this.domDocument.createElement('div');
             element.id = `${this.domElementIdPrefix}${id}`;
 
-            this.domElement.appendChild(element);
+            this.domObjectLayerElement.appendChild(element);
         }
 
         // @ts-ignore
@@ -298,15 +315,18 @@ export class UiScene {
             return;
         }
 
-        const resources = matchingLocation.getResources();
         const resourcesByType = {};
 
-        resources.forEach((resource) => {
-            if (!resourcesByType[resource.constructor.name]) {
-                resourcesByType[resource.constructor.name] = 0;
+        matchingLocation.resources.forEach((resource) => {
+            if (!resourcesByType[resource.type]) {
+                resourcesByType[resource.type] = 0;
             }
 
-            resourcesByType[resource.constructor.name]++;
+            resourcesByType[resource.type]++;
+        });
+
+        const actions = matchingLocation.actions.map((action) => {
+            return `<button data-locationid="${matchingLocation.id}" data-action="${action}">${action.toLocaleUpperCase()}</button>`;
         });
 
         this.uiDetails.render(`
@@ -314,12 +334,46 @@ export class UiScene {
                 <dt>ID</dt>
                 <dd>${matchingLocation.id}</dd>
                 <dt>Type</dt>
-                <dd>${matchingLocation.constructor.name}</dd>
-                <dt>Resources (${resources.length})</dt>
+                <dd>${matchingLocation.type}</dd>
+                <dt>Resources (${matchingLocation.resources.length})</dt>
                 <dd>${JSON.stringify(resourcesByType)}</dd>
                 <dt>Actions</dt>
-                <dd><a href="#">Remove</a></dd>
+                <dd>${actions.join(' | ')}</dd>
             </dl>
         `);
+    }
+
+    static canvasReset(canvas: HTMLCanvasElement, terrain?: Terrain) {
+        if (terrain) {
+            canvas.width = terrain.x;
+            canvas.height = terrain.y;
+        } else {
+            canvas.width = canvas.width;
+            canvas.height = canvas.height;
+        }
+    }
+
+    static canvasAddToRenderCache(canvas: HTMLCanvasElement, id: string): void {
+        if (!canvas.dataset.renderCache) {
+            canvas.dataset.renderCache = '';
+        }
+
+        const renderCache = canvas.dataset.renderCache.split(',');
+        renderCache.push(id);
+
+        canvas.dataset.renderCache = renderCache.join(',');
+    }
+
+    static canvasIsRenderCacheOutdated(canvas: HTMLCanvasElement, ids: Array<string>): boolean {
+        if (!canvas.dataset.renderCache) {
+            return true;
+        }
+
+        const renderCache = canvas.dataset.renderCache.split(',');
+
+        return !(
+            !difference(renderCache, ids).length
+            || !difference(ids, renderCache).length
+        );
     }
 }
