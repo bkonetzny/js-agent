@@ -245,7 +245,13 @@ class Game {
 
         this.forcePublish();
 
-        return location.handleAction(data.action, data);
+        const result = location.handleAction(data.action, data);
+
+        if (result === true) {
+            this.forcePublish();
+        }
+
+        return result;
     }
 }
 
