@@ -29,14 +29,18 @@
 
 #scene .layer-hover .hover {
     z-index: 9;
-    width: 30px;
-    height: 30px;
     display: none;
-    border: 5px dashed yellow;
     font-size: 8px;
     word-wrap: anywhere;
     margin-top: -20px;
     margin-left: -20px;
+}
+
+#scene .layer-hover .hover,
+.building.selected {
+    width: 30px;
+    height: 30px;
+    border: 5px dashed yellow;
 }
 
 #scene .layer-hover .hover.active {

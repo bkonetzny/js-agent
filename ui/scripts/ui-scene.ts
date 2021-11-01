@@ -301,6 +301,10 @@ export class UiScene {
     }
 
     showDetails(id?: string) {
+        this.locationCache.forEach((location) => {
+            this.domDocument.getElementById(`${this.domElementIdPrefix}${location.id}`)?.classList.remove('selected');
+        });
+
         if (!id) {
             this.uiDetails.render('');
 
@@ -314,6 +318,8 @@ export class UiScene {
         if (!matchingLocation) {
             return;
         }
+
+        this.domDocument.getElementById(`${this.domElementIdPrefix}${matchingLocation.id}`)?.classList.add('selected');
 
         const resourcesByType = {};
 
