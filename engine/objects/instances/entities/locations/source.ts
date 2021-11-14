@@ -4,7 +4,7 @@ import { LocationEntity } from "../location-entity";
 export class SourceLocation extends LocationEntity {
     onCreate() {
         for (let index = 0; index < 10; index++) {
-            let resource = new ItemA();
+            const resource = new ItemA();
             resource.pickable = true;
 
             this.createResource(resource);
@@ -12,19 +12,17 @@ export class SourceLocation extends LocationEntity {
     }
 
     onProcess() {
-        if (this.processTicks < 10) {
+        if (this.processTicks < 50
+            || this.getResources().length >= 20
+        ) {
             return;
         }
 
-        if (this.getResources().length >= 20) {
-            return;
-        }
+        this.resetProcessTicks();
 
-        let resource = new ItemA();
+        const resource = new ItemA();
         resource.pickable = true;
 
         this.createResource(resource);
-
-        this.resetProcessTicks();
     }
 }

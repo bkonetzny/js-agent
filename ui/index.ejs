@@ -1,26 +1,25 @@
 <!DOCTYPE html>
 <html class="js-agent">
-	<head>
-		<meta charset="utf-8"/>
-		<title><%= htmlWebpackPlugin.options.title %></title>
-		<% for(var i=0; i < htmlWebpackPlugin.files.css.length; i++) { %>
-			<link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[i] %>" />
-		<% } %>
-	</head>
-	<body style="padding: 0; margin: 0;">
-		<div id="controls">
-            <fieldset>
+    <head>
+        <meta charset="utf-8"/>
+        <title><%= htmlWebpackPlugin.options.title %></title>
+        <% for(var i=0; i < htmlWebpackPlugin.files.css.length; i++) { %>
+        <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.css[i] %>" />
+        <% } %>
+    </head>
+    <body style="padding: 0; margin: 0;">
+        <div id="controls">
+            <fieldset class="simulation">
                 <legend>Simulation</legend>
-                <button id="start">Start</button>
-                <button id="pause">Pause</button>
+                <button id="start"></button>
+                <button id="pause" disabled="disabled"></button>
             </fieldset>
             <fieldset>
                 <legend>Entity</legend>
-                <button id="addSource">Add Source</button>
-                <button id="addDestination">Add Destination</button>
-                <button id="addBusyDestination">Add Busy Destination</button>
+                <div id="locations"></div>
                 <button id="addAgent">Add Agent</button>
             </fieldset>
+            <!--
             <fieldset>
                 <legend>Setting</legend>
                 <select id="updateSettingKey">
@@ -29,6 +28,7 @@
                 <input id="updateSettingValue" type="text">
                 <button id="updateSetting">Update</button>
             </fieldset>
+            -->
             <fieldset>
                 <legend>Data</legend>
                 <button id="export">Export</button>
@@ -37,11 +37,16 @@
             </fieldset>
         </div>
         <div id="meta"></div>
-        <div id="scene"></div>
+        <div id="scene">
+            <canvas class="layer layer-terrain"></canvas>
+            <div class="layer layer-objects"></div>
+            <div class="layer layer-hover">
+                <div class="hover"></div>
+            </div>
+        </div>
         <fieldset>
             <legend>Details</legend>
             <div id="details"></div>
         </fieldset>
-	</body>
-
+    </body>
 </html>

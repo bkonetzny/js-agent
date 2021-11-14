@@ -16,6 +16,18 @@ export abstract class Resource extends Instance {
         this.pickable = false;
     }
 
+    toJSON() {
+        return {
+            ...super.toJSON(),
+            ...{
+                owner: this.owner,
+                locationId: this.locationId,
+                jobId: this.jobId,
+                pickable: this.pickable,
+            }
+        };
+    }
+
     getLocation(): LocationEntity | undefined {
         return this.locationId
             ? this.game?.locations.findOneById(this.locationId)

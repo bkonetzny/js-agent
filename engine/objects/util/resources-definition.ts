@@ -44,9 +44,23 @@ export class ResourcesDefinition {
         return hasMissingResources;
     }
 
-    resetMatches() {
+    resetMatches(): void {
         Object.keys(this.definitions).forEach((resourceClass) => {
             this.definitions[resourceClass].amountMatched = 0;
+        });
+    }
+
+    forEachMissingResource(callback: CallableFunction): void {
+        Object.keys(this.definitions).forEach((resourceClass) => {
+            const amountDiff = this.definitions[resourceClass].amountRequested - this.definitions[resourceClass].amountMatched;
+
+            if (!amountDiff) {
+                return;
+            }
+
+            for (let index = 0; index < amountDiff; index++) {
+                callback(resourceClass, this.definitions[resourceClass]);
+            }
         });
     }
 }

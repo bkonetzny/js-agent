@@ -1,20 +1,66 @@
 #scene {
     background: #fff;
     margin: 10px;
-    width: 500px;
-    height: 400px;
     position: relative;
+    overflow: hidden;
 }
 
-#scene > div {
+#scene > div,
+#scene > canvas {
     position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#scene .layer div {
+    position: absolute;
+}
+
+#scene .layer-hover {
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    display: none;
+}
+
+#scene .layer-hover.active {
+    display: block;
+}
+
+#scene .layer-hover .hover {
+    z-index: 9;
+    display: none;
+    font-size: 8px;
+    word-wrap: anywhere;
+    margin-top: -20px;
+    margin-left: -20px;
+}
+
+#scene .layer-hover .hover,
+.building.selected {
+    width: 30px;
+    height: 30px;
+    border: 5px dashed yellow;
+}
+
+#scene .layer-hover .hover.active {
+    display: block;
+}
+
+#scene .layer-hover .hover.invalid {
+    background-color: red;
+}
+
+#scene .layer-hover .hover.valid {
+    background-color: green;
 }
 
 .building {
     z-index: 0;
-    background-color: yellow;
     width: 40px;
     height: 40px;
+    margin-top: -20px;
+    margin-left: -20px;
 }
 
 .building-SourceLocation {
@@ -41,6 +87,9 @@
 
 .agent:before {
     font-size: 20px;
+    position: absolute;
+    margin-top: -14px;
+    margin-left: -14px;
 }
 
 .agent-state-idle:before {
@@ -53,4 +102,11 @@
 
 .agent-state-packed:before {
     content: '🥵';
+}
+
+.path {
+    z-index: 2;
+    width: 1px;
+    height: 1px;
+    background: gray;
 }

@@ -23,19 +23,19 @@ export class AgentRepository extends ArrayStorage<AgentEntity> {
     }
 
     findOneRandomIdle(): AgentEntity | undefined {
-        let idleAgents = this.findIdle();
+        const idleAgents = this.findIdle();
 
         if (!idleAgents) {
             return undefined;
         }
 
-        let shuffledIdleAgents = shuffle(idleAgents);
+        const shuffledIdleAgents = shuffle(idleAgents);
 
         return shuffledIdleAgents.shift();
     }
 
     findOneClosestIdle(position: Position): AgentEntity | undefined {
-        let idleAgents = this.findIdle();
+        const idleAgents = this.findIdle();
 
         if (!idleAgents) {
             return undefined;

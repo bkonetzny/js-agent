@@ -11,12 +11,19 @@ export class Position {
         this.y = parseInt(y, 10);
     }
 
+    toJSON() {
+        return {
+            x: this.x,
+            y: this.y,
+        };
+    }
+
     static findClosestEntity<T extends Entity>(position: Position, entities: T[]): T | undefined {
         let closestDistance: number;
         let closestEntity: T | undefined = undefined;
 
         entities.forEach((entity) => {
-            let distance = this.getDistance(position.x, entity.position.x) + this.getDistance(position.y, entity.position.y);
+            const distance = this.getDistance(position.x, entity.position.x) + this.getDistance(position.y, entity.position.y);
 
             if (!closestEntity || distance < closestDistance) {
                 closestEntity = entity;

@@ -4,6 +4,14 @@ import { Position } from "../objects/position";
 import { ArrayStorage } from "./array-storage";
 
 export class ResourceRepository extends ArrayStorage<Resource> {
+    removeByLocation(location: LocationEntity): boolean {
+        this.findByLocation(location).forEach((resource) => {
+            this.remove(resource);
+        });
+
+        return true;
+    }
+
     findByLocation(location: LocationEntity): Resource[] {
         return this.data.filter((resource) => {
             return (
@@ -14,7 +22,7 @@ export class ResourceRepository extends ArrayStorage<Resource> {
     }
 
     findOneClosestByType(type: Resource, position: Position): Resource | undefined {
-        let pickableResources = this.data.filter((resource) => {
+        const pickableResources = this.data.filter((resource) => {
             return (
                 resource.pickable
                 && resource.constructor.name === type.constructor.name
@@ -25,9 +33,9 @@ export class ResourceRepository extends ArrayStorage<Resource> {
             return undefined;
         }
 
-        let locationIds: Array<String> = [];
+        const locationIds: Array<String> = [];
 
-        let uniqueLocationResources = pickableResources.filter((resource) => {
+        const uniqueLocationResources = pickableResources.filter((resource) => {
             if (!resource.locationId || locationIds.includes(resource.locationId)) {
                 return false;
             }
@@ -37,7 +45,7 @@ export class ResourceRepository extends ArrayStorage<Resource> {
             return true;
         });
 
-        let possibleLocations = uniqueLocationResources.map((resource) => {
+        const possibleLocations = uniqueLocationResources.map((resource) => {
             return resource.getLocation();
         });
 
@@ -45,16 +53,16 @@ export class ResourceRepository extends ArrayStorage<Resource> {
             return undefined;
         }
 
-        possibleLocations = possibleLocations.filter((location) => {
+        const possibleExistingLocations = possibleLocations.filter((location) => {
             return !!location;
         });
 
-        if (!possibleLocations.length) {
+        if (!possibleExistingLocations.length) {
             return undefined;
         }
 
         // @ts-ignore
-        let closestLocation = Position.findClosestEntity(position, possibleLocations);
+        const closestLocation = Position.findClosestEntity(position, possibleExistingLocations);
 
         if (!closestLocation) {
             return undefined;
