@@ -1,5 +1,5 @@
 import { difference } from "lodash-es";
-import { AgentAddInputCommand, LocationAddInputCommand } from "../../io-bridge/input-commands";
+import { LocationAddInputCommand } from "../../io-bridge/input-commands";
 import { Agent } from "../../io-bridge/types/agent";
 import { Location } from "../../io-bridge/types/location";
 import { Path } from "../../io-bridge/types/path";
@@ -143,9 +143,6 @@ export class UiScene {
 
         if (this.clickMode.startsWith('location:add:')) {
             handleInputResult = this.ui.handleInput(new LocationAddInputCommand(locationId, position));
-        }
-        else if (this.clickMode.startsWith('agent:add')) {
-            handleInputResult = this.ui.handleInput(new AgentAddInputCommand(position));
         }
 
         if (handleInputResult instanceof Error) {

@@ -148,9 +148,6 @@ class Game {
             case 'location:action':
                 return this.triggerLocationAction(inputCommand.data);
 
-            case 'agent:add':
-                return this.addAgent(inputCommand.data);
-
             default:
                 throw new Error(`Unknown command "${inputCommand.command}"`);
         }
@@ -179,17 +176,6 @@ class Game {
         this.paths.removeAll();
 
         return location.id;
-    }
-
-    addAgent(data: any): string {
-        const position: Position = data.position;
-        const agent = new AgentEntity(position);
-
-        this.agents.add(agent);
-
-        this.forcePublish();
-
-        return agent.id;
     }
 
     updateSetting(key: string, value: string): object {

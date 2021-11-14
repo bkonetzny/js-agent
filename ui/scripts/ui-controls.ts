@@ -10,7 +10,6 @@ export class UiControls {
     private btnStart: Element;
     private btnPause: Element;
     private btnLocationsWrapper: Element;
-    private btnAddAgent: Element;
     /*
     private inputUpdateSettingKey: HTMLSelectElement;
     private inputUpdateSettingValue: HTMLInputElement;
@@ -29,7 +28,6 @@ export class UiControls {
         this.btnStart = this.domElement.querySelector('#start')!;
         this.btnPause = this.domElement.querySelector('#pause')!;
         this.btnLocationsWrapper = this.domElement.querySelector('#locations')!;
-        this.btnAddAgent = this.domElement.querySelector('#addAgent')!;
         /*
         this.inputUpdateSettingKey = this.domElement.querySelector('#updateSettingKey')!;
         this.inputUpdateSettingValue = this.domElement.querySelector('#updateSettingValue')!;
@@ -53,10 +51,6 @@ export class UiControls {
 
         this.btnLocationsWrapper.addEventListener('click', (event) => {
             this.scene.setClickMode((event.target as Element)!.id);
-        });
-
-        this.btnAddAgent.addEventListener('click', (event) => {
-            this.scene.setClickMode('agent:add');
         });
 
         /*
@@ -102,28 +96,10 @@ export class UiControls {
                 clientY: 50,
             }));
 
-            this.scene.setClickMode('agent:add');
+            this.scene.setClickMode('location:add:DepotLocation');
             this.scene.processClickEventOnScene(new MouseEvent('click', {
-                clientX: 300,
-                clientY: 150,
-            }));
-
-            this.scene.setClickMode('agent:add');
-            this.scene.processClickEventOnScene(new MouseEvent('click', {
-                clientX: 250,
-                clientY: 50,
-            }));
-
-            this.scene.setClickMode('agent:add');
-            this.scene.processClickEventOnScene(new MouseEvent('click', {
-                clientX: 50,
-                clientY: 180,
-            }));
-
-            this.scene.setClickMode('agent:add');
-            this.scene.processClickEventOnScene(new MouseEvent('click', {
-                clientX: 100,
-                clientY: 400,
+                clientX: 400,
+                clientY: 300,
             }));
 
             this.ui.handleInput(new ControlStartInputCommand());

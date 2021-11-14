@@ -56,17 +56,6 @@ class LocationActionInputCommand implements InputCommandInterface {
     }
 }
 
-class AgentAddInputCommand implements InputCommandInterface {
-    command = 'agent:add';
-    data: any;
-
-    constructor(position: Position) {
-        this.data = {
-            position,
-        };
-    }
-}
-
 export {
     InputCommandInterface,
     ControlStartInputCommand,
@@ -75,5 +64,4 @@ export {
     GamestateImportInputCommand,
     LocationAddInputCommand,
     LocationActionInputCommand,
-    AgentAddInputCommand,
 }
