@@ -5,6 +5,7 @@ import { Location } from "../../io-bridge/types/location";
 import { Path } from "../../io-bridge/types/path";
 import { Position } from "../../io-bridge/types/position";
 import { Terrain } from "../../io-bridge/types/terrain";
+import { UiLocation } from "./entities/ui-location";
 import { Ui } from "./ui";
 import { UiDetails } from "./ui-details";
 
@@ -15,7 +16,7 @@ export class UiScene {
     private uiDetails: UiDetails;
     private clickMode?: string;
     private focusedObjectId?: string;
-    private locationCache: Location[];
+    private locationCache: UiLocation[];
     private domElementIdPrefix: string;
     private domTerrainLayerElement: HTMLCanvasElement;
     private domObjectLayerElement: HTMLDivElement;
@@ -180,22 +181,21 @@ export class UiScene {
             UiScene.canvasReset(this.domTerrainLayerElement, terrain);
         }
 
-        this.locationCache = locations;
+        this.locationCache = locations.map((location) => {
+            return new UiLocation(location, this.domDocument, this.domElementIdPrefix);
+        });
 
-        this.domRemoveObsoleteLocations(locations);
-        this.domRemoveObsoleteAgents(agents);
-
-        this.domUpdateLocations(locations);
+        this.domUpdateLocations();
         this.domUpdateAgents(agents);
         this.domUpdatePaths(paths);
 
         this.updateDetails();
     }
 
-    domRemoveObsoleteLocations(locations: Location[]) {
+    domRemoveObsoleteLocations(locations: UiLocation[]) {
         const domLocations = this.domElement.querySelectorAll('.building');
         const locationIds = locations.map((location) => {
-            return `${this.domElementIdPrefix}${location.id}`;
+            return location.getDomElementId();
         });
 
         domLocations.forEach((domLocation) => {
@@ -218,19 +218,23 @@ export class UiScene {
         });
     }
 
-    domUpdateLocations(locations: Location[]) {
-        locations.forEach((building) => {
-            const domBuilding = this.domEnsureElementForTyoe('building', building.id);
+    domUpdateLocations() {
+        this.domRemoveObsoleteLocations(this.locationCache);
 
-            this.domUpdateElementPosition(domBuilding, building.position);
+        this.locationCache.forEach((building) => {
+            const domBuilding = this.domEnsureElementForTyoe('building', building.getDomElementId());
 
-            domBuilding.classList.add('building-' + building.type);
+            this.domUpdateElementPosition(domBuilding, building.location.position);
+
+            domBuilding.classList.add('building-' + building.location.type);
         });
     }
 
     domUpdateAgents(agents: Agent[]) {
+        this.domRemoveObsoleteAgents(agents);
+
         agents.forEach((agent) => {
-            const domAgent = this.domEnsureElementForTyoe('agent', agent.id);
+            const domAgent = this.domEnsureElementForTyoe('agent', `${this.domElementIdPrefix}${agent.id}`);
 
             this.domUpdateElementPosition(domAgent, agent.position);
 
@@ -275,11 +279,11 @@ export class UiScene {
     }
 
     domEnsureElementForTyoe(type: string, id: string): HTMLDivElement {
-        let element: HTMLDivElement | null = this.domObjectLayerElement.querySelector(`#${this.domElementIdPrefix}${id}`);
+        let element: HTMLDivElement | null = this.domObjectLayerElement.querySelector(`#${id}`);
 
         if (!element) {
             element = this.domDocument.createElement('div');
-            element.id = `${this.domElementIdPrefix}${id}`;
+            element.id = id;
 
             this.domObjectLayerElement.appendChild(element);
         }
@@ -301,6 +305,10 @@ export class UiScene {
     }
 
     showDetails(id?: string) {
+        this.locationCache.forEach((location) => {
+            location.getDomElement()?.classList.remove('selected');
+        });
+
         if (!id) {
             this.uiDetails.render('');
 
@@ -308,16 +316,20 @@ export class UiScene {
         }
 
         const matchingLocation = this.locationCache.find((location) => {
-            return `${this.domElementIdPrefix}${location.id}` === id;
+            return id === location.getDomElementId();
         });
 
         if (!matchingLocation) {
+            this.uiDetails.render('');
+
             return;
         }
 
+        matchingLocation.getDomElement()?.classList.add('selected');
+
         const resourcesByType = {};
 
-        matchingLocation.resources.forEach((resource) => {
+        matchingLocation.location.resources.forEach((resource) => {
             if (!resourcesByType[resource.type]) {
                 resourcesByType[resource.type] = 0;
             }
@@ -325,17 +337,17 @@ export class UiScene {
             resourcesByType[resource.type]++;
         });
 
-        const actions = matchingLocation.actions.map((action) => {
-            return `<button data-locationid="${matchingLocation.id}" data-action="${action}">${action.toLocaleUpperCase()}</button>`;
+        const actions = matchingLocation.location.actions.map((action) => {
+            return `<button data-locationid="${matchingLocation.location.id}" data-action="${action}">${action.toLocaleUpperCase()}</button>`;
         });
 
         this.uiDetails.render(`
             <dl>
                 <dt>ID</dt>
-                <dd>${matchingLocation.id}</dd>
+                <dd>${matchingLocation.location.id}</dd>
                 <dt>Type</dt>
-                <dd>${matchingLocation.type}</dd>
-                <dt>Resources (${matchingLocation.resources.length})</dt>
+                <dd>${matchingLocation.location.type}</dd>
+                <dt>Resources (${matchingLocation.location.resources.length})</dt>
                 <dd>${JSON.stringify(resourcesByType)}</dd>
                 <dt>Actions</dt>
                 <dd>${actions.join(' | ')}</dd>

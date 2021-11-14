@@ -5,25 +5,27 @@ import { Resource } from "../objects/instances/resource";
 export class OrderManager {
     static process(game: Game) {
         game.orders.findAll().forEach((order) => {
-            const location = order.getLocation();
+            const destinationLocation = order.getLocation();
 
-            if (!location) {
+            if (!destinationLocation) {
                 return;
             }
 
             order.forEachMissingResource((resourceClass, resourceDefinition): Resource | undefined => {
-                const matchingResource = game.resources.findOneClosestByType(resourceDefinition.resource, location.position);
+                const matchingResource = game.resources.findOneClosestByType(resourceDefinition.resource, destinationLocation.position);
 
                 if (!matchingResource) {
                     return undefined;
                 }
 
+                const sourceLocation = matchingResource.getLocation();
+
                 // @ts-ignore
-                const job = new Job(matchingResource.getLocation(), location, matchingResource);
+                const job = new Job(sourceLocation, destinationLocation, matchingResource);
 
                 matchingResource.assignToJob(job);
 
-                game.addJob(job);
+                game.jobs.add(job);
 
                 return matchingResource;
             });

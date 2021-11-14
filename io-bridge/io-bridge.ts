@@ -1,10 +1,23 @@
 import { Ui } from "../ui/scripts/ui";
-import { Game } from "../engine/game";
-import { InputHandler, OutputHandler } from "./handlers";
+import { Game, GameSettings } from "../engine/game";
+import { WindowInputHandler, WindowOutputHandler } from "./handlers";
 
 export class IoBridge {
-    constructor(game: Game, ui: Ui) {
-        new InputHandler(game, ui);
-        new OutputHandler(game, ui);
+    constructor(ui: Ui, gameSettings: GameSettings, mode: string = 'window') {
+        if (mode === 'window') {
+            const game = new Game(gameSettings, (callback) => {
+                window.requestAnimationFrame(callback);
+            });
+
+            new WindowInputHandler(game, ui);
+            new WindowOutputHandler(game, ui);
+        }
+        else if (mode === 'worker') {
+            // const worker = new Worker('engine.js');
+            throw new Error('Mode "worker" not implemented yet');
+        }
+        else {
+            throw new Error('Invalid mode');
+        }
     }
 }

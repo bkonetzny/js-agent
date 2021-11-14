@@ -8,6 +8,7 @@ export class OrdersRepository extends ArrayStorage<Order> {
             return order.locationId === location.id;
         });
     }
+
     hasOpenOrderForLocation(location: LocationEntity, type: string): boolean {
         return this.data.findIndex((order) => {
             return (
@@ -15,5 +16,16 @@ export class OrdersRepository extends ArrayStorage<Order> {
                 && order.type === type
             );
         }) !== -1;
+    }
+
+    removeByLocation(location: LocationEntity): boolean {
+        this.data.forEach((order) => {
+            if (order.locationId === location.id) {
+                console.log('removed order', order);
+                this.remove(order);
+            }
+        });
+
+        return true;
     }
 }

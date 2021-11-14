@@ -10,6 +10,7 @@ export class Job extends Instance {
     public agentId ?: string;
     public started : boolean;
     public finished : boolean;
+    public created : Date;
 
     constructor(source: LocationEntity, destination: LocationEntity, resource: Resource) {
         super();
@@ -19,6 +20,7 @@ export class Job extends Instance {
         this.agentId = undefined;
         this.started = false;
         this.finished = false;
+        this.created = new Date();
     }
 
     toJSON() {
@@ -31,6 +33,7 @@ export class Job extends Instance {
                 agentId: this.agentId,
                 started: this.started,
                 finished: this.finished,
+                created: this.created,
             }
         };
     }

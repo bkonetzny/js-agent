@@ -3,7 +3,15 @@ import { Ui } from "../ui/scripts/ui";
 import { InputCommandInterface } from "./input-commands";
 import { OutputStateInterface } from "./output-state";
 
-class InputHandler {
+interface InputHandlerInterface {
+    command(inputCommand: InputCommandInterface): any
+}
+
+interface OutputHandlerInterface {
+    update(outputState: OutputStateInterface)
+}
+
+class WindowInputHandler implements InputHandlerInterface {
     private game : Game;
 
     constructor(game: Game, ui: Ui) {
@@ -16,7 +24,7 @@ class InputHandler {
     }
 }
 
-class OutputHandler {
+class WindowOutputHandler implements OutputHandlerInterface {
     private ui : Ui;
 
     constructor(game: Game, ui: Ui) {
@@ -30,6 +38,8 @@ class OutputHandler {
 }
 
 export {
-    InputHandler,
-    OutputHandler,
+    InputHandlerInterface,
+    OutputHandlerInterface,
+    WindowInputHandler,
+    WindowOutputHandler,
 }
