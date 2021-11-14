@@ -166,8 +166,8 @@ export class UiScene {
         const sceneRect = this.domElement.getBoundingClientRect();
 
         return {
-            x: event.clientX - sceneRect.left,
-            y: event.clientY - sceneRect.top,
+            x: Math.ceil(event.clientX - sceneRect.left),
+            y: Math.ceil(event.clientY - sceneRect.top),
         };
     }
 
