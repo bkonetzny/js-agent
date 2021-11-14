@@ -70,11 +70,9 @@ export class Ui {
     }
 
     handleInput(inputCommand: InputCommandInterface): any {
-        console.log('handleInput', inputCommand);
-
         const handleInputResult = this.inputHandler?.command(inputCommand);
 
-        console.log('handleInputResult', handleInputResult);
+        console.log('handleInputResult', inputCommand, handleInputResult);
 
         return handleInputResult;
     }
