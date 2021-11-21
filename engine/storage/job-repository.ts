@@ -1,4 +1,3 @@
-import { LocationEntity } from "../objects/instances/entities/location-entity";
 import { Job } from "../objects/instances/job";
 import { ArrayStorage } from "./array-storage";
 

@@ -9,6 +9,7 @@ export class AgentEntity extends Entity {
     public pathId ?: string;
     private velocityIdle : number;
     private velocityJob : number;
+    private energy : number;
 
     constructor(position: Position) {
         super(position);
@@ -16,6 +17,8 @@ export class AgentEntity extends Entity {
         this.pathId = undefined;
         this.velocityIdle = 5;
         this.velocityJob = 1;
+
+        this.chargeEnergy();
     }
 
     toJSON() {
@@ -83,6 +86,10 @@ export class AgentEntity extends Entity {
     }
 
     moveToTarget(target: LocationEntity) {
+        if (this.energy <= 0) {
+            return;
+        }
+
         let path : Path | undefined;
 
         if (this.pathId) {
@@ -110,6 +117,7 @@ export class AgentEntity extends Entity {
             return;
         }
 
+        this.energy--;
         this.position = newPosition;
     }
 
@@ -124,6 +132,7 @@ export class AgentEntity extends Entity {
         }
 
         job.finish();
+        this.game.events.emit('agent:arrived:'+job.destination.id, this);
 
         this.game?.jobs.remove(job);
         this.jobId = undefined;
@@ -144,8 +153,13 @@ export class AgentEntity extends Entity {
 
         if (Position.isSamePosition(this.position, job.source.position)) {
             job.start();
+            this.game.events.emit('agent:arrived:'+job.source.id, this);
         }
 
         return job.started;
+    }
+
+    chargeEnergy() {
+        this.energy = 1000;
     }
 }
