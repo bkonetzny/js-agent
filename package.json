@@ -31,6 +31,7 @@
     "webpack-dev-server": "^4.4.0"
   },
   "dependencies": {
+    "event-pubsub": "^5.0.3",
     "hash-it": "^5.0.0",
     "lodash-es": "^4",
     "pathfinding": "^0",

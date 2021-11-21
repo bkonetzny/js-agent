@@ -1,3 +1,4 @@
+import { Game } from "../../game";
 import { Instance } from "../instance";
 import { AgentEntity } from "./entities/agent-entity";
 import { LocationEntity } from "./entities/location-entity";
@@ -12,8 +13,9 @@ export class Job extends Instance {
     public finished : boolean;
     public created : Date;
 
-    constructor(source: LocationEntity, destination: LocationEntity, resource: Resource) {
+    constructor(game: Game, source: LocationEntity, destination: LocationEntity, resource: Resource) {
         super();
+        this.game = game;
         this.source = source;
         this.destination = destination;
         this.resourceId = resource ? resource.id : undefined;
@@ -21,6 +23,14 @@ export class Job extends Instance {
         this.started = false;
         this.finished = false;
         this.created = new Date();
+
+        this.game?.events.once('location:remove:'+this.source.id, (location: LocationEntity) => {
+            this.game?.jobs.remove(this);
+        });
+
+        this.game?.events.once('location:remove:'+this.destination.id, (location: LocationEntity) => {
+            this.game?.jobs.remove(this);
+        });
     }
 
     toJSON() {

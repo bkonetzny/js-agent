@@ -1,3 +1,4 @@
+import { Game } from "../../game";
 import { Instance } from "../instance";
 import { ResourcesDefinition } from "../util/resources-definition";
 import { LocationEntity } from "./entities/location-entity";
@@ -9,12 +10,17 @@ export class Order extends Instance {
     public resourcesDefinition : ResourcesDefinition;
     public resources : Array<string>;
 
-    constructor(location: LocationEntity, type: string, resourcesDefinition: ResourcesDefinition) {
+    constructor(game: Game, location: LocationEntity, type: string, resourcesDefinition: ResourcesDefinition) {
         super();
+        this.game = game;
         this.locationId = location.id;
         this.type = type;
         this.resourcesDefinition = resourcesDefinition;
         this.resources = [];
+
+        this.game?.events.once('location:remove:'+this.locationId, (location: LocationEntity) => {
+            this.game?.orders.remove(this);
+        });
     }
 
     toJSON() {

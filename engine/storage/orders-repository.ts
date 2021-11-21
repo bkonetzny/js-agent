@@ -17,15 +17,4 @@ export class OrdersRepository extends ArrayStorage<Order> {
             );
         }) !== -1;
     }
-
-    removeByLocation(location: LocationEntity): boolean {
-        this.data.forEach((order) => {
-            if (order.locationId === location.id) {
-                console.log('removed order', order);
-                this.remove(order);
-            }
-        });
-
-        return true;
-    }
 }

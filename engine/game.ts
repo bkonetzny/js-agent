@@ -6,7 +6,6 @@ import { LocationManager } from "./managers/location-manager";
 import { OrderManager } from "./managers/order-manager";
 import { PathManager } from "./managers/path-manager";
 import { TerrainManager } from "./managers/terrain-manager";
-import { AgentEntity } from "./objects/instances/entities/agent-entity";
 import { Position } from "./objects/position";
 import { Terrain } from "./objects/terrain";
 import { LocationRegistry } from "./registries/location-registry";
@@ -16,6 +15,7 @@ import { LocationRepository } from "./storage/location-repository";
 import { OrdersRepository } from "./storage/orders-repository";
 import { PathRepository } from "./storage/path-repository";
 import { ResourceRepository } from "./storage/resource-repository";
+import { EventPubSub } from 'event-pubsub';
 
 class Game {
     public settings: any;
@@ -29,6 +29,7 @@ class Game {
     public paths: PathRepository;
     public tickFunction: CallableFunction;
     public terrain: Terrain;
+    public events: EventPubSub;
 
     constructor(settings: GameSettings, tickFunction: Function) {
         this.settings = {...{
@@ -44,6 +45,7 @@ class Game {
         this.paths = new PathRepository(this);
         this.tickFunction = tickFunction;
         this.terrain = TerrainManager.generate(this);
+        this.events = new EventPubSub();
     }
 
     controlStart() {

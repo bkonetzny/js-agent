@@ -9,22 +9,6 @@ export class JobRepository extends ArrayStorage<Job> {
         return super.remove(job);
     }
 
-    removeByLocation(location: LocationEntity): boolean {
-        this.data.forEach((job) => {
-            if (job.destination.id === location.id
-                || (
-                    job.source.id === location.id
-                    && !job.started
-                )
-            ) {
-                console.log('job removed', job);
-                this.remove(job);
-            }
-        });
-
-        return true;
-    }
-
     findOpen(): Job[] {
         return this.data.filter((job) => {
             return !job.agentId;

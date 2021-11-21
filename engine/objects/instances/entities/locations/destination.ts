@@ -42,6 +42,6 @@ export class DestinationLocation extends LocationEntity {
         const orderResourcesDefinition = new ResourcesDefinition();
         orderResourcesDefinition.addDefinition(new ItemA(), 5);
 
-        this.game?.orders.add(new Order(this, 'default', orderResourcesDefinition));
+        this.game?.orders.add(new Order(this.game, this, 'default', orderResourcesDefinition));
     }
 }

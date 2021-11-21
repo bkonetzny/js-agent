@@ -21,7 +21,7 @@ export class OrderManager {
                 const sourceLocation = matchingResource.getLocation();
 
                 // @ts-ignore
-                const job = new Job(sourceLocation, destinationLocation, matchingResource);
+                const job = new Job(game, sourceLocation, destinationLocation, matchingResource);
 
                 matchingResource.assignToJob(job);
 
