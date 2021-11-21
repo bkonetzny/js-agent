@@ -13,6 +13,6 @@ export class DepotLocation extends LocationEntity {
 
         this.game?.events.on('agent:arrived:'+this.id, (agent: AgentEntity) => {
             agent.chargeEnergy();
-        }));
+        });
     }
 }
